@@ -11,6 +11,7 @@ import {
     ZoomOutMapRound,
 } from "@vicons/material";
 import ChangeTheme from "./ChangeTheme.vue";
+import { curRepo } from "@/store/repo";
 const height = 40;
 onMounted(() => {
     document.body.style.setProperty("--titlebar-height", height + "px");
@@ -44,7 +45,10 @@ resize();
             tw`h-[${height}px] bg-bgColor1 text-color1 flex justify-between items-center transition-color ${header}`
         "
     >
-        <span :class="tw`text-[14px]`">Git可视化</span>
+        <span :class="tw`text-[14px] mx-[10px]`">
+            Git可视化
+            <code>({{ curRepo?.title || "请选择一个仓库" }})</code>
+        </span>
 
         <div :class="tw`flex h-full items-center`">
             <ChangeTheme />

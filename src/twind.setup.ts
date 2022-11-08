@@ -10,6 +10,7 @@ setup({
         },
         transitionProperty: {
             color: "background-color, color",
+            opacity: "opacity",
         },
     },
     plugins: {

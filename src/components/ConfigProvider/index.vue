@@ -4,6 +4,7 @@ import {
     GlobalThemeOverrides,
     lightTheme,
     NConfigProvider,
+    NMessageProvider,
 } from "naive-ui";
 import { tw } from "twind";
 import { theme, ThemeType } from "@/store/theme";
@@ -18,7 +19,9 @@ const themes: Record<ThemeType, GlobalThemeOverrides> = {
         :class="[tw`h-screen w-screen bg-bgColor2 transition-color`, theme]"
         :theme-overrides="themes[theme]"
     >
-        <slot></slot>
+        <NMessageProvider>
+            <slot></slot>
+        </NMessageProvider>
     </NConfigProvider>
 </template>
 

@@ -12,7 +12,10 @@
     },
     "tauri": {
         "allowlist": {
-            "all": true
+            "all": true,
+            "fs": {
+                "scope": ["$RESOURCE/*"]
+            }
         },
         "bundle": {
             "active": true,
@@ -56,10 +59,10 @@
         "windows": [
             {
                 "fullscreen": false,
-                "height": 600,
+                "height": 900,
                 "resizable": true,
                 "title": "git-gui",
-                "width": 800,
+                "width": 1600,
                 "decorations": false,
                 "center": true,
                 "transparent": true
