@@ -41,5 +41,4 @@ export const writeFile = (
     options = Object.assign({}, fsOptions, options);
     return writeTextFile(path, content, options);
 };
-
 readDir("data", { recursive: true });

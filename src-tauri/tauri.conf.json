@@ -15,6 +15,9 @@
             "all": true,
             "fs": {
                 "scope": ["$RESOURCE/*"]
+            },
+            "shell": {
+                "scope": [{ "cmd": "git", "name": "git", "args": true }]
             }
         },
         "bundle": {

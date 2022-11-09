@@ -15,5 +15,6 @@ setup({
     },
     plugins: {
         center: "flex justify-center items-center",
+        title: "text-[16px] p-[10px] bg-bgColor1 text-color1",
     },
 });

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getLocalRepo, repos } from "@/store/repo";
-import { NButton, NIcon, useMessage } from "naive-ui";
+import { NButton, NIcon, NScrollbar, useMessage } from "naive-ui";
+import { PlaylistAddTwotone } from "@vicons/material";
 import { tw } from "twind";
 import { curRepo, setCurRepo } from "@/store/repo";
 import { CopyOutline } from "@vicons/ionicons5";
@@ -17,8 +18,16 @@ const copyRepoName = async (name: string) => {
 </script>
 
 <template>
-    <div>
-        <div :class="tw`text-color1 transition-color select-none`">
+    <div :class="tw`flex flex-col h-[100%] w-[300px]`">
+        <div :class="tw`title flex justify-between items-center`">
+            <div>仓库列表</div>
+            <NIcon :class="tw`cursor-pointer`" size="24" @click="getLocalRepo">
+                <PlaylistAddTwotone />
+            </NIcon>
+        </div>
+        <NScrollbar
+            :class="tw`text-color1 transition-color select-none flex-1`"
+        >
             <div
                 v-for="(item, key) in repos"
                 :key="key"
@@ -43,7 +52,6 @@ const copyRepoName = async (name: string) => {
                     </NIcon>
                 </span>
             </div>
-        </div>
-        <NButton block type="info" @click="getLocalRepo"> 添加仓库 </NButton>
+        </NScrollbar>
     </div>
 </template>

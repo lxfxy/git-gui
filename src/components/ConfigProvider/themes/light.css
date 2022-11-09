@@ -2,6 +2,19 @@
     /* 背景颜色 */
     --bg-color: #f2f2f2;
     --bg-color2: #fff;
+
     /* 字体颜色 */
     --color: #333;
+
+    --scroll-color: #fff;
+    --scroll-thumb-color: #ddd;
+
+    --file-status-modify-bg-color: #d87a1640;
+    --file-status-modify-text-color: #d87a16;
+
+    --file-status-new-bg-color: #49aa1940;
+    --file-status-new-text-color: #49aa19;
+
+    --file-status-delete-bg-color: #d3202940;
+    --file-status-delete-text-color: #d32029;
 }

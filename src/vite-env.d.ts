@@ -24,6 +24,11 @@ declare module globalThis {
     }
 }
 
+declare type NTagProps = Exclude<
+    typeof import("naive-ui")["NTag"]["__defaults"],
+    undefined
+>;
+
 interface FileSystemDirectoryHandle {
     keys(): IterableIterator<Promise<string>>;
     values(): Promise<

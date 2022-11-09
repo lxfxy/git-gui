@@ -5,6 +5,7 @@ import {
     lightTheme,
     NConfigProvider,
     NMessageProvider,
+    zhCN,
 } from "naive-ui";
 import { tw } from "twind";
 import { theme, ThemeType } from "@/store/theme";
@@ -16,8 +17,13 @@ const themes: Record<ThemeType, GlobalThemeOverrides> = {
 
 <template>
     <NConfigProvider
-        :class="[tw`h-screen w-screen bg-bgColor2 transition-color`, theme]"
+        :class="[
+            tw`h-screen w-screen bg-bgColor2 transition-color`,
+            theme,
+            `scrollbar`,
+        ]"
         :theme-overrides="themes[theme]"
+        :locale="zhCN"
     >
         <NMessageProvider>
             <slot></slot>
@@ -25,7 +31,17 @@ const themes: Record<ThemeType, GlobalThemeOverrides> = {
     </NConfigProvider>
 </template>
 
-<style>
+<style lang="less">
 @import "./themes/dark.css";
 @import "./themes/light.css";
+
+.scrollbar {
+    * ::-webkit-scrollbar {
+        background-color: var(--scroll-color);
+        width: 8px;
+    }
+    * ::-webkit-scrollbar-thumb {
+        background-color: var(--scroll-thumb-color);
+    }
+}
 </style>
