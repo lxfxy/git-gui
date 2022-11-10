@@ -5,6 +5,7 @@ import {
     BaseDirectory,
     FsOptions,
     FsDirOptions,
+    exists,
     readDir as tauriReadDir,
 } from "@tauri-apps/api/fs";
 const fsOptions: FsOptions = {
@@ -41,4 +42,6 @@ export const writeFile = (
     options = Object.assign({}, fsOptions, options);
     return writeTextFile(path, content, options);
 };
-readDir("data", { recursive: true });
+exists("data", { dir: BaseDirectory.Resource }).catch(() => {
+    mkdir("data");
+});

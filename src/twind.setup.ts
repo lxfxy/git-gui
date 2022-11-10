@@ -5,12 +5,12 @@ setup({
             colors: {
                 bgColor1: "var(--bg-color)",
                 bgColor2: "var(--bg-color2)",
-                color1: "var(--color)",
+                color1: "var(--text-color)",
             },
-        },
-        transitionProperty: {
-            color: "background-color, color",
-            opacity: "opacity",
+            transitionProperty: {
+                color: "background-color, color",
+                opacity: "opacity",
+            },
         },
     },
     plugins: {

@@ -18,12 +18,20 @@ const copyRepoName = async (name: string) => {
 </script>
 
 <template>
-    <div :class="tw`flex flex-col h-[100%] w-[300px]`">
+    <div :class="tw`flex flex-col w-[18%]`">
         <div :class="tw`title flex justify-between items-center`">
             <div>仓库列表</div>
-            <NIcon :class="tw`cursor-pointer`" size="24" @click="getLocalRepo">
-                <PlaylistAddTwotone />
-            </NIcon>
+            <NButton quaternary type="success">
+                <template #icon>
+                    <NIcon
+                        :class="tw`cursor-pointer`"
+                        size="24"
+                        @click="getLocalRepo"
+                    >
+                        <PlaylistAddTwotone />
+                    </NIcon>
+                </template>
+            </NButton>
         </div>
         <NScrollbar
             :class="tw`text-color1 transition-color select-none flex-1`"

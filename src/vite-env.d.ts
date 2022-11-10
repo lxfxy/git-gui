@@ -1,9 +1,16 @@
 /// <reference types="vite/client" />
+import { DefineComponent } from "vue";
 
 declare module "*.vue" {
     import type { DefineComponent } from "vue";
     const component: DefineComponent<{}, {}, any>;
     export default component;
+}
+
+declare module "vue" {
+    export declare interface VNode<HostNode> {
+        $el: HostNode;
+    }
 }
 
 declare module globalThis {
@@ -23,11 +30,6 @@ declare module globalThis {
         ): Promise<FileSystemDirectoryHandle>;
     }
 }
-
-declare type NTagProps = Exclude<
-    typeof import("naive-ui")["NTag"]["__defaults"],
-    undefined
->;
 
 interface FileSystemDirectoryHandle {
     keys(): IterableIterator<Promise<string>>;

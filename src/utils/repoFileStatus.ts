@@ -17,7 +17,7 @@ export type FileStatusType = "Modify" | "New" | "Delete";
 export const fileStatusType: FileStatusType[] = ["Delete", "Modify", "New"];
 const fileStatusMap: Record<string, FileStatusType> = {
     M: "Modify",
-    "??": "New",
+    "?": "New",
     D: "Delete",
     A: "New",
 };
@@ -32,7 +32,7 @@ export const getRepoFileStatus = async (cwd: string = curRepo.value!.dir) => {
         symbol = symbol.trim();
         historySymbol = historySymbol.trim();
         const filename = getFilePathLastText(filepath.replaceAll("/", sep));
-        if (historySymbol) {
+        if (historySymbol && historySymbol !== "?") {
             historyFiles.push({
                 symbol: historySymbol,
                 status: fileStatusMap[historySymbol],
@@ -56,5 +56,13 @@ export const getRepoFileStatus = async (cwd: string = curRepo.value!.dir) => {
 
 export const historyRepoFiles = async (cwd: string = curRepo.value!.dir) => {
     const command = runCommand("git", ["add", "."], { cwd });
+    return await command.execute();
+};
+
+export const commitRepo = async (
+    msg: string,
+    cwd: string = curRepo.value!.dir
+) => {
+    const command = runCommand("git", ["commit", "-m", msg], { cwd });
     return await command.execute();
 };

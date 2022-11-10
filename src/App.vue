@@ -4,7 +4,7 @@ import ConfigProvider from "./components/ConfigProvider/index.vue";
 import RepoList from "./components/RepoList/index.vue";
 import RepoFiles from "./components/RepoFiles/index.vue";
 import Header from "./components/Header.vue";
-import { NLayout, NLayoutContent, NLayoutSider } from "naive-ui";
+import Commit from "./components/Commit/index.vue";
 import { tw } from "twind";
 onMounted(() => {
     document.getElementById("loading-control")!.style.display = "none";
@@ -13,11 +13,14 @@ onMounted(() => {
 
 <template>
     <ConfigProvider>
-        <div :class="tw`h-screen w-screen flex flex-col`">
+        <div :class="tw`h-screen w-screen flex flex-col overflow-hidden`">
             <Header></Header>
-            <div :class="tw`flex flex-1`">
+            <div :class="tw`flex flex-1 overflow-hidden`">
                 <RepoList></RepoList>
-                <RepoFiles></RepoFiles>
+                <div :class="tw`flex flex-1 flex-col overflow-hidden`">
+                    <Commit></Commit>
+                    <RepoFiles></RepoFiles>
+                </div>
             </div>
         </div>
     </ConfigProvider>

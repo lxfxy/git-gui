@@ -75,7 +75,7 @@ const tableClassName = css`
     >
         <div
             v-if="curRepo"
-            :class="tw`title flex items-center justify-between`"
+            :class="tw`title flex items-center justify-between h-[50px]`"
         >
             <div :class="[tw`flex gap-x-[10px] items-center`]">
                 <div>
@@ -94,12 +94,12 @@ const tableClassName = css`
                 v-if="tableData.length && workspace === RepoWorkTree.Workspace"
                 :align="'center'"
             >
-                <NButton type="success" @click="pushHistory" text>
+                <NButton type="success" @click="pushHistory" quaternary>
                     暂存所有更改
                 </NButton>
             </NSpace>
         </div>
-        <div v-else>未选择仓库</div>
+        <div v-else :class="tw`title h-[50px]`">未选择仓库</div>
         <NDataTable
             :bordered="true"
             :columns="columns"

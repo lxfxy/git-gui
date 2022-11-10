@@ -1,5 +1,7 @@
-import { dirname, sep } from "@tauri-apps/api/path";
-
+import { sep } from "@tauri-apps/api/path";
+export * from "./command";
+export * from "./file";
+export * from "./repoFileStatus";
 /**
  * 获取一个路径的最后的名字
  */
@@ -10,4 +12,12 @@ export const getFilePathLastText = (path: string) => {
         i--;
     }
     return paths[i];
+};
+
+export const sleep = (timer: number) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(timer);
+        }, timer);
+    });
 };

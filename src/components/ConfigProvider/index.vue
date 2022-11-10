@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
     darkTheme,
+    GlobalTheme,
     GlobalThemeOverrides,
     lightTheme,
     NConfigProvider,
@@ -9,9 +10,9 @@ import {
 } from "naive-ui";
 import { tw } from "twind";
 import { theme, ThemeType } from "@/store/theme";
-const themes: Record<ThemeType, GlobalThemeOverrides> = {
-    dark: darkTheme as any,
-    light: lightTheme as any,
+const themes: Record<ThemeType, GlobalTheme> = {
+    dark: darkTheme,
+    light: lightTheme,
 };
 </script>
 
@@ -19,10 +20,9 @@ const themes: Record<ThemeType, GlobalThemeOverrides> = {
     <NConfigProvider
         :class="[
             tw`h-screen w-screen bg-bgColor2 transition-color`,
-            theme,
             `scrollbar`,
         ]"
-        :theme-overrides="themes[theme]"
+        :theme="themes[theme]"
         :locale="zhCN"
     >
         <NMessageProvider>

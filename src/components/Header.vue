@@ -42,7 +42,7 @@ resize();
     <span :class="tw`hidden`">{{ tw }}</span>
     <div
         :class="
-            tw`h-[${height}px] bg-bgColor1 text-color1 flex justify-between items-center transition-color ${header}`
+            tw`min-h-[${height}px] bg-bgColor1 text-color1 flex justify-between items-center transition-color ${header}`
         "
     >
         <span :class="tw`text-[14px] mx-[10px]`">
