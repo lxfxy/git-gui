@@ -6,7 +6,7 @@ import {
     theme,
     ThemeType,
 } from "@/store";
-import { commitRepo } from "@/utils";
+import { commitAmendRepo, commitRepo } from "@/utils";
 import { getGitLogMsg } from "@/utils/gitLog";
 import { isEmpty } from "lodash";
 import {
@@ -18,7 +18,7 @@ import {
     useMessage,
 } from "naive-ui";
 import { tw } from "twind";
-import { effect, ref, watch, watchEffect } from "vue";
+import { ref, watch } from "vue";
 import Gitmoji from "./Gitmoji.vue";
 const dividerTheme: Record<ThemeType, any> = {
     dark: {},
@@ -97,14 +97,18 @@ const commit = async () => {
         message.error("暂存区无内容");
         return;
     }
-    await commitRepo(msg.value);
+    if (isCommitAmend.value) {
+        await commitAmendRepo(msg.value);
+    } else {
+        await commitRepo(msg.value);
+    }
     message.success("提交成功");
     msg.value = "";
     commitMsg.value = "";
     amendMsg.value = "";
 };
 const getLastCommitMsg = async () => {
-    amendMsg.value = await getGitLogMsg(repoLogs.value[0].Hash);
+    amendMsg.value = await getGitLogMsg(repoLogs[0].Hash);
 };
 </script>
 

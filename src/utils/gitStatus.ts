@@ -22,9 +22,7 @@ const fileStatusMap: Record<string, FileStatusType> = {
     A: "New",
 };
 
-export const getRepoFileStatus = async (
-    cwd: string | undefined = curRepoDir.value
-) => {
+export const getRepoFileStatus = async (cwd: Cwd = curRepoDir.value) => {
     const command = runCommand("git", ["status", "--porcelain"], { cwd });
     const files: FileStatus[] = [];
     const historyFiles: FileStatus[] = [];
@@ -53,24 +51,29 @@ export const getRepoFileStatus = async (
     });
     const child = await command.spawn();
 
-    return new Promise((resolve) => {
+    return new Promise<FileStatus[][]>((resolve) => {
         command.on("close", () => {
             resolve([files, historyFiles]);
         });
     });
 };
 
-export const historyRepoFiles = async (
-    cwd: string | undefined = curRepoDir.value
-) => {
+export const historyRepoFiles = async (cwd: Cwd = curRepoDir.value) => {
     const command = runCommand("git", ["add", "."], { cwd });
     return await command.execute();
 };
 
-export const commitRepo = async (
-    msg: string,
-    cwd: string | undefined = curRepoDir.value
-) => {
+export const commitRepo = async (msg: string, cwd: Cwd = curRepoDir.value) => {
     const command = runCommand("git", ["commit", "-m", msg], { cwd });
+    return await command.execute();
+};
+
+export const commitAmendRepo = async (
+    msg: string,
+    cwd: Cwd = curRepoDir.value
+) => {
+    const command = runCommand("git", ["commit", "--amend", "-m", msg], {
+        cwd,
+    });
     return await command.execute();
 };

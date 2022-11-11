@@ -5,7 +5,7 @@ import {
     historyRepoFiles,
     RepoWorkTree,
     FileStatus,
-} from "@/utils/repoFileStatus";
+} from "@/utils/gitStatus";
 import { repoWorkTreeInfo } from "@/store/repoFileStatus";
 import {
     NButton,

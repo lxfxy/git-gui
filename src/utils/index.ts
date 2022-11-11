@@ -1,7 +1,7 @@
 import { sep } from "@tauri-apps/api/path";
 export * from "./command";
 export * from "./file";
-export * from "./repoFileStatus";
+export * from "./gitStatus";
 /**
  * 获取一个路径的最后的名字
  */

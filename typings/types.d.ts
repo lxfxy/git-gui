@@ -8,3 +8,5 @@ declare type NTagProps = Exclude<
     typeof import("naive-ui")["NTag"]["__defaults"],
     undefined
 >;
+
+declare type Cwd = string | undefined;

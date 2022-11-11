@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FileStatusType } from "@/utils/repoFileStatus";
+import { FileStatusType } from "@/utils/gitStatus";
 import { NTag } from "naive-ui";
 interface Props extends Partial<NTagProps> {
     status: FileStatusType;

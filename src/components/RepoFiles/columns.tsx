@@ -1,4 +1,4 @@
-import { FileStatus, fileStatusType } from "@/utils/repoFileStatus";
+import { FileStatus, fileStatusType } from "@/utils/gitStatus";
 import { DataTableColumns, NSelect } from "naive-ui";
 import { TableBaseColumn } from "naive-ui/es/data-table/src/interface";
 import { tw } from "twind";

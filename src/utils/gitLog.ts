@@ -90,7 +90,7 @@ export const gitLog = async ({
 
 export const getGitLogMsg = async (
     hash: string,
-    cwd: string | undefined = curRepoDir.value
+    cwd: Cwd = curRepoDir.value
 ) => {
     const command = runCommand("git", ["log", hash, `-1`, "--format=%B"], {
         cwd,
