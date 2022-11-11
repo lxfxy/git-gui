@@ -1,21 +1,32 @@
 <script setup lang="ts">
 import { tw } from "twind";
-import { logsInfinityQuery, repoLogs } from "@/store";
+import { logsInfinityQuery, repoLogs, logLimit } from "@/store";
 import {
+    NButton,
     NCode,
     NEllipsis,
     NInput,
+    NLoadingBarProvider,
     NScrollbar,
+    NSpin,
     NTime,
     NTooltip,
+    useLoadingBar,
 } from "naive-ui";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { effect, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { observer, unObserver } from "@/utils/intersectionObserver";
+import { last } from "lodash";
+import Opacity from "../Transiton/Opacity.vue";
+import { setLoadingBarRenderEl } from "../LoadingBar";
 
-const { fetchNextPage } = logsInfinityQuery();
+const { fetchNextPage, data, isFetchingNextPage } = logsInfinityQuery();
 const endEl = ref<HTMLDivElement>();
+const scrollbarRef = ref<GetCompSetupReturn<typeof NScrollbar>>();
+const fetchNext = async () => {
+    await fetchNextPage();
+};
 onMounted(() => {
-    observer(endEl.value!, fetchNextPage);
+    observer(endEl.value!, fetchNext);
 });
 onBeforeUnmount(() => {
     unObserver(endEl.value!);
@@ -36,7 +47,7 @@ onBeforeUnmount(() => {
                 />
             </div>
         </div>
-        <NScrollbar :class="tw`flex-1`">
+        <NScrollbar :class="tw`flex-1`" ref="scrollbarRef">
             <div
                 v-for="item in repoLogs"
                 :key="item.Hash"
@@ -56,9 +67,22 @@ onBeforeUnmount(() => {
                 </code>
             </div>
             <div
-                :class="tw`w-full bg-bgColor1 h-[30px] opacity-0`"
                 ref="endEl"
-            ></div>
+                @click="fetchNext"
+                :class="tw`w-full h-[36px] center cursor-pointer`"
+            >
+                <NSpin
+                    size="small"
+                    :class="tw`w-[18px] h-[18px] mr-[10px] transition-all`"
+                    :style="{ opacity: isFetchingNextPage ? 1 : 0 }"
+                />
+                <span
+                    v-if="last(data?.pages)?.length && last(data?.pages)!.length > logLimit"
+                >
+                    加载更多
+                </span>
+                <span v-else>到底了</span>
+            </div>
         </NScrollbar>
     </div>
 </template>

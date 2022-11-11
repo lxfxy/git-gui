@@ -2,7 +2,7 @@ import { getFilePathLastText } from "@/utils";
 import { readFileToJSON, writeFile } from "@/utils/file";
 import { open } from "@tauri-apps/api/dialog";
 import { dirname } from "@tauri-apps/api/path";
-import { effect, reactive, ref } from "vue";
+import { computed, effect, reactive, ref } from "vue";
 
 export interface RepoInfo {
     dir: string;
@@ -20,13 +20,12 @@ readFileToJSON<Record<string, RepoInfo>>("data/repos.json")
         });
     });
 export const curRepo = ref<RepoInfo>();
-export let curRepoDir = ref<string>();
-effect(() => {
-    curRepoDir.value = curRepo.value?.dir;
-});
 export const setCurRepo = (repoInfo: RepoInfo) => {
     curRepo.value = repoInfo;
 };
+export let curRepoDir = computed(() => {
+    return curRepo.value?.dir;
+});
 export const getLocalRepo = async () => {
     const dirs = (await open({
         directory: true,

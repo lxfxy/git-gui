@@ -1,3 +1,4 @@
+import { sleep } from "@/utils";
 import { FileStatus, getRepoFileStatus, RepoWorkTree } from "@/utils/gitStatus";
 import { ref } from "vue";
 import { curRepo } from "./repo";
@@ -13,8 +14,7 @@ const readRepoFilesStatus = async () => {
         [repoFileStatus.value, repoHistoryFileStatus.value] =
             await getRepoFileStatus();
     }
-    setTimeout(() => {
-        requestIdleCallback(readRepoFilesStatus);
-    }, 400);
+    await sleep(600);
+    requestIdleCallback(readRepoFilesStatus);
 };
 requestIdleCallback(readRepoFilesStatus);
