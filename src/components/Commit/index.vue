@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { curRepo, repoHistoryFileStatus, theme, ThemeType } from "@/store";
+import {
+    curRepo,
+    repoHistoryFileStatus,
+    repoLogs,
+    theme,
+    ThemeType,
+} from "@/store";
 import { commitRepo } from "@/utils";
+import { getGitLogMsg } from "@/utils/gitLog";
 import { isEmpty } from "lodash";
 import {
     NButton,
@@ -11,7 +18,7 @@ import {
     useMessage,
 } from "naive-ui";
 import { tw } from "twind";
-import { Component, ref, RenderFunction, VNode } from "vue";
+import { effect, ref, watch, watchEffect } from "vue";
 import Gitmoji from "./Gitmoji.vue";
 const dividerTheme: Record<ThemeType, any> = {
     dark: {},
@@ -25,16 +32,41 @@ const cursorPos = {
     end: 0,
 };
 const commitMsg = ref("");
+const amendMsg = ref("");
+const msg = ref("");
 const isCommitAmend = ref(false);
+watch(
+    () => msg.value,
+    (val) => {
+        if (isCommitAmend.value) {
+            amendMsg.value = val;
+        } else {
+            commitMsg.value = val;
+        }
+    }
+);
+watch(
+    () => isCommitAmend.value,
+    async (flag) => {
+        if (flag) {
+            if (!amendMsg.value) {
+                await getLastCommitMsg();
+            }
+            msg.value = amendMsg.value;
+        } else {
+            msg.value = commitMsg.value;
+        }
+    }
+);
 const gitmojiVisible = ref(false);
 const message = useMessage();
 const inputGitmoji = (info: string) => {
     gitmojiVisible.value = false;
     const { start } = cursorPos;
-    const currentMsg = commitMsg.value;
+    const currentMsg = msg.value;
     const left = currentMsg.substring(0, start);
     const right = currentMsg.substring(start);
-    commitMsg.value = `${left}${info}${right}`;
+    msg.value = `${left}${info}${right}`;
     const input = inputCompRef.value
         ?.textareaElRef as unknown as HTMLTextAreaElement;
 
@@ -65,9 +97,14 @@ const commit = async () => {
         message.error("暂存区无内容");
         return;
     }
-    await commitRepo(commitMsg.value);
+    await commitRepo(msg.value);
     message.success("提交成功");
+    msg.value = "";
     commitMsg.value = "";
+    amendMsg.value = "";
+};
+const getLastCommitMsg = async () => {
+    amendMsg.value = await getGitLogMsg(repoLogs.value[0].Hash);
 };
 </script>
 
@@ -96,7 +133,7 @@ const commit = async () => {
                 quaternary
                 type="success"
                 @click="commit"
-                :disabled="!commitMsg.trim()"
+                :disabled="!msg.trim()"
             >
                 提交
             </NButton>
@@ -105,7 +142,7 @@ const commit = async () => {
             <NInput
                 ref="inputCompRef"
                 @blur="blur"
-                v-model:value="commitMsg"
+                v-model:value="msg"
                 :class="tw`text-[18px]`"
                 type="textarea"
                 :autosize="{

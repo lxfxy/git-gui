@@ -1,9 +1,13 @@
+body,
+html,
 #app {
-    font-family: "微软雅黑 Light";
-    border-radius: 8px;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+}
+#app {
+    font-family: "微软雅黑 Light";
+    border-radius: 8px;
 }
 
 button {

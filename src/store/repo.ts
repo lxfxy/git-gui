@@ -12,14 +12,18 @@ export const repos = reactive<Record<string, RepoInfo>>({});
 readFileToJSON<Record<string, RepoInfo>>("data/repos.json")
     .then((res) => {
         Object.assign(repos, res);
-        setCurRepo(Object.values(res)[1]);
+        setCurRepo(Object.values(res)[2]);
     })
     .then(() => {
         effect(() => {
             writeFile("data/repos.json", JSON.stringify(repos));
         });
     });
-export const curRepo = ref<RepoInfo | null>(null);
+export const curRepo = ref<RepoInfo>();
+export let curRepoDir = ref<string>();
+effect(() => {
+    curRepoDir.value = curRepo.value?.dir;
+});
 export const setCurRepo = (repoInfo: RepoInfo) => {
     curRepo.value = repoInfo;
 };

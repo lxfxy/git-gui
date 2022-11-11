@@ -1,4 +1,6 @@
-declare type GetCompSetupReturn<Comp> = Comp extends { setup?: infer Setup }
+declare type GetCompSetupReturn<Comp> = Comp extends {
+    setup?: infer Setup extends (...args: any) => any;
+}
     ? Exclude<ReturnType<Setup>, undefined | (() => any) | void | Promise<any>>
     : null;
 

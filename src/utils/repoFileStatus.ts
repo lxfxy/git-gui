@@ -1,4 +1,4 @@
-import { curRepo } from "@/store/repo";
+import { curRepo, curRepoDir } from "@/store/repo";
 import { sep } from "@tauri-apps/api/path";
 import { Command } from "@tauri-apps/api/shell";
 import { getFilePathLastText } from ".";
@@ -22,7 +22,9 @@ const fileStatusMap: Record<string, FileStatusType> = {
     A: "New",
 };
 
-export const getRepoFileStatus = async (cwd: string = curRepo.value!.dir) => {
+export const getRepoFileStatus = async (
+    cwd: string | undefined = curRepoDir.value
+) => {
     const command = runCommand("git", ["status", "--porcelain"], { cwd });
     const files: FileStatus[] = [];
     const historyFiles: FileStatus[] = [];
@@ -49,19 +51,25 @@ export const getRepoFileStatus = async (cwd: string = curRepo.value!.dir) => {
             });
         }
     });
-    const child = await command.execute();
+    const child = await command.spawn();
 
-    return [files, historyFiles];
+    return new Promise((resolve) => {
+        command.on("close", () => {
+            resolve([files, historyFiles]);
+        });
+    });
 };
 
-export const historyRepoFiles = async (cwd: string = curRepo.value!.dir) => {
+export const historyRepoFiles = async (
+    cwd: string | undefined = curRepoDir.value
+) => {
     const command = runCommand("git", ["add", "."], { cwd });
     return await command.execute();
 };
 
 export const commitRepo = async (
     msg: string,
-    cwd: string = curRepo.value!.dir
+    cwd: string | undefined = curRepoDir.value
 ) => {
     const command = runCommand("git", ["commit", "-m", msg], { cwd });
     return await command.execute();

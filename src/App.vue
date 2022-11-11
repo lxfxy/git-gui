@@ -5,6 +5,7 @@ import RepoList from "./components/RepoList/index.vue";
 import RepoFiles from "./components/RepoFiles/index.vue";
 import Header from "./components/Header.vue";
 import Commit from "./components/Commit/index.vue";
+import Log from "./components/Log/index.vue";
 import { tw } from "twind";
 onMounted(() => {
     document.getElementById("loading-control")!.style.display = "none";
@@ -16,7 +17,10 @@ onMounted(() => {
         <div :class="tw`h-screen w-screen flex flex-col overflow-hidden`">
             <Header></Header>
             <div :class="tw`flex flex-1 overflow-hidden`">
-                <RepoList></RepoList>
+                <div :class="tw`w-[24%] flex flex-col`">
+                    <RepoList></RepoList>
+                    <Log></Log>
+                </div>
                 <div :class="tw`flex flex-1 flex-col overflow-hidden`">
                     <Commit></Commit>
                     <RepoFiles></RepoFiles>

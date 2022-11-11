@@ -18,7 +18,7 @@ const copyRepoName = async (name: string) => {
 </script>
 
 <template>
-    <div :class="tw`flex flex-col w-[18%]`">
+    <div :class="tw`flex flex-col flex-1`">
         <div :class="tw`title flex justify-between items-center`">
             <div>仓库列表</div>
             <NButton quaternary type="success">

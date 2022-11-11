@@ -18,7 +18,7 @@ import {
 import { apply, tw } from "twind";
 import { computed, ref } from "vue";
 import { css } from "twind/css";
-import { columns, tableStatusCol } from "./columns";
+import { columns } from "./columns";
 const genCss = (status: FileStatusType) => {
     return css`
         .n-data-table-td {

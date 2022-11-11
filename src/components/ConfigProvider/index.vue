@@ -7,6 +7,7 @@ import {
     NConfigProvider,
     NMessageProvider,
     zhCN,
+    dateZhCN,
 } from "naive-ui";
 import { tw } from "twind";
 import { theme, ThemeType } from "@/store/theme";
@@ -24,6 +25,7 @@ const themes: Record<ThemeType, GlobalTheme> = {
         ]"
         :theme="themes[theme]"
         :locale="zhCN"
+        :date-locale="dateZhCN"
     >
         <NMessageProvider>
             <slot></slot>

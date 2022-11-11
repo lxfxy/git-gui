@@ -15,14 +15,15 @@
         "baseUrl": ".",
         "paths": {
             "@/*": ["src/*"]
-        }
+        },
+        "typeRoots": ["./node_modules/@types", "./typings"]
     },
     "include": [
+        "typings/**.d.ts",
         "src/**/*.ts",
         "src/**/*.d.ts",
         "src/**/*.tsx",
-        "src/**/*.vue",
-        "components.d.ts"
+        "src/**/*.vue"
     ],
     "references": [{ "path": "./tsconfig.node.json" }]
 }
