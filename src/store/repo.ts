@@ -12,7 +12,7 @@ export const repos = reactive<Record<string, RepoInfo>>({});
 readFileToJSON<Record<string, RepoInfo>>("data/repos.json")
     .then((res) => {
         Object.assign(repos, res);
-        setCurRepo(Object.values(res)[0]);
+        setCurRepo(Object.values(res)[2]);
     })
     .then(() => {
         effect(() => {
@@ -23,7 +23,7 @@ export const curRepo = ref<RepoInfo>();
 export const setCurRepo = (repoInfo: RepoInfo) => {
     curRepo.value = repoInfo;
 };
-export let curRepoDir = computed(() => {
+export const curRepoDir = computed(() => {
     return curRepo.value?.dir;
 });
 export const getLocalRepo = async () => {

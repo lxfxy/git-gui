@@ -38,6 +38,7 @@ const hover = apply`transition-all hover:scale-[1.1] cursor-pointer`;
                 <div
                     v-for="item in data"
                     :class="tw`py-[10px] center flex-col`"
+                    :key="item.emoji"
                 >
                     <div
                         :class="tw`text-[28px] ${hover}`"

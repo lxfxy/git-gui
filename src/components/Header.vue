@@ -12,6 +12,7 @@ import {
 } from "@vicons/material";
 import ChangeTheme from "./ChangeTheme.vue";
 import { curRepo } from "@/store/repo";
+import { curBranch } from "@/store";
 const height = 40;
 onMounted(() => {
     document.body.style.setProperty("--titlebar-height", height + "px");
@@ -47,7 +48,9 @@ resize();
     >
         <span :class="tw`text-[14px] mx-[10px]`">
             Git可视化
-            <code>({{ curRepo?.title || "请选择一个仓库" }})</code>
+            <code>
+                ({{ curRepo?.title || "请选择一个仓库" }}^{{ curBranch?.name }})
+            </code>
         </span>
 
         <div :class="tw`flex h-full items-center`">

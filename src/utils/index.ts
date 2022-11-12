@@ -2,6 +2,8 @@ import { sep } from "@tauri-apps/api/path";
 export * from "./command";
 export * from "./file";
 export * from "./gitStatus";
+export * from "./gitBranch";
+export * from "./gitSwitch";
 /**
  * 获取一个路径的最后的名字
  */
@@ -20,4 +22,13 @@ export const sleep = (timer: number) => {
             resolve(timer);
         }, timer);
     });
+};
+
+export const loop = (fn: Function, timer = 600) => {
+    const scheduler = async () => {
+        await fn();
+        await sleep(timer);
+        requestIdleCallback(scheduler);
+    };
+    requestIdleCallback(scheduler);
 };

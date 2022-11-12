@@ -5,10 +5,12 @@ import {
     NButton,
     NCode,
     NEllipsis,
+    NIcon,
     NInput,
     NLoadingBarProvider,
     NScrollbar,
     NSpin,
+    NTag,
     NTime,
     NTooltip,
     useLoadingBar,
@@ -18,11 +20,13 @@ import { observer, unObserver } from "@/utils/intersectionObserver";
 import { last } from "lodash";
 import Opacity from "../Transiton/Opacity.vue";
 import { setLoadingBarRenderEl } from "../LoadingBar";
+import { ArrowDownSharp } from "@vicons/ionicons5";
 
 const { fetchNextPage, data, isFetchingNextPage } = logsInfinityQuery();
 const endEl = ref<HTMLDivElement>();
 const scrollbarRef = ref<GetCompSetupReturn<typeof NScrollbar>>();
 const fetchNext = async () => {
+    console.log(123);
     await fetchNextPage();
 };
 onMounted(() => {
@@ -51,20 +55,35 @@ onBeforeUnmount(() => {
             <div
                 v-for="item in repoLogs"
                 :key="item.Hash"
-                :class="tw`px-[8px] py-[6px] flex gap-x-[10px] items-center`"
+                :class="tw`px-[8px] py-[6px]`"
             >
-                <NEllipsis :class="tw`max-w-[50%]!`" :tooltip="false">
-                    {{ item.Subject }}
-                    <!-- {{ Date.now() }} -->
-                </NEllipsis>
-                <code :class="tw`text-color2 text-[12px]`">
-                    {{ item.Author }}
-                    <NTime
-                        :time="new Date(item.Date)"
-                        :to="Date.now()"
-                        type="relative"
-                    />
-                </code>
+                <NTag
+                    v-if="item.Ref"
+                    type="info"
+                    :class="tw`my-[6px]`"
+                    size="small"
+                >
+                    <div :class="tw`flex items-end gap-x-[4px] relative`">
+                        <code>{{ item.Ref }}</code>
+                        <NIcon :class="tw`right-0 bottom-[-14px] absolute`">
+                            <ArrowDownSharp />
+                        </NIcon>
+                    </div>
+                </NTag>
+                <div :class="tw`flex gap-x-[10px] items-center`">
+                    <NEllipsis :class="tw`max-w-[50%]!`" :tooltip="false">
+                        {{ item.Subject }}
+                        <!-- {{ Date.now() }} -->
+                    </NEllipsis>
+                    <code :class="tw`text-color2 text-[12px]`">
+                        {{ item.Author }}
+                        <NTime
+                            :time="new Date(item.Date)"
+                            :to="Date.now()"
+                            type="relative"
+                        />
+                    </code>
+                </div>
             </div>
             <div
                 ref="endEl"

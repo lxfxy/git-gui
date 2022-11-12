@@ -7,6 +7,7 @@ import Header from "./components/Header.vue";
 import Commit from "./components/Commit/index.vue";
 import Log from "./components/Log/index.vue";
 import LoadingBar from "./components/LoadingBar/index.vue";
+import Branch from "./components/Branch/index.vue";
 import { tw } from "twind";
 onMounted(() => {
     document.getElementById("loading-control")!.style.display = "none";
@@ -21,6 +22,7 @@ onMounted(() => {
                 <div :class="tw`flex flex-1 overflow-hidden`">
                     <div :class="tw`w-[24%] flex flex-col`">
                         <RepoList></RepoList>
+                        <Branch></Branch>
                         <Log></Log>
                     </div>
                     <div :class="tw`flex flex-1 flex-col overflow-hidden`">

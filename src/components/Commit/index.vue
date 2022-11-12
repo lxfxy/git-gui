@@ -147,7 +147,7 @@ const getLastCommitMsg = async () => {
                 ref="inputCompRef"
                 @blur="blur"
                 v-model:value="msg"
-                :class="tw`text-[18px]`"
+                :class="tw`text-[16px]`"
                 type="textarea"
                 :autosize="{
                     maxRows: 4,

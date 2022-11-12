@@ -1,9 +1,10 @@
-import { sleep } from "@/utils";
+import { loop, sleep } from "@/utils";
 import { GitLog, gitLog } from "@/utils/gitLog";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/vue-query";
 import { last } from "lodash";
 import { effect, onBeforeUnmount, reactive, ref, watch } from "vue";
 import { curRepoDir } from "./repo";
+import { curBranch } from "./repoBranch";
 
 // 多出一条是下次加载的开始，git log [多出一条的hash] -20
 export const logLimit = 20;
@@ -12,8 +13,8 @@ export const repoLogsMsg = reactive<Record<string, string>>({});
 const refetchs: Set<Function> = new Set();
 export const logsInfinityQuery = () => {
     const query = useInfiniteQuery(
-        ["logs", curRepoDir],
-        ({ pageParam = Date.now(), queryKey }) => {
+        ["logs", curRepoDir, curBranch.value?.name],
+        ({ pageParam = Date.now() }) => {
             const date = last(repoLogs)?.Timestamp || Date.now();
             return gitLog({
                 args: [`-${logLimit}`, `--before=${+pageParam - 1}`],
@@ -49,17 +50,15 @@ export const refetchLogs = () => {
     return Promise.all([...refetchs].map((refetch) => refetch()));
 };
 watch(
-    () => curRepoDir.value,
+    () => [curRepoDir.value, curBranch.value],
     () => {
         // repoLogs.length = 0;
         refetchLogs();
     }
 );
-const getLogs = async (deadline: IdleDeadline) => {
+const getLogs = async () => {
     if (curRepoDir.value) {
         await refetchLogs();
     }
-    await sleep(600);
-    requestIdleCallback(getLogs);
 };
-requestIdleCallback(getLogs);
+loop(getLogs, 1000);

@@ -3,3 +3,4 @@ export * from "./repo";
 export * from "./repoFileStatus";
 export * from "./theme";
 export * from "./repoLog";
+export * from "./repoBranch";

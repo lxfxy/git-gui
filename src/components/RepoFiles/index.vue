@@ -1,12 +1,12 @@
 <script setup lang="tsx">
-import { curRepo } from "@/store/repo";
+import { curRepo } from "@/store";
 import {
     FileStatusType,
     historyRepoFiles,
     RepoWorkTree,
     FileStatus,
 } from "@/utils/gitStatus";
-import { repoWorkTreeInfo } from "@/store/repoFileStatus";
+import { repoWorkTreeInfo } from "@/store";
 import {
     NButton,
     NDataTable,
@@ -19,6 +19,7 @@ import { apply, tw } from "twind";
 import { computed, ref } from "vue";
 import { css } from "twind/css";
 import { columns } from "./columns";
+import { curBranch } from "@/store";
 const genCss = (status: FileStatusType) => {
     return css`
         .n-data-table-td {
@@ -79,7 +80,8 @@ const tableClassName = css`
         >
             <div :class="[tw`flex gap-x-[10px] items-center`]">
                 <div>
-                    <code>{{ curRepo.title }}</code> 的工作树信息
+                    <code>{{ curRepo.title }}^{{ curBranch?.name }}</code>
+                    的工作树信息
                 </div>
                 <NPopselect
                     :options="workTreeTypeOptions"
