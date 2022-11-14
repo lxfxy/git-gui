@@ -1,4 +1,5 @@
 import { apply, setup, tw } from "twind";
+// import "twind/shim";
 import { css } from "twind/css";
 setup({
     darkMode: "class",

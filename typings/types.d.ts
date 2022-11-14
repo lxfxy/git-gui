@@ -8,14 +8,17 @@ declare type GetCompSetupReturn<Comp> = Comp extends {
           >
       >
     : null;
-declare type ObjValuesUnRef<O extends Record<string, any>> = {
-    [key in keyof O]: UnRef<O[key]>;
-};
+declare type ObjValuesUnRef<O extends Record<string, any>> = O extends any
+    ? {
+          [key in keyof O]: UnRef<O[key]>;
+      }
+    : never;
 declare type UnRef<Value extends Record<string, any>> = Value extends {
     value: infer V;
 }
     ? V
     : Value;
+
 declare type NTagProps = Exclude<
     typeof import("naive-ui")["NTag"]["__defaults"],
     undefined

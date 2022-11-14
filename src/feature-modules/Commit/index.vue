@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Divider from "@/components/Divider.vue";
 import {
     curRepo,
     repoHistoryFileStatus,
@@ -8,24 +9,22 @@ import {
 } from "@/store";
 import { commitAmendRepo, commitRepo } from "@/utils";
 import { getGitLogMsg } from "@/utils/gitLog";
+import { AlertCircleSharp, Reload } from "@vicons/ionicons5";
 import { isEmpty } from "lodash";
 import {
     NButton,
     NCheckbox,
     NDivider,
+    NIcon,
     NInput,
     NPopover,
+    NTooltip,
     useMessage,
 } from "naive-ui";
 import { tw } from "twind";
+import { css } from "twind/css";
 import { ref, watch } from "vue";
 import Gitmoji from "./Gitmoji.vue";
-const dividerTheme: Record<ThemeType, any> = {
-    dark: {},
-    light: {
-        color: "#ddd",
-    },
-};
 const inputCompRef = ref<GetCompSetupReturn<typeof NInput>>();
 const cursorPos = {
     start: 0,
@@ -67,8 +66,7 @@ const inputGitmoji = (info: string) => {
     const left = currentMsg.substring(0, start);
     const right = currentMsg.substring(start);
     msg.value = `${left}${info}${right}`;
-    const input = inputCompRef.value
-        ?.textareaElRef as unknown as HTMLTextAreaElement;
+    const input = inputCompRef.value?.textareaElRef!;
 
     input?.focus();
     setTimeout(() => {
@@ -93,34 +91,48 @@ const commit = async () => {
         message.info("请先选择一个仓库");
         return;
     }
-    if (isEmpty(repoHistoryFileStatus.value)) {
-        message.error("暂存区无内容");
+    if (!msg.value.trim()) {
+        message.error("请输入本次提交的描述信息");
         return;
     }
     if (isCommitAmend.value) {
         await commitAmendRepo(msg.value);
     } else {
+        if (isEmpty(repoHistoryFileStatus.value)) {
+            message.error("暂存区无内容");
+            return;
+        }
         await commitRepo(msg.value);
     }
     message.success("提交成功");
     msg.value = "";
     commitMsg.value = "";
     amendMsg.value = "";
+    isCommitAmend.value = false;
 };
 const getLastCommitMsg = async () => {
     amendMsg.value = await getGitLogMsg(repoLogs[0].Hash);
+    const input = inputCompRef.value?.textareaElRef!;
+    input.focus();
+};
+const keydown = (e: KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+    }
+};
+const keyup = (e: KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+        commit();
+    }
 };
 </script>
 
 <template>
     <div :class="tw`bg-bgColor1 text-color1`">
         <div :class="tw`title flex justify-between items-center h-[50px]`">
-            <div :class="tw`flex items-center gap-x-[10px]`">
+            <div :class="tw`flex items-center gap-x-[6px]`">
                 <code>Commit</code>
-                <NDivider
-                    vertical
-                    :builtin-theme-overrides="dividerTheme[theme]"
-                />
+                <Divider vertical />
                 <NPopover :class="tw`p-0!`" v-model:show="gitmojiVisible">
                     <template #trigger>
                         <NButton quaternary>
@@ -129,9 +141,44 @@ const getLastCommitMsg = async () => {
                     </template>
                     <Gitmoji @select="inputGitmoji" />
                 </NPopover>
+                <Divider vertical />
                 <NCheckbox v-model:checked="isCommitAmend">
                     修订最后一次更改
                 </NCheckbox>
+                <NTooltip placement="bottom">
+                    <template #trigger>
+                        <NButton
+                            quaternary
+                            round
+                            type="success"
+                            size="small"
+                            @click="getLastCommitMsg"
+                            :disabled="!isCommitAmend"
+                        >
+                            <NIcon
+                                size="18px"
+                                :class="tw`transition hover:rotate-180 block`"
+                            >
+                                <Reload />
+                            </NIcon>
+                        </NButton>
+                    </template>
+                    重新获取最后一次 <code>commit</code> 的描述信息
+                </NTooltip>
+                <Divider vertical />
+                <NTooltip placement="bottom">
+                    <template #trigger>
+                        <NIcon
+                            :class="tw`cursor-pointer text-blue-300`"
+                            size="20px"
+                        >
+                            <AlertCircleSharp />
+                        </NIcon>
+                    </template>
+                    <code>Shift + Enter 换行</code>
+                    <br />
+                    <code>Enter 提交</code>
+                </NTooltip>
             </div>
             <NButton
                 quaternary
@@ -146,6 +193,8 @@ const getLastCommitMsg = async () => {
             <NInput
                 ref="inputCompRef"
                 @blur="blur"
+                @keydown="keydown"
+                @keyup.enter="keyup"
                 v-model:value="msg"
                 :class="tw`text-[16px]`"
                 type="textarea"

@@ -2,12 +2,12 @@
 import {
     darkTheme,
     GlobalTheme,
-    GlobalThemeOverrides,
     lightTheme,
     NConfigProvider,
     NMessageProvider,
     zhCN,
     dateZhCN,
+    NDialogProvider,
 } from "naive-ui";
 import { tw } from "twind";
 import { theme, ThemeType } from "@/store/theme";
@@ -27,8 +27,10 @@ const themes: Record<ThemeType, GlobalTheme> = {
         :locale="zhCN"
         :date-locale="dateZhCN"
     >
-        <NMessageProvider>
-            <slot></slot>
+        <NMessageProvider :container-style="{ paddingTop: `80px` }">
+            <NDialogProvider>
+                <slot></slot>
+            </NDialogProvider>
         </NMessageProvider>
     </NConfigProvider>
 </template>

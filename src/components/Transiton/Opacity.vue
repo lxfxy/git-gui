@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { Transition } from "vue";
+import { Transition, TransitionProps } from "vue";
+interface TransitionOpacityProps extends TransitionProps {}
+const props = defineProps<TransitionOpacityProps>();
 </script>
 
 <template>
-    <Transition name="opacity">
+    <Transition name="opacity" v-bind="props">
         <slot></slot>
     </Transition>
 </template>

@@ -3,7 +3,7 @@ import { NIcon, NScrollbar, NSpin } from "naive-ui";
 import { apply, tw } from "twind";
 import { getGitMojis, gitmojis } from "@/store/gitmoji";
 import { ReloadOutline } from "@vicons/ionicons5";
-import Opacity from "../Transiton/Opacity.vue";
+import Opacity from "@/components/Transiton/Opacity.vue";
 
 const event = defineEmits<{
     (event: "select", info: string): void;

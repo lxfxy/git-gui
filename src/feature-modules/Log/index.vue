@@ -1,12 +1,12 @@
 <script setup lang="tsx">
 import { apply, tw } from "twind";
-import { css } from "twind/css";
 import {
     logsInfinityQuery,
     repoLogs,
     logLimit,
     curRepoBranch,
     repoStatus,
+    setRepoStatus,
 } from "@/store";
 import {
     NButton,
@@ -28,8 +28,7 @@ import {
 } from "vue";
 import { observer, unObserver } from "@/utils/intersectionObserver";
 import { last } from "lodash";
-import Opacity from "../Transiton/Opacity.vue";
-import { setLoadingBarRenderEl } from "../LoadingBar";
+import Opacity from "@/components/Transiton/Opacity.vue";
 import { ArrowDownSharp } from "@vicons/ionicons5";
 import { CloudUploadOutlined } from "@vicons/material";
 import { gitPush } from "@/utils";
@@ -61,10 +60,17 @@ onBeforeUnmount(() => {
                         type="success"
                         quaternary
                         @click="gitPush({ branch: curRepoBranch! })"
+                        :class="tw`opacity-100!`"
                     >
-                        <NIcon size="24">
-                            <CloudUploadOutlined />
-                        </NIcon>
+                        <Opacity mode="out-in" appear>
+                            <NIcon size="24" v-if="!repoStatus.isPushing">
+                                <CloudUploadOutlined />
+                            </NIcon>
+                            <NSpin
+                                v-else
+                                :class="tw`w-[20px] h-[20px] opacity-100`"
+                            ></NSpin>
+                        </Opacity>
                     </NButton>
                 </template>
                 推送至上游分支
@@ -87,7 +93,7 @@ onBeforeUnmount(() => {
             >
                 <div
                     :class="
-                        tw`relative inline-block my-[10px] text-[12px] px-[6px]`
+                        tw`relative inline-block mb-[10px] text-[12px] px-[6px]`
                     "
                     :style="{
                         color: `var(--log-ref-color)`,
