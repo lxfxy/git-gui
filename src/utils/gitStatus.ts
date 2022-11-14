@@ -1,6 +1,5 @@
-import { curRepo, curRepoDir } from "@/store/repo";
+import { curRepo, curRepoDir } from "@/store";
 import { sep } from "@tauri-apps/api/path";
-import { Command } from "@tauri-apps/api/shell";
 import { getFilePathLastText } from ".";
 import { runCommand } from "./command";
 export interface FileStatus {
@@ -9,7 +8,7 @@ export interface FileStatus {
     filepath: string;
     filename: string;
 }
-export const enum RepoWorkTree {
+export enum RepoWorkTree {
     Workspace,
     History,
 }

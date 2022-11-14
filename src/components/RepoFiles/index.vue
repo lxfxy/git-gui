@@ -19,7 +19,7 @@ import { apply, tw } from "twind";
 import { computed, ref } from "vue";
 import { css } from "twind/css";
 import { columns } from "./columns";
-import { curBranch } from "@/store";
+import { curRepoBranch } from "@/store";
 const genCss = (status: FileStatusType) => {
     return css`
         .n-data-table-td {
@@ -80,7 +80,7 @@ const tableClassName = css`
         >
             <div :class="[tw`flex gap-x-[10px] items-center`]">
                 <div>
-                    <code>{{ curRepo.title }}^{{ curBranch?.name }}</code>
+                    <code>{{ curRepo.title }}^{{ curRepoBranch?.name }}</code>
                     的工作树信息
                 </div>
                 <NPopselect

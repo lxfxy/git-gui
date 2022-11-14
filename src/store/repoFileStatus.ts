@@ -1,10 +1,17 @@
-import { loop, sleep } from "@/utils";
-import { FileStatus, getRepoFileStatus, RepoWorkTree } from "@/utils/gitStatus";
+import {
+    loop,
+    sleep,
+    FileStatus,
+    getRepoFileStatus,
+    RepoWorkTree,
+} from "@/utils";
+// import { FileStatus, getRepoFileStatus, RepoWorkTree } from "@/utils/gitStatus";
 import { effect, ref } from "vue";
 import { curRepo } from "./repo";
 
 export const repoFileStatus = ref<FileStatus[]>([]);
 export const repoHistoryFileStatus = ref<FileStatus[]>([]);
+
 export const repoWorkTreeInfo = {
     [RepoWorkTree.History]: repoHistoryFileStatus,
     [RepoWorkTree.Workspace]: repoFileStatus,

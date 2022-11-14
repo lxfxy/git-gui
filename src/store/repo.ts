@@ -1,31 +1,42 @@
-import { getFilePathLastText } from "@/utils";
-import { readFileToJSON, writeFile } from "@/utils/file";
+import { getFilePathLastText, readFileToJSON, writeFile } from "@/utils";
+// import { readFileToJSON, writeFile } from "@/utils/file";
 import { open } from "@tauri-apps/api/dialog";
 import { dirname } from "@tauri-apps/api/path";
+import { isEmpty } from "lodash";
 import { computed, effect, reactive, ref } from "vue";
 
 export interface RepoInfo {
     dir: string;
     title: string;
+    isCurrent?: boolean;
 }
 export const repos = reactive<Record<string, RepoInfo>>({});
+export const curRepo = ref<RepoInfo>();
+export const setCurRepo = (repoInfo: RepoInfo) => {
+    if (curRepo.value) {
+        curRepo.value.isCurrent = false;
+    }
+    curRepo.value = repoInfo;
+    curRepo.value.isCurrent = true;
+};
+export const curRepoDir = computed(() => {
+    return curRepo.value?.dir;
+});
 readFileToJSON<Record<string, RepoInfo>>("data/repos.json")
     .then((res) => {
-        Object.assign(repos, res);
-        setCurRepo(Object.values(res)[2]);
+        if (!isEmpty(res)) {
+            Object.assign(repos, res);
+            const repoValues = Object.values(res);
+            setCurRepo(
+                repoValues.find((item) => !!item.isCurrent) || repoValues[0]
+            );
+        }
     })
     .then(() => {
         effect(() => {
             writeFile("data/repos.json", JSON.stringify(repos));
         });
     });
-export const curRepo = ref<RepoInfo>();
-export const setCurRepo = (repoInfo: RepoInfo) => {
-    curRepo.value = repoInfo;
-};
-export const curRepoDir = computed(() => {
-    return curRepo.value?.dir;
-});
 export const getLocalRepo = async () => {
     const dirs = (await open({
         directory: true,
@@ -36,6 +47,7 @@ export const getLocalRepo = async () => {
         repos[dir] = {
             dir,
             title: getFilePathLastText(dir),
+            isCurrent: false,
         };
     }
 };

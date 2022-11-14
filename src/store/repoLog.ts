@@ -1,19 +1,18 @@
-import { loop, sleep } from "@/utils";
-import { GitLog, gitLog } from "@/utils/gitLog";
+import { loop, sleep, GitLog, gitLog } from "@/utils";
+// import { GitLog, gitLog } from "@/utils/gitLog";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/vue-query";
 import { last } from "lodash";
 import { effect, onBeforeUnmount, reactive, ref, watch } from "vue";
 import { curRepoDir } from "./repo";
-import { curBranch } from "./repoBranch";
+import { curRepoBranch } from "./repoBranch";
 
-// 多出一条是下次加载的开始，git log [多出一条的hash] -20
 export const logLimit = 20;
 export const repoLogs = reactive<GitLog[]>([]);
 export const repoLogsMsg = reactive<Record<string, string>>({});
 const refetchs: Set<Function> = new Set();
 export const logsInfinityQuery = () => {
     const query = useInfiniteQuery(
-        ["logs", curRepoDir, curBranch.value?.name],
+        ["logs", curRepoDir, curRepoBranch.value?.name],
         ({ pageParam = Date.now() }) => {
             const date = last(repoLogs)?.Timestamp || Date.now();
             return gitLog({
@@ -50,7 +49,7 @@ export const refetchLogs = () => {
     return Promise.all([...refetchs].map((refetch) => refetch()));
 };
 watch(
-    () => [curRepoDir.value, curBranch.value],
+    () => [curRepoDir.value, curRepoBranch.value],
     () => {
         // repoLogs.length = 0;
         refetchLogs();

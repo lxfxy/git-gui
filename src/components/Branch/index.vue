@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-    branchs,
+    repoBranchs,
     getBranch,
     repoFileStatus,
     repoHistoryFileStatus,
@@ -36,7 +36,7 @@ const changeBranch = async (branchInfo: GitBranch) => {
         <NScrollbar :class="tw`flex-1 text-color1 px-[10px]`">
             <NTimeline :class="tw`py-[6px]`">
                 <NTimelineItem
-                    v-for="item in branchs"
+                    v-for="item in repoBranchs"
                     :key="item.name"
                     :type="item.current ? `success` : `default`"
                     :class="

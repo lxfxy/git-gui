@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { tw } from "twind";
+import { apply, tw } from "twind";
 import { css } from "twind/css";
 import { NIcon } from "naive-ui";
 import { appWindow } from "@tauri-apps/api/window";
@@ -12,24 +12,26 @@ import {
 } from "@vicons/material";
 import ChangeTheme from "./ChangeTheme.vue";
 import { curRepo } from "@/store/repo";
-import { curBranch } from "@/store";
+import { curRepoBranch } from "@/store";
 const height = 40;
 onMounted(() => {
     document.body.style.setProperty("--titlebar-height", height + "px");
 });
 const header = css`
+    ${apply`z-[9999] pointer-events-none`};
+
     .n-icon {
-        @apply center h-full w-[46px] transition-color cursor-pointer;
+        ${apply`center h-full w-[46px] transition-color cursor-pointer`};
 
         &:hover {
-            @apply bg-bgColor2;
+            ${apply`bg-bgColor2`};
         }
         &:last-child:hover {
-            @apply bg-red-900;
+            ${apply`bg-red-900`};
         }
     }
     > * {
-        z-index: 2;
+        ${apply`z-[1] pointer-events-auto`};
     }
 `;
 const isMaximize = ref(false);
@@ -49,7 +51,9 @@ resize();
         <span :class="tw`text-[14px] mx-[10px]`">
             Git可视化
             <code>
-                ({{ curRepo?.title || "请选择一个仓库" }}^{{ curBranch?.name }})
+                ({{ curRepo?.title || "请选择一个仓库" }}^{{
+                    curRepoBranch?.name
+                }})
             </code>
         </span>
 
@@ -76,5 +80,6 @@ resize();
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 9999;
 }
 </style>

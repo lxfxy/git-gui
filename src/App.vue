@@ -9,6 +9,8 @@ import Log from "./components/Log/index.vue";
 import LoadingBar from "./components/LoadingBar/index.vue";
 import Branch from "./components/Branch/index.vue";
 import { tw } from "twind";
+import Initial from "./components/Initial.vue";
+import { NDialogProvider } from "naive-ui";
 onMounted(() => {
     document.getElementById("loading-control")!.style.display = "none";
 });
@@ -17,20 +19,25 @@ onMounted(() => {
 <template>
     <ConfigProvider>
         <LoadingBar>
-            <div :class="tw`h-screen w-screen flex flex-col overflow-hidden`">
-                <Header></Header>
-                <div :class="tw`flex flex-1 overflow-hidden`">
-                    <div :class="tw`w-[24%] flex flex-col`">
-                        <RepoList></RepoList>
-                        <Branch></Branch>
-                        <Log></Log>
-                    </div>
-                    <div :class="tw`flex flex-1 flex-col overflow-hidden`">
-                        <Commit></Commit>
-                        <RepoFiles></RepoFiles>
+            <NDialogProvider>
+                <Initial />
+                <div
+                    :class="tw`h-screen w-screen flex flex-col overflow-hidden`"
+                >
+                    <Header></Header>
+                    <div :class="tw`flex flex-1 overflow-hidden`">
+                        <div :class="tw`w-[24%] flex flex-col`">
+                            <RepoList></RepoList>
+                            <Branch></Branch>
+                            <Log></Log>
+                        </div>
+                        <div :class="tw`flex flex-1 flex-col overflow-hidden`">
+                            <Commit></Commit>
+                            <RepoFiles></RepoFiles>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </NDialogProvider>
         </LoadingBar>
     </ConfigProvider>
 </template>

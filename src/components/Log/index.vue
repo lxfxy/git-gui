@@ -1,32 +1,43 @@
-<script setup lang="ts">
-import { tw } from "twind";
-import { logsInfinityQuery, repoLogs, logLimit } from "@/store";
+<script setup lang="tsx">
+import { apply, tw } from "twind";
+import { css } from "twind/css";
+import {
+    logsInfinityQuery,
+    repoLogs,
+    logLimit,
+    curRepoBranch,
+    repoStatus,
+} from "@/store";
 import {
     NButton,
-    NCode,
     NEllipsis,
     NIcon,
-    NInput,
-    NLoadingBarProvider,
     NScrollbar,
     NSpin,
     NTag,
     NTime,
     NTooltip,
-    useLoadingBar,
 } from "naive-ui";
-import { effect, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import {
+    effect,
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
+    reactive,
+    ref,
+} from "vue";
 import { observer, unObserver } from "@/utils/intersectionObserver";
 import { last } from "lodash";
 import Opacity from "../Transiton/Opacity.vue";
 import { setLoadingBarRenderEl } from "../LoadingBar";
 import { ArrowDownSharp } from "@vicons/ionicons5";
+import { CloudUploadOutlined } from "@vicons/material";
+import { gitPush } from "@/utils";
 
 const { fetchNextPage, data, isFetchingNextPage } = logsInfinityQuery();
 const endEl = ref<HTMLDivElement>();
 const scrollbarRef = ref<GetCompSetupReturn<typeof NScrollbar>>();
 const fetchNext = async () => {
-    console.log(123);
     await fetchNextPage();
 };
 onMounted(() => {
@@ -39,37 +50,63 @@ onBeforeUnmount(() => {
 
 <template>
     <div :class="tw`flex-1 flex flex-col overflow-hidden text-color1`">
-        <div :class="tw`title flex gap-x-[6px] items-end`">
-            <div>提交历史</div>
-            <div :class="tw`text-[12px] text-color2`" v-show="false">
-                更新于
-                <NTime
-                    v-if="repoLogs[0]"
-                    :time="new Date(repoLogs[0].Date)"
-                    :to="Date.now()"
-                    type="relative"
-                />
+        <div :class="tw`title flex gap-x-[6px] items-center justify-between`">
+            <div :class="tw` `">
+                <div>提交历史</div>
             </div>
+            <NTooltip>
+                <template #trigger>
+                    <NButton
+                        :disabled="repoStatus.isPushing"
+                        type="success"
+                        quaternary
+                        @click="gitPush({ branch: curRepoBranch! })"
+                    >
+                        <NIcon size="24">
+                            <CloudUploadOutlined />
+                        </NIcon>
+                    </NButton>
+                </template>
+                推送至上游分支
+            </NTooltip>
         </div>
-        <NScrollbar :class="tw`flex-1`" ref="scrollbarRef">
+        <div :class="tw`text-[12px] text-color2`" v-show="false">
+            更新于
+            <NTime
+                v-if="repoLogs[0]"
+                :time="new Date(repoLogs[0].Date)"
+                :to="Date.now()"
+                type="relative"
+            />
+        </div>
+        <NScrollbar :class="tw`flex-1 w-full`" ref="scrollbarRef">
             <div
                 v-for="item in repoLogs"
                 :key="item.Hash"
-                :class="tw`px-[8px] py-[6px]`"
+                :class="tw`px-[8px] py-[6px] w-full`"
             >
-                <NTag
-                    v-if="item.Ref"
-                    type="info"
-                    :class="tw`my-[6px]`"
-                    size="small"
+                <div
+                    :class="
+                        tw`relative inline-block my-[10px] text-[12px] px-[6px]`
+                    "
+                    :style="{
+                        color: `var(--log-ref-color)`,
+                        backgroundColor: `var(--log-ref-bg)`,
+                        border: `1px solid var(--log-ref-color)`,
+                    }"
+                    v-show="item.Ref"
                 >
-                    <div :class="tw`flex items-end gap-x-[4px] relative`">
-                        <code>{{ item.Ref }}</code>
-                        <NIcon :class="tw`right-0 bottom-[-14px] absolute`">
-                            <ArrowDownSharp />
-                        </NIcon>
-                    </div>
-                </NTag>
+                    <code
+                        :class="
+                            tw`break-words whitespace-normal leading-[16px] overflow-hidden`
+                        "
+                    >
+                        {{ item.Ref }}
+                    </code>
+                    <NIcon :class="tw`left-[10px] bottom-[-12px] absolute`">
+                        <ArrowDownSharp />
+                    </NIcon>
+                </div>
                 <div :class="tw`flex gap-x-[10px] items-center`">
                     <NEllipsis :class="tw`max-w-[50%]!`" :tooltip="false">
                         {{ item.Subject }}
