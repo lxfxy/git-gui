@@ -6,7 +6,6 @@ import {
     logLimit,
     curRepoBranch,
     repoStatus,
-    setRepoStatus,
 } from "@/store";
 import {
     NButton,
@@ -32,6 +31,7 @@ import Opacity from "@/components/Transiton/Opacity.vue";
 import { ArrowDownSharp } from "@vicons/ionicons5";
 import { CloudUploadOutlined } from "@vicons/material";
 import { gitPush } from "@/utils";
+import Button from "@/components/Button.vue";
 
 const { fetchNextPage, data, isFetchingNextPage } = logsInfinityQuery();
 const endEl = ref<HTMLDivElement>();
@@ -55,23 +55,20 @@ onBeforeUnmount(() => {
             </div>
             <NTooltip>
                 <template #trigger>
-                    <NButton
+                    <Button
                         :disabled="repoStatus.isPushing"
+                        :loading="repoStatus.isPushing"
                         type="success"
                         quaternary
                         @click="gitPush({ branch: curRepoBranch! })"
                         :class="tw`opacity-100!`"
                     >
-                        <Opacity mode="out-in" appear>
-                            <NIcon size="24" v-if="!repoStatus.isPushing">
+                        <template #icon>
+                            <NIcon size="24">
                                 <CloudUploadOutlined />
                             </NIcon>
-                            <NSpin
-                                v-else
-                                :class="tw`w-[20px] h-[20px] opacity-100`"
-                            ></NSpin>
-                        </Opacity>
-                    </NButton>
+                        </template>
+                    </Button>
                 </template>
                 推送至上游分支
             </NTooltip>

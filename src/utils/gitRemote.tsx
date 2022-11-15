@@ -1,4 +1,4 @@
-import { curRepoDir } from "@/store";
+import { curRepoDir, setRepoStatus } from "@/store";
 import { runCommand } from "./command";
 
 export interface GitRemote {
@@ -28,5 +28,13 @@ export const gitRemote = async (cwd: Cwd = curRepoDir.value) => {
         command.on("close", () => {
             resolve(result);
         });
+    });
+};
+
+export const gitRemoteUpdate = async (cwd: Cwd = curRepoDir.value) => {
+    const command = runCommand("git", ["remote", "update"], { cwd });
+    setRepoStatus({ isRemoteRefetching: true });
+    return await command.execute().finally(() => {
+        setRepoStatus({ isRemoteRefetching: false });
     });
 };

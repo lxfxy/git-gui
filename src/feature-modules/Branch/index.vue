@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import { repoBranchs, changeBranch, setContextmenuBranch } from "@/store";
-import { GitBranch, gitSwitch } from "@/utils";
 import {
+    repoBranchs,
+    changeBranch,
+    setContextmenuBranch,
+    repoStatus,
+} from "@/store";
+import { GitBranch, gitRemoteUpdate } from "@/utils";
+import { CloudSyncOutlined } from "@vicons/material";
+import {
+    NButton,
     NEllipsis,
+    NIcon,
     NPopover,
     NScrollbar,
     NTimeline,
     NTimelineItem,
-    useMessage,
+    NTooltip,
 } from "naive-ui";
 import { tw } from "twind";
-import { onBeforeUnmount, ref } from "vue";
+import { ref } from "vue";
 import BranchOperation from "./BranchOperation.vue";
 
-const message = useMessage();
 const xRef = ref<number>(0);
 const yRef = ref<number>(0);
 const show = ref<boolean>(false);
@@ -32,7 +39,29 @@ document.addEventListener("click", closeBranchOperationPopover);
 
 <template>
     <div :class="tw`flex-1 flex-col flex overflow-hidden`">
-        <div :class="tw`title`">分支信息</div>
+        <div :class="tw`title flex justify-between`">
+            <div>分支信息</div>
+
+            <div>
+                <NTooltip>
+                    <template #trigger>
+                        <NButton
+                            quaternary
+                            type="success"
+                            @click="gitRemoteUpdate()"
+                            :loading="repoStatus.isRemoteRefetching"
+                        >
+                            <template #icon>
+                                <NIcon size="24">
+                                    <CloudSyncOutlined />
+                                </NIcon>
+                            </template>
+                        </NButton>
+                    </template>
+                    同步远程仓库分支
+                </NTooltip>
+            </div>
+        </div>
         <NPopover
             :x="xRef"
             :y="yRef"

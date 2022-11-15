@@ -40,7 +40,7 @@ export const gitPush = async ({
     }
     if (!remote) {
         remote = repoBranchs.value.find((item) => {
-            return item.name === branch.name;
+            return item.remotes && item.branchname === branch.name;
         })!;
     }
     args.push(remote.remote!, `${branch.branchname}:${remote.branchname}`);
