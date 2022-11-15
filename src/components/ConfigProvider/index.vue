@@ -9,8 +9,9 @@ import {
     dateZhCN,
     NDialogProvider,
 } from "naive-ui";
-import { tw } from "twind";
+import { apply, tw } from "twind";
 import { theme, ThemeType } from "@/store/theme";
+import { css } from "twind/css";
 const themes: Record<ThemeType, GlobalTheme> = {
     dark: darkTheme,
     light: lightTheme,
@@ -27,7 +28,7 @@ const themes: Record<ThemeType, GlobalTheme> = {
         :locale="zhCN"
         :date-locale="dateZhCN"
     >
-        <NMessageProvider :container-style="{ paddingTop: `80px` }">
+        <NMessageProvider>
             <NDialogProvider>
                 <slot></slot>
             </NDialogProvider>

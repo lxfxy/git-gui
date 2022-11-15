@@ -1,5 +1,5 @@
 import { curRepoDir, repoBranchs, repoRemoteNames, repoRemotes } from "@/store";
-import { runCommand } from "./command";
+import { commandErrorDialog, runCommand } from "./command";
 import {
     FormInst,
     NAlert,
@@ -10,6 +10,7 @@ import {
     NSpace,
     NButton,
     NTooltip,
+    NTag,
 } from "naive-ui";
 import { tw } from "twind";
 import { effect, reactive, ref, watch } from "vue";
@@ -90,6 +91,47 @@ export const gitBranch = async (cwd: Cwd = curRepoDir.value) => {
     });
 };
 
+interface GitBranchDelOptions {
+    cwd?: Cwd;
+    branch: GitBranch;
+}
+export const gitBranchDel = async ({
+    cwd = curRepoDir.value,
+    branch,
+}: GitBranchDelOptions) => {
+    const command = runCommand("git", ["branch", "-d", branch.name], { cwd });
+    command.on("command-error", commandErrorDialog);
+    return await command.execute();
+};
+
+export const branchDel = async (branch: GitBranch) => {
+    dialog.value?.error({
+        style: { width: "50vw" },
+        positiveText: "确定",
+        negativeText: "取消",
+        onPositiveClick() {
+            gitBranchDel({ branch });
+        },
+        title() {
+            return (
+                <div class={tw`ml-[6px]`}>
+                    真的要删除分支
+                    <code class={tw`mx-[6px]`}>{branch.name}</code>吗？
+                </div>
+            );
+        },
+        content() {
+            return (
+                <>
+                    <NAlert type="info" bordered={false}>
+                        不会影响远程仓库，只是本地仓库将不再有当前删除分支的信息。
+                    </NAlert>
+                </>
+            );
+        },
+    });
+};
+
 export const createRemoteBranch = (
     label: string,
     remote: string
@@ -110,6 +152,7 @@ export interface ChooseBranchOptions {
     showInfo?: boolean;
     // dialog: ReturnType<typeof useDialog>;
     branch: string;
+    force?: boolean;
 }
 export interface ChooseBranchValue {
     branch: GitBranch;
@@ -119,6 +162,7 @@ export const chooseBranch = ({
     // dialog,
     showInfo = true,
     branch,
+    force = false,
 }: ChooseBranchOptions) => {
     return new Promise<ChooseBranchValue>((resolve) => {
         const curBranchs = repoBranchs.value;
@@ -158,9 +202,13 @@ export const chooseBranch = ({
         const dialogReactive = dialog.value!.create({
             title: () => {
                 return (
-                    <>
-                        选择<code>&nbsp;{branch}&nbsp;</code>分支推送的上游分支
-                    </>
+                    <div class={tw`flex gap-x-[10px] items-center`}>
+                        <div>
+                            选择<code>&nbsp;{branch}&nbsp;</code>
+                            分支推送的上游分支
+                        </div>
+                        {force && <NTag type="error">强制推送</NTag>}
+                    </div>
                 );
             },
             showIcon: false,

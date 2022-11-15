@@ -21,7 +21,7 @@ import {
     NTooltip,
     useMessage,
 } from "naive-ui";
-import { tw } from "twind";
+import { apply, tw } from "twind";
 import { css } from "twind/css";
 import { ref, watch } from "vue";
 import Gitmoji from "./Gitmoji.vue";
@@ -111,7 +111,7 @@ const commit = async () => {
     isCommitAmend.value = false;
 };
 const getLastCommitMsg = async () => {
-    amendMsg.value = await getGitLogMsg(repoLogs[0].Hash);
+    amendMsg.value = msg.value = await getGitLogMsg(repoLogs[0].Hash);
     const input = inputCompRef.value?.textareaElRef!;
     input.focus();
 };
@@ -154,11 +154,15 @@ const keyup = (e: KeyboardEvent) => {
                             size="small"
                             @click="getLastCommitMsg"
                             :disabled="!isCommitAmend"
+                            :class="
+                                tw`${css`
+                                    &:hover .n-icon {
+                                        ${apply`rotate-180`}
+                                    }
+                                `}`
+                            "
                         >
-                            <NIcon
-                                size="18px"
-                                :class="tw`transition hover:rotate-180 block`"
-                            >
+                            <NIcon size="18px" :class="tw`transition block`">
                                 <Reload />
                             </NIcon>
                         </NButton>

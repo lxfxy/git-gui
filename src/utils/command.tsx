@@ -34,7 +34,6 @@ export const runCommand = (
     { ...options }: RunCommandOptions = {}
 ) => {
     const command = new Command(shell, args, {
-        encoding: "utf8",
         ...options,
     }) as CustomCommand;
     const stderrLines: string[] = [];
