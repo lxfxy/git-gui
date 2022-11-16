@@ -8,7 +8,7 @@ import {
     ThemeType,
 } from "@/store";
 import { commitAmendRepo, commitRepo } from "@/utils";
-import { getGitLogMsg } from "@/utils/gitLog";
+import { gitLogMsg } from "@/utils/gitLog";
 import { AlertCircleSharp, Reload } from "@vicons/ionicons5";
 import { isEmpty } from "lodash";
 import {
@@ -111,7 +111,7 @@ const commit = async () => {
     isCommitAmend.value = false;
 };
 const getLastCommitMsg = async () => {
-    amendMsg.value = msg.value = await getGitLogMsg(repoLogs[0].Hash);
+    amendMsg.value = msg.value = await gitLogMsg(repoLogs[0].Hash);
     const input = inputCompRef.value?.textareaElRef!;
     input.focus();
 };

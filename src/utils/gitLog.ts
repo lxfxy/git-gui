@@ -88,13 +88,12 @@ export const gitLog = async ({
     // });
 };
 
-export const getGitLogMsg = async (
-    hash: string,
-    cwd: Cwd = curRepoDir.value
-) => {
+export const gitLogMsg = async (hash: string, cwd: Cwd = curRepoDir.value) => {
     const command = runCommand("git", ["log", hash, `-1`, "--format=%B"], {
         cwd,
     });
+    const lines: string[] = [];
+    command.stdout.on("data", (line) => [lines.push(line)]);
     const child = await command.execute();
-    return child.stdout;
+    return lines;
 };

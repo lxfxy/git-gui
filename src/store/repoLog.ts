@@ -1,4 +1,4 @@
-import { loop, sleep, GitLog, gitLog } from "@/utils";
+import { loop, sleep, GitLog, gitLog, gitLogMsg } from "@/utils";
 // import { GitLog, gitLog } from "@/utils/gitLog";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/vue-query";
 import { last } from "lodash";
@@ -8,7 +8,6 @@ import { curRepoBranch } from "./repoBranch";
 
 export const logLimit = 20;
 export const repoLogs = reactive<GitLog[]>([]);
-export const repoLogsMsg = reactive<Record<string, string>>({});
 const refetchs: Set<Function> = new Set();
 export const logsInfinityQuery = () => {
     const query = useInfiniteQuery(
@@ -61,3 +60,10 @@ const getLogs = async () => {
     }
 };
 loop(getLogs, 1000);
+
+export const repoLogsMsg = reactive<Record<string, string[]>>({});
+export const getRepoLogMsg = async (hash: string) => {
+    const msg = await gitLogMsg(hash);
+
+    repoLogsMsg[hash] = msg;
+};

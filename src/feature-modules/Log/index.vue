@@ -32,6 +32,7 @@ import { ArrowDownSharp } from "@vicons/ionicons5";
 import { CloudUploadOutlined } from "@vicons/material";
 import { gitPush } from "@/utils";
 import Button from "@/components/Button.vue";
+import LogPopover from "./LogPopover.vue";
 
 const { fetchNextPage, data, isFetchingNextPage } = logsInfinityQuery();
 const endEl = ref<HTMLDivElement>();
@@ -50,7 +51,7 @@ onBeforeUnmount(() => {
 <template>
     <div :class="tw`flex-1 flex flex-col overflow-hidden text-color1`">
         <div :class="tw`title flex gap-x-[6px] items-center justify-between`">
-            <div :class="tw` `">
+            <div :class="tw``">
                 <div>提交历史</div>
             </div>
             <NTooltip>
@@ -83,48 +84,57 @@ onBeforeUnmount(() => {
             />
         </div>
         <NScrollbar :class="tw`flex-1 w-full`" ref="scrollbarRef">
-            <div
-                v-for="item in repoLogs"
+            <NTooltip
+                v-for="(item, index) in repoLogs"
                 :key="item.Hash"
-                :class="tw`px-[8px] py-[6px] w-full`"
+                placement="right"
             >
-                <div
-                    :class="
-                        tw`relative inline-block mb-[10px] text-[12px] px-[6px]`
-                    "
-                    :style="{
-                        color: `var(--log-ref-color)`,
-                        backgroundColor: `var(--log-ref-bg)`,
-                        border: `1px solid var(--log-ref-color)`,
-                    }"
-                    v-show="item.Ref"
-                >
-                    <code
-                        :class="
-                            tw`break-words whitespace-normal leading-[16px] overflow-hidden`
-                        "
-                    >
-                        {{ item.Ref }}
-                    </code>
-                    <NIcon :class="tw`left-[10px] bottom-[-12px] absolute`">
-                        <ArrowDownSharp />
-                    </NIcon>
-                </div>
-                <div :class="tw`flex gap-x-[10px] items-center`">
-                    <NEllipsis :class="tw`max-w-[50%]!`" :tooltip="false">
-                        {{ item.Subject }}
-                        <!-- {{ Date.now() }} -->
-                    </NEllipsis>
-                    <code :class="tw`text-color2 text-[12px]`">
-                        {{ item.Author }}
-                        <NTime
-                            :time="new Date(item.Date)"
-                            :to="Date.now()"
-                            type="relative"
-                        />
-                    </code>
-                </div>
-            </div>
+                <template #trigger>
+                    <div :class="tw`px-[8px] py-[6px] w-full`">
+                        <div
+                            :class="
+                                tw`relative inline-block mb-[10px] text-[12px] px-[6px]`
+                            "
+                            :style="{
+                                color: `var(--log-ref-color)`,
+                                backgroundColor: `var(--log-ref-bg)`,
+                                border: `1px solid var(--log-ref-color)`,
+                            }"
+                            v-show="item.Ref"
+                        >
+                            <code
+                                :class="
+                                    tw`break-words whitespace-normal leading-[16px] overflow-hidden`
+                                "
+                            >
+                                {{ item.Ref }}
+                            </code>
+                            <NIcon
+                                :class="tw`left-[10px] bottom-[-12px] absolute`"
+                            >
+                                <ArrowDownSharp />
+                            </NIcon>
+                        </div>
+                        <div :class="tw`flex gap-x-[10px] items-center`">
+                            <NEllipsis
+                                :class="tw`max-w-[50%]!`"
+                                :tooltip="false"
+                            >
+                                {{ item.Subject }}
+                            </NEllipsis>
+                            <code :class="tw`text-color2 text-[12px]`">
+                                {{ item.Author }}
+                                <NTime
+                                    :time="new Date(item.Date)"
+                                    :to="Date.now()"
+                                    type="relative"
+                                />
+                            </code>
+                        </div>
+                    </div>
+                </template>
+                <LogPopover :log="item" />
+            </NTooltip>
             <div
                 ref="endEl"
                 @click="fetchNext"
