@@ -10,6 +10,7 @@ export interface CommandEventData {
     progress: ChildProcess;
     stderrLines: string[];
     stdoutLines: string[];
+    command: Command;
 }
 export type CommandEventListener = (
     event: CommandEvent,
@@ -24,6 +25,7 @@ export type CustomCommand = Command & {
     prependListener: CommandEventListener;
     prependOnceListener: CommandEventListener;
     emit(name: CommandEvent, data: CommandEventData): CustomCommand;
+    exec(): Promise<CommandEventData>;
 };
 export interface RunCommandOptions extends SpawnOptions {
     // showStdout?: boolean;
@@ -55,13 +57,33 @@ export const runCommand = (
             progress: child,
             stderrLines,
             stdoutLines,
+            command,
         };
         if (child.code === 0) {
             command.emit("command-success", eventData);
-        } else if (child.code !== 0) {
+        } else {
             command.emit("command-error", eventData);
         }
         return child;
+    };
+    command.exec = async () => {
+        const child = await execute();
+        const eventData: CommandEventData = {
+            shell,
+            args,
+            options,
+            progress: child,
+            stderrLines,
+            stdoutLines,
+            command,
+        };
+        if (child.code === 0) {
+            command.emit("command-success", eventData);
+            return Promise.resolve(eventData);
+        } else {
+            command.emit("command-error", eventData);
+            return Promise.reject(eventData);
+        }
     };
     return command;
 };

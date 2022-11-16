@@ -11,9 +11,18 @@ import {
     NButton,
     NTooltip,
     NTag,
+    FormRules,
 } from "naive-ui";
 import { tw } from "twind";
-import { effect, reactive, ref, watch } from "vue";
+import {
+    computed,
+    defineComponent,
+    effect,
+    FunctionalComponent,
+    reactive,
+    ref,
+    watch,
+} from "vue";
 import { dialog } from "./globalApis";
 import { GitRemotes } from "./gitRemote";
 // import { repoRemoteNames } from "@/store/repoRemote";
@@ -133,15 +142,15 @@ export const branchDel = async (branch: GitBranch) => {
 };
 
 export const createRemoteBranch = (
-    label: string,
+    branchname: string,
     remote: string
 ): GitBranch => {
     return {
         authordate: new Date().toString(),
         authorname: "",
-        branchname: label,
+        branchname,
         current: "",
-        name: `${remote}/${label}`,
+        name: `${remote}/${branchname}`,
         upstream: "",
         remote: remote,
         remotes: true,
@@ -165,38 +174,31 @@ export const chooseBranch = ({
     force = false,
 }: ChooseBranchOptions) => {
     return new Promise<ChooseBranchValue>((resolve) => {
-        const curBranchs = repoBranchs.value;
-        const branchs = ref<GitBranch[]>([]);
-        let branchNames: string[] = [];
-        const remotes = Object.values(repoRemotes.value);
         const formValue = reactive({
-            remote: remotes[0].name,
-            branch: "",
+            remote: null as any as GitBranch,
+            remoteName: "",
+            remoteBranchName: "",
             isUpstream: false,
         });
-        watch(
-            () => formValue.remote,
-            (remote) => {
-                const newBranchs = curBranchs.filter(
-                    (item) => item.remotes && item.remote! === remote
-                );
-                branchs.value = newBranchs;
-                branchNames = newBranchs.map((item) => item.branchname);
-            },
-            { immediate: true }
-        );
         const form = ref<FormInst>();
+        const rules: FormRules = {
+            remoteBranchName: {
+                required: true,
+                message: "请选择上游分支",
+                trigger: ["input", "blur"],
+            },
+            remoteName: {
+                required: true,
+                message: "请选择远程仓库",
+                trigger: ["input", "blur"],
+            },
+        };
         const submit = async () => {
             await form.value?.validate();
-            const branch = branchNames.includes(formValue.branch)
-                ? branchs.value.find(
-                      (item) => item.branchname === formValue.branch
-                  )!
-                : createRemoteBranch(formValue.branch, formValue.remote);
             dialogReactive.destroy();
             resolve({
-                ...formValue,
-                branch,
+                branch: formValue.remote,
+                isUpstream: formValue.isUpstream,
             });
         };
         const dialogReactive = dialog.value!.create({
@@ -230,57 +232,15 @@ export const chooseBranch = ({
                             labelWidth={100}
                             requireMarkPlacement="left"
                             class={tw`mt-[20px]`}
+                            rules={rules}
                         >
-                            <NFormItem
-                                label="远程分支："
-                                showFeedback={false}
-                                required
-                            >
-                                <NFormItem
-                                    path="remote"
-                                    rule={{
-                                        required: true,
-                                        message: "请选择推送源",
-                                        trigger: ["input", "blur"],
-                                    }}
-                                    class={tw`w-[200px]`}
-                                >
-                                    <NSelect
-                                        v-model:value={formValue.remote}
-                                        options={remotes as any}
-                                        labelField="name"
-                                        valueField="name"
-                                        renderLabel={(option: GitRemotes) => {
-                                            return <code>{option.name}</code>;
-                                        }}
-                                    />
-                                </NFormItem>
-
-                                <NFormItem
-                                    path="branch"
-                                    rule={{
-                                        required: true,
-                                        message: "请选择上游分支",
-                                        trigger: ["input", "blur"],
-                                    }}
-                                    class={tw`flex-1`}
-                                >
-                                    <NSelect
-                                        filterable
-                                        clearable
-                                        tag
-                                        v-model:value={formValue.branch}
-                                        options={branchs.value}
-                                        labelField="branchname"
-                                        valueField="branchname"
-                                        renderLabel={(option: GitBranch) => {
-                                            return (
-                                                <code>{option.branchname}</code>
-                                            );
-                                        }}
-                                    />
-                                </NFormItem>
-                            </NFormItem>
+                            <FormItemRemote
+                                v-model:remote={formValue.remote}
+                                v-model:remoteBranchName={
+                                    formValue.remoteBranchName
+                                }
+                                v-model:remoteName={formValue.remoteName}
+                            />
                             <NFormItem>
                                 <NTooltip>
                                     {{
@@ -321,3 +281,93 @@ export const chooseBranch = ({
         });
     });
 };
+
+const FormItemRemote = defineComponent({
+    props: {
+        remote: Object,
+        remoteName: String,
+        remoteBranchName: String,
+    },
+
+    emits: ["update:remote", "update:remoteName", "update:remoteBranchName"],
+    setup(props, context) {
+        const curBranchs = repoBranchs.value;
+        const branchs = ref<GitBranch[]>([]);
+        const remotes = Object.values(repoRemotes.value);
+        let branchnames: string[] = [];
+        context.emit("update:remoteName", remotes[0].name);
+        watch(
+            () => props.remoteName,
+            (remote) => {
+                const newBranchs = curBranchs.filter(
+                    (item) => item.remotes && item.remote! === remote
+                );
+                branchs.value = newBranchs;
+                branchnames = newBranchs.map((item) => item.branchname);
+            },
+            { immediate: true }
+        );
+        watch(
+            () => props.remoteBranchName,
+            (remoteBranchName) => {
+                let remoteInfo: GitBranch;
+                if (
+                    remoteBranchName &&
+                    branchnames.includes(remoteBranchName)
+                ) {
+                    remoteInfo = branchs.value.find((item) => {
+                        return item.branchname === remoteBranchName;
+                    })!;
+                } else {
+                    remoteInfo = createRemoteBranch(
+                        remoteBranchName!,
+                        props.remoteName!
+                    );
+                }
+                context.emit("update:remote", remoteInfo);
+            }
+        );
+
+        return () => {
+            return (
+                <NFormItem label="远程分支：" showFeedback={false} required>
+                    <NFormItem class={tw`w-[200px]`} path="remoteName">
+                        <NSelect
+                            value={props.remoteName}
+                            onUpdateValue={(...args) => {
+                                context.emit("update:remoteName", ...args);
+                            }}
+                            options={remotes as any}
+                            labelField="name"
+                            valueField="name"
+                            renderLabel={(option: GitRemotes) => {
+                                return <code>{option.name}</code>;
+                            }}
+                        />
+                    </NFormItem>
+
+                    <NFormItem class={tw`flex-1`} path="remoteBranchName">
+                        <NSelect
+                            filterable
+                            clearable
+                            tag
+                            value={props.remoteBranchName}
+                            onUpdateValue={(...args) => {
+                                context.emit(
+                                    "update:remoteBranchName",
+                                    ...args
+                                );
+                            }}
+                            options={branchs.value}
+                            labelField="branchname"
+                            valueField="branchname"
+                            renderLabel={(option: GitBranch) => {
+                                return <code>{option.branchname}</code>;
+                            }}
+                        />
+                    </NFormItem>
+                </NFormItem>
+            );
+        };
+    },
+});

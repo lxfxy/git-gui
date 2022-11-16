@@ -34,6 +34,7 @@ const rowClassName: Record<FileStatusType, any> = {
     Modify: genCss("Modify"),
     Delete: genCss("Delete"),
     New: genCss("New"),
+    Renamed: genCss("Renamed"),
 };
 const workTreeTypeOptions = [
     { label: "工作区", value: RepoWorkTree.Workspace },

@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import Button from "@/components/Button.vue";
 import {
     repoBranchs,
     changeBranch,
     setContextmenuBranch,
     repoStatus,
 } from "@/store";
-import { GitBranch, gitRemoteUpdate } from "@/utils";
+import { GitBranch, gitRemoteUpdate, addBranch } from "@/utils";
+import { Add } from "@vicons/ionicons5";
 import { CloudSyncOutlined } from "@vicons/material";
 import {
-    NButton,
+    NButtonGroup,
     NEllipsis,
     NIcon,
     NPopover,
@@ -42,25 +44,38 @@ document.addEventListener("click", closeBranchOperationPopover);
         <div :class="tw`title flex justify-between`">
             <div>分支信息</div>
 
-            <div>
+            <NButtonGroup>
                 <NTooltip>
                     <template #trigger>
-                        <NButton
+                        <Button
                             quaternary
                             type="success"
                             @click="gitRemoteUpdate()"
                             :loading="repoStatus.isRemoteRefetching"
+                            :disabled="repoStatus.isRemoteRefetching"
                         >
                             <template #icon>
                                 <NIcon size="24">
                                     <CloudSyncOutlined />
                                 </NIcon>
                             </template>
-                        </NButton>
+                        </Button>
                     </template>
                     同步远程仓库分支
                 </NTooltip>
-            </div>
+                <NTooltip>
+                    <template #trigger>
+                        <Button quaternary type="success" @click="addBranch()">
+                            <template #icon>
+                                <NIcon size="24">
+                                    <Add />
+                                </NIcon>
+                            </template>
+                        </Button>
+                    </template>
+                    添加分支
+                </NTooltip>
+            </NButtonGroup>
         </div>
         <NPopover
             :x="xRef"
@@ -88,7 +103,7 @@ document.addEventListener("click", closeBranchOperationPopover);
                     "
                     :class="
                         tw`opacity-${
-                            item.current ? `100` : item.heads ? `40 ` : `40`
+                            item.current ? `100` : item.heads ? `60 ` : `60`
                         } ${
                             item.heads
                                 ? `hover:opacity-100 cursor-pointer`

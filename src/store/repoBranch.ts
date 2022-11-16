@@ -8,11 +8,18 @@ import { repoFileStatus, repoHistoryFileStatus } from "./repoFileStatus";
 
 export const [contextmenuBranch, setContextmenuBranch] = useRef<GitBranch>();
 export const repoBranchs = ref<GitBranch[]>([]);
+export const repoHeadsBranchs = ref<GitBranch[]>([]);
+export const repoRemotesBranchs = ref<GitBranch[]>([]);
 export const curRepoBranch = ref<GitBranch>();
 export const getBranch = async () => {
     if (curRepoDir.value) {
         let newCurBranch: GitBranch;
-        [newCurBranch, repoBranchs.value] = await gitBranch();
+        [
+            newCurBranch,
+            repoBranchs.value,
+            repoHeadsBranchs.value,
+            repoRemotesBranchs.value,
+        ] = await gitBranch();
         if (curRepoBranch.value?.name !== newCurBranch.name) {
             curRepoBranch.value = newCurBranch;
         }

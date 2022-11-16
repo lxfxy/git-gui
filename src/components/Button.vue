@@ -12,7 +12,7 @@ const { loading, ...props } = toRefs(propsRaw);
 </script>
 
 <template>
-    <NButton v-bind="(props as ButtonProps)">
+    <NButton v-bind="(props as ButtonProps)" :class="tw`opacity-100!`">
         <Opacity mode="out-in">
             <NSpin
                 v-if="loading"
