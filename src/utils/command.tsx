@@ -47,9 +47,18 @@ export const runCommand = (
         stdoutLines.push(output);
     });
     command.addListener("command-error", (e) => {});
+    const promiseCatch = (reason: any) => {
+        stderrLines.push(reason);
+        return {
+            code: 1,
+            signal: null,
+            stderr: reason,
+            stdout: "",
+        } as ChildProcess;
+    };
     const execute = command.execute.bind(command);
     command.execute = async () => {
-        const child = await execute();
+        const child = await execute().catch(promiseCatch);
         const eventData: CommandEventData = {
             shell,
             args,
@@ -67,7 +76,7 @@ export const runCommand = (
         return child;
     };
     command.exec = async () => {
-        const child = await execute();
+        const child = await execute().catch(promiseCatch);
         const eventData: CommandEventData = {
             shell,
             args,
@@ -77,6 +86,7 @@ export const runCommand = (
             stdoutLines,
             command,
         };
+
         if (child.code === 0) {
             command.emit("command-success", eventData);
             return Promise.resolve(eventData);
@@ -133,7 +143,7 @@ export const commandErrorDialog = ({
         content() {
             return (
                 <>
-                    {stderrLines.map((item) => {
+                    {stderrLines?.map((item) => {
                         return (
                             <code key={item} class={tw`block`}>
                                 {item}

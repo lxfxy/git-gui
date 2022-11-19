@@ -27,7 +27,7 @@ const forcePushTo = () => {
 </script>
 
 <template>
-    <div :class="tw`flex flex-col`">
+    <div :class="tw`flex flex-col w-[160px]`">
         <!-- <code :class="tw`text-center my-[6px]`">
             {{ contextmenuBranch?.name }}
         </code> -->
@@ -58,7 +58,10 @@ const forcePushTo = () => {
                 强制推送至
             </Button>
         </template>
-        <Button.Danger @click="branchDel(contextmenuBranch!)">
+        <Button.Danger
+            @click="branchDel(contextmenuBranch!)"
+            :disabled="curRepoBranch?.name === contextmenuBranch?.name"
+        >
             删除当前分支
         </Button.Danger>
     </div>

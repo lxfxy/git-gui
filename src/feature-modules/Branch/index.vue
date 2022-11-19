@@ -41,9 +41,17 @@ document.addEventListener("click", closeBranchOperationPopover);
 
 <template>
     <div :class="tw`flex-1 flex-col flex overflow-hidden`">
+        <NPopover
+            :x="xRef"
+            :y="yRef"
+            trigger="manual"
+            v-model:show="show"
+            placement="right"
+        >
+            <BranchOperation />
+        </NPopover>
         <div :class="tw`title flex justify-between`">
             <div>分支信息</div>
-
             <NButtonGroup>
                 <NTooltip>
                     <template #trigger>
@@ -77,15 +85,6 @@ document.addEventListener("click", closeBranchOperationPopover);
                 </NTooltip>
             </NButtonGroup>
         </div>
-        <NPopover
-            :x="xRef"
-            :y="yRef"
-            trigger="manual"
-            v-model:show="show"
-            :show-arrow="true"
-        >
-            <BranchOperation />
-        </NPopover>
         <NScrollbar
             :class="tw`flex-1 text-color1 px-[10px]`"
             @scroll="closeBranchOperationPopover"

@@ -1,3 +1,4 @@
+import { useRef } from "@/hooks";
 import { getFilePathLastText, readFileToJSON, writeFile } from "@/utils";
 // import { readFileToJSON, writeFile } from "@/utils/file";
 import { open } from "@tauri-apps/api/dialog";
@@ -37,6 +38,7 @@ readFileToJSON<Record<string, RepoInfo>>("data/repos.json")
             writeFile("data/repos.json", JSON.stringify(repos));
         });
     });
+
 export const getLocalRepo = async () => {
     const dirs = (await open({
         directory: true,
@@ -51,3 +53,5 @@ export const getLocalRepo = async () => {
         };
     }
 };
+
+export const [contextmenuRepo, setContextmenuRepo] = useRef<RepoInfo>();

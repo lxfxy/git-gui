@@ -111,7 +111,7 @@ const commit = async () => {
     isCommitAmend.value = false;
 };
 const getLastCommitMsg = async () => {
-    amendMsg.value = msg.value = await gitLogMsg(repoLogs[0].Hash);
+    amendMsg.value = msg.value = (await gitLogMsg(repoLogs[0].Hash)).join("\n");
     const input = inputCompRef.value?.textareaElRef!;
     input.focus();
 };
@@ -123,6 +123,7 @@ const keydown = (e: KeyboardEvent) => {
 const keyup = (e: KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
         commit();
+        e.preventDefault();
     }
 };
 </script>

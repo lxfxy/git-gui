@@ -9,6 +9,7 @@ import {
 import { repoWorkTreeInfo } from "@/store";
 import {
     NButton,
+    NCode,
     NDataTable,
     NPopselect,
     NSpace,
@@ -105,7 +106,7 @@ const tableClassName = css`
         <div v-else :class="tw`title h-[50px]`">未选择仓库</div>
         <NDataTable
             :bordered="true"
-            :columns="columns"
+            :columns="(columns as any)"
             :data="tableData"
             :max-height="'100%'"
             :row-class-name="(data: FileStatus) => {
@@ -113,5 +114,12 @@ const tableClassName = css`
             }"
             size="small"
         ></NDataTable>
+        <!-- <NCode
+            contenteditable
+            @input="input"
+            :class="tw`h-[200px]`"
+            :code="code"
+            language="js"
+        /> -->
     </div>
 </template>

@@ -12,6 +12,9 @@ import {
 import { apply, tw } from "twind";
 import { theme, ThemeType } from "@/store/theme";
 import { css } from "twind/css";
+import hljs from "highlight.js/lib/core";
+import javascript from "highlight.js/lib/languages/javascript";
+hljs.registerLanguage("js", javascript);
 const themes: Record<ThemeType, GlobalTheme> = {
     dark: darkTheme,
     light: lightTheme,
@@ -27,6 +30,7 @@ const themes: Record<ThemeType, GlobalTheme> = {
         :theme="themes[theme]"
         :locale="zhCN"
         :date-locale="dateZhCN"
+        :hljs="hljs"
     >
         <NMessageProvider>
             <NDialogProvider>
