@@ -62,6 +62,7 @@ export const addBranch = ({
                         loadings.branchName = false;
                     });
                 },
+                trigger: ["input", "blur"],
             },
             {
                 validator(_rule, value) {
@@ -73,6 +74,7 @@ export const addBranch = ({
                     }
                     return true;
                 },
+                trigger: ["input", "blur"],
             },
         ],
     };
@@ -116,6 +118,7 @@ export const addBranch = ({
                             placeholder="请输入新的分支名"
                             clearable
                             loading={loadings.branchName}
+                            autofocus
                         ></NInput>
                     </NFormItem>
                     <FormItemRemoteBranch

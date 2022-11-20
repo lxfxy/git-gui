@@ -36,3 +36,4 @@ export * from "./gitSwitch";
 export * from "./gitPush";
 export * from "./gitRemote";
 export * from "./gitLog";
+export * from "./gitRebase";

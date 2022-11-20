@@ -1,7 +1,13 @@
 <script setup lang="tsx">
 import Button from "./Button";
 import { contextmenuBranch, changeBranch, curRepoBranch } from "@/store";
-import { branchDel, gitPush } from "@/utils";
+import {
+    addBranch,
+    branchDel,
+    gitPush,
+    gitRebase,
+    chooseBranchRebase,
+} from "@/utils";
 import { NTooltip } from "naive-ui";
 import { tw } from "twind";
 import { computed } from "vue";
@@ -24,21 +30,36 @@ const forcePushTo = () => {
         chooseBranchs: true,
     });
 };
+const rebase = () => {
+    gitRebase({
+        target: curRepoBranch.value!.name,
+        branch: contextmenuBranch.value!.name,
+    });
+};
+const reabseTo = () => {
+    chooseBranchRebase({
+        branch: contextmenuBranch.value!,
+    });
+};
+const contextBranchIsCurrent = computed(() => {
+    return contextmenuBranch.value?.name === curRepoBranch.value?.name;
+});
 </script>
 
 <template>
-    <div :class="tw`flex flex-col w-[160px]`">
+    <div :class="tw`flex flex-col`">
         <!-- <code :class="tw`text-center my-[6px]`">
             {{ contextmenuBranch?.name }}
         </code> -->
         <template v-if="!isRemoteBranch">
+            <Button :disabled="contextBranchIsCurrent" @click="rebase">
+                将<code>HEAD</code>变基至此分支
+            </Button>
+            <Button @click="reabseTo"> 将此分支变基至 </Button>
             <NTooltip>
                 <template #trigger>
                     <Button
-                        :disabled="
-                            isRemoteBranch ||
-                            curRepoBranch?.name === contextmenuBranch?.name
-                        "
+                        :disabled="isRemoteBranch || contextBranchIsCurrent"
                         @click="changeBranch(contextmenuBranch!)"
                     >
                         切换到当前分支
@@ -60,9 +81,18 @@ const forcePushTo = () => {
         </template>
         <Button.Danger
             @click="branchDel(contextmenuBranch!)"
-            :disabled="curRepoBranch?.name === contextmenuBranch?.name"
+            :disabled="contextBranchIsCurrent"
         >
             删除当前分支
         </Button.Danger>
+        <Button.Danger
+            @click="branchDel(contextmenuBranch!, true)"
+            :disabled="contextBranchIsCurrent"
+        >
+            强制删除当前分支
+        </Button.Danger>
+        <Button @click="addBranch({ anchor: contextmenuBranch!.name })">
+            基于此分支创建新分支
+        </Button>
     </div>
 </template>

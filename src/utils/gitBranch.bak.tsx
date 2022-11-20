@@ -103,12 +103,18 @@ export const gitBranch = async (cwd: Cwd = curRepoDir.value) => {
 interface GitBranchDelOptions {
     cwd?: Cwd;
     branch: GitBranch;
+    force?: boolean;
 }
 export const gitBranchDel = async ({
     cwd = curRepoDir.value,
     branch,
+    force = false,
 }: GitBranchDelOptions) => {
-    const command = runCommand("git", ["branch", "-d", branch.name], { cwd });
+    const args = ["branch", "-d", branch.name];
+    if (force) {
+        args.push("-f");
+    }
+    const command = runCommand("git", args, { cwd });
     command.on("command-error", commandErrorDialog);
     return await command.execute();
 };

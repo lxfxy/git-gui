@@ -91,12 +91,21 @@ export const gitBranch = async (cwd: Cwd = curRepoDir.value) => {
 export interface GitBranchDelOptions {
     cwd?: Cwd;
     branch: GitBranch;
+    force?: boolean;
 }
 export const gitBranchDel = async ({
     cwd = curRepoDir.value,
     branch,
+    force = false,
 }: GitBranchDelOptions) => {
-    const command = runCommand("git", ["branch", "-d", branch.name], { cwd });
+    const args = ["branch", "-d", branch.name];
+    if (force) {
+        args.push("-f");
+    }
+    if (branch.remotes) {
+        args.push("-r");
+    }
+    const command = runCommand("git", args, { cwd });
     command.on("command-error", commandErrorDialog);
     return await command.execute();
 };
@@ -176,18 +185,18 @@ export const createHeadsBranch = (
     };
 };
 
-export const branchDel = async (branch: GitBranch) => {
+export const branchDel = async (branch: GitBranch, force: boolean = false) => {
     dialog.value?.error({
         style: { width: "50vw" },
         positiveText: "确定",
         negativeText: "取消",
         onPositiveClick() {
-            gitBranchDel({ branch });
+            gitBranchDel({ branch, force });
         },
         title() {
             return (
                 <div class={tw`ml-[6px]`}>
-                    真的要删除分支
+                    是否继续要{force ? "强制" : ""}删除分支
                     <code class={tw`mx-[6px]`}>{branch.name}</code>吗？
                 </div>
             );
