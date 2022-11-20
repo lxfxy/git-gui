@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { contextmenuRepo } from "@/store";
+import { contextmenuRepo, setCurRepo } from "@/store";
 import { commandErrorDialog, runCommand } from "@/utils";
 import { message } from "@/utils/globalApis";
 import { writeText } from "@tauri-apps/api/clipboard";
@@ -27,6 +27,7 @@ const copyRepoDir = async () => {
 
 <template>
     <div :class="tw`flex flex-col w-[200px]`">
+        <Button @click="setCurRepo(contextmenuRepo!)">切换至此仓库</Button>
         <Button @click="vscodeOpen">
             通过&nbsp;<code>vscode</code>&nbsp;打开此目录
         </Button>

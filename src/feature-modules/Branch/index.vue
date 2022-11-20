@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Button from "@/components/Button.vue";
+import { useContextmenu } from "@/hooks";
 import {
     repoBranchs,
     changeBranch,
@@ -20,30 +21,23 @@ import {
     NTooltip,
 } from "naive-ui";
 import { tw } from "twind";
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 import BranchOperation from "./BranchOperation.vue";
 
-const xRef = ref<number>(0);
-const yRef = ref<number>(0);
-const show = ref<boolean>(false);
+const container = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
+const { x, y, show, open, close } = useContextmenu({ container });
 const contextmenu = (branch: GitBranch, e: MouseEvent) => {
     e.preventDefault();
     setContextmenuBranch(branch);
-    show.value = true;
-    xRef.value = e.clientX;
-    yRef.value = e.clientY;
+    open();
 };
-const closeBranchOperationPopover = () => {
-    show.value = false;
-};
-document.addEventListener("click", closeBranchOperationPopover);
 </script>
 
 <template>
-    <div :class="tw`flex-1 flex-col flex overflow-hidden`">
+    <div :class="tw`flex-1 flex-col flex overflow-hidden`" ref="container">
         <NPopover
-            :x="xRef"
-            :y="yRef"
+            :x="x"
+            :y="y"
             trigger="manual"
             v-model:show="show"
             placement="right"
@@ -85,10 +79,7 @@ document.addEventListener("click", closeBranchOperationPopover);
                 </NTooltip>
             </NButtonGroup>
         </div>
-        <NScrollbar
-            :class="tw`flex-1 text-color1 px-[10px]`"
-            @scroll="closeBranchOperationPopover"
-        >
+        <NScrollbar :class="tw`flex-1 text-color1 px-[10px]`" @scroll="close">
             <NTimeline :class="tw`py-[6px]`">
                 <NTimelineItem
                     v-for="item in repoBranchs"

@@ -11,11 +11,13 @@ import { gitBranchCreate } from "./gitBranch";
 export interface GitRemote {
     url: string;
     name: string;
+    type: string;
 }
 export interface GitRemotes {
     name: string;
     fetch: GitRemote;
     push: GitRemote;
+    urls: GitRemote[];
 }
 export const gitRemote = async (cwd: Cwd = curRepoDir.value) => {
     const command = runCommand("git", ["remote", "-v"], { cwd });
@@ -26,11 +28,14 @@ export const gitRemote = async (cwd: Cwd = curRepoDir.value) => {
             const [, name, url, type] = /(.+?)\s+(.+?)\s\((\w+)\)/.exec(
                 remoteInfo
             )!;
-            result[name] = result[name] || { name };
-            result[name][type as "fetch" | "push"] = {
+            const info = {
                 name,
                 url,
+                type,
             };
+            result[name] = result[name] || { name, urls: [] };
+            result[name][type as "fetch" | "push"] = info;
+            result[name].urls.push(info);
         });
         command.on("close", () => {
             resolve(result);

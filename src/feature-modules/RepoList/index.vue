@@ -4,48 +4,40 @@ import {
     RepoInfo,
     repos,
     setContextmenuRepo,
-} from "@/store/repo";
-import { NButton, NIcon, NPopover, NScrollbar, useMessage } from "naive-ui";
+    allRemotes,
+    curRepo,
+    setCurRepo,
+} from "@/store";
+import {
+    NButton,
+    NButtonGroup,
+    NCollapse,
+    NCollapseItem,
+    NIcon,
+    NPopover,
+    NScrollbar,
+    NTooltip,
+    useMessage,
+} from "naive-ui";
 import { PlaylistAddTwotone } from "@vicons/material";
-import { tw } from "twind";
-import { curRepo, setCurRepo } from "@/store/repo";
-import { CopyOutline } from "@vicons/ionicons5";
-import { writeText } from "@tauri-apps/api/clipboard";
-import { ref } from "vue";
+import { apply, tw } from "twind";
+import { Ref, ref } from "vue";
 import Operation from "./Operation.vue";
-const message = useMessage();
-const copyRepoName = async (name: string) => {
-    try {
-        await writeText(name);
-        message.success(`${name} 复制成功`);
-    } catch (error) {
-        message.error(`${name} 复制失败`);
-    }
-};
-const show = ref(false);
-const xRef = ref(0);
-const yRef = ref(0);
-const contextmenu = (repo: RepoInfo, e: MouseEvent) => {
+import { useContextmenu } from "@/hooks";
+import { css } from "twind/css";
+import { Add, CheckmarkDoneSharp } from "@vicons/ionicons5";
+const container = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
+const { x, y, show, open } = useContextmenu({ container });
+const contextmenu = (item: RepoInfo, e: MouseEvent) => {
     e.preventDefault();
-    xRef.value = e.clientX;
-    yRef.value = e.clientY;
-    setContextmenuRepo(repo);
-    show.value = true;
+    setContextmenuRepo(item);
+    open();
 };
-window.addEventListener("click", () => {
-    show.value = false;
-});
 </script>
 
 <template>
-    <div :class="tw`flex flex-col flex-1`">
-        <NPopover
-            trigger="manual"
-            :x="xRef"
-            :y="yRef"
-            :show="show"
-            placement="right"
-        >
+    <div :class="tw`flex flex-col flex-1 overflow-hidden`" ref="container">
+        <NPopover trigger="manual" :x="x" :y="y" :show="show" placement="right">
             <Operation />
         </NPopover>
         <div :class="tw`title flex justify-between items-center`">
@@ -65,28 +57,110 @@ window.addEventListener("click", () => {
         <NScrollbar
             :class="tw`text-color1 transition-color select-none flex-1`"
         >
-            <div
-                v-for="(item, key) in repos"
-                :key="key"
-                :class="
-                    tw`hover:bg-bgColor1 transition-color p-[10px] cursor-pointer`
-                "
-                @dblclick="setCurRepo(item)"
-                @contextmenu="contextmenu(item, $event)"
-            >
-                <span
-                    :class="
-                        tw`opacity-${
-                            curRepo?.dir === item.dir ? `100` : `0`
-                        } transition-opacity text-[18px]`
-                    "
+            <NCollapse>
+                <NCollapseItem
+                    v-for="(repo, key) in repos"
+                    :key="key"
+                    :class="[
+                        tw`p-[10px] cursor-pointer mt-0!`,
+                        tw`${css`
+                            transition: background-color 0.6s !important;
+
+                            .n-collapse-item__header {
+                                padding-top: 0 !important;
+                                position: sticky !important;
+                                top: 0px;
+                                left: 0px;
+                                transition: background-color 0.6s !important;
+                                background-color: var(--bg-color2);
+                            }
+
+                            &:hover,
+                            &:hover .n-collapse-item__header,
+                            &.active,
+                            &.active .n-collapse-item__header {
+                                background-color: var(--bg-color) !important;
+                                .n-collapse-item__header-extra {
+                                    ${apply`opacity-100`}
+                                }
+                            }
+
+                            .n-collapse-item__header-extra {
+                                ${apply`opacity-0`}
+                                transition: opacity .3s !important;
+                            }
+                        `}`,
+                        curRepo?.dir === repo.dir
+                            ? tw`bg-bgColor1` + ` active`
+                            : ``,
+                    ]"
+                    @contextmenu="contextmenu(repo, $event)"
                 >
-                    ✅
-                </span>
-                <span>
-                    {{ item.title }}
-                </span>
-            </div>
+                    <div
+                        v-for="remote in allRemotes[repo.dir]"
+                        :key="remote.name"
+                        :class="tw`flex flex-col overflow-hidden`"
+                    >
+                        <div
+                            :class="
+                                tw`center gap-x-[10px] p-[10px] transition hover:bg-bgColor2`
+                            "
+                            v-for="item in remote.urls"
+                            :key="item.type"
+                        >
+                            <div :class="tw`flex flex-col gap-y-[6px]`">
+                                <code>{{ item.name }}</code>
+                                <code>({{ item.type }})</code>
+                            </div>
+                            <code
+                                :class="
+                                    tw`flex-1 whitespace-normal break-words`
+                                "
+                            >
+                                {{ item.url }}
+                            </code>
+                        </div>
+                    </div>
+                    <template #header>
+                        <div :class="tw`ml-[4px]`">
+                            {{ repo.title }}
+                        </div>
+                    </template>
+                    <template #header-extra>
+                        <NButtonGroup>
+                            <NTooltip>
+                                <template #trigger>
+                                    <NButton
+                                        quaternary
+                                        type="success"
+                                        @click.stop="setCurRepo(repo)"
+                                        :disabled="curRepo?.dir === repo.dir"
+                                    >
+                                        <NIcon size="20">
+                                            <CheckmarkDoneSharp />
+                                        </NIcon>
+                                    </NButton>
+                                </template>
+                                切换至当前仓库
+                            </NTooltip>
+                            <NTooltip>
+                                <template #trigger>
+                                    <NButton
+                                        quaternary
+                                        type="success"
+                                        @click.stop
+                                    >
+                                        <NIcon size="24">
+                                            <Add />
+                                        </NIcon>
+                                    </NButton>
+                                </template>
+                                添加源
+                            </NTooltip>
+                        </NButtonGroup>
+                    </template>
+                </NCollapseItem>
+            </NCollapse>
         </NScrollbar>
     </div>
 </template>
