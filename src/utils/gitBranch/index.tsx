@@ -24,6 +24,7 @@ export type GitBranch = typeof formatMap & {
      * 不包含 remote 的名字
      */
     branchname: string;
+    updateDate?: string;
 };
 export const gitBranch = async (cwd: Cwd = curRepoDir.value) => {
     const format = `${formatValues
@@ -81,7 +82,16 @@ export const gitBranch = async (cwd: Cwd = curRepoDir.value) => {
                     chunks = [];
                 }
             });
-            command.on("close", () => {
+            command.on("close", async () => {
+                for (const remoteBranch of remotesBranchs) {
+                    const command = runCommand(
+                        "git",
+                        ["log", `${remoteBranch.name}`, "-1", "--format=%aI"],
+                        { cwd: curRepoDir.value }
+                    );
+                    const data = await command.exec();
+                    remoteBranch.updateDate = data.stdoutLines[0];
+                }
                 resolve([activeBranch, branchs, headsBranchs, remotesBranchs]);
             });
         }

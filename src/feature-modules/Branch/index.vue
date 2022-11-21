@@ -16,6 +16,7 @@ import {
     NIcon,
     NPopover,
     NScrollbar,
+    NTime,
     NTimeline,
     NTimelineItem,
     NTooltip,
@@ -109,6 +110,15 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
                             -> {{ item.upstream }}
                         </code>
                     </NEllipsis>
+                    <span :class="tw`text-[12px] ml-[4px]`">
+                        <NTime
+                            v-if="item.updateDate"
+                            type="relative"
+                            :time="new Date(item.updateDate)"
+                            :to="new Date()"
+                        >
+                        </NTime>
+                    </span>
                 </NTimelineItem>
             </NTimeline>
         </NScrollbar>

@@ -11,6 +11,7 @@ import {
 import { NTooltip } from "naive-ui";
 import { tw } from "twind";
 import { computed } from "vue";
+import { gitFetch } from "@/utils/gitFetch";
 const isRemoteBranch = computed(() => {
     return !!contextmenuBranch.value?.remotes;
 });
@@ -41,6 +42,15 @@ const reabseTo = () => {
         branch: contextmenuBranch.value!,
     });
 };
+const rebaseToHEAD = () => {
+    gitRebase({
+        target: contextmenuBranch.value!.name,
+        branch: curRepoBranch.value!.name,
+    });
+};
+const fetch = async () => {
+    await gitFetch({ remoteBranch: contextmenuBranch.value! });
+};
 const contextBranchIsCurrent = computed(() => {
     return contextmenuBranch.value?.name === curRepoBranch.value?.name;
 });
@@ -51,11 +61,19 @@ const contextBranchIsCurrent = computed(() => {
         <!-- <code :class="tw`text-center my-[6px]`">
             {{ contextmenuBranch?.name }}
         </code> -->
-        <template v-if="!isRemoteBranch">
+
+        <Button @click="reabseTo"> 将此分支变基至 </Button>
+        <Button @click="rebaseToHEAD" :disabled="contextBranchIsCurrent">
+            将此分支变基至<code>HEAD</code>
+        </Button>
+
+        <template v-if="isRemoteBranch">
+            <Button @click="fetch"> 拉取此远程分支的信息 </Button>
+        </template>
+        <template v-else>
             <Button :disabled="contextBranchIsCurrent" @click="rebase">
                 将<code>HEAD</code>变基至此分支
             </Button>
-            <Button @click="reabseTo"> 将此分支变基至 </Button>
             <NTooltip>
                 <template #trigger>
                     <Button
