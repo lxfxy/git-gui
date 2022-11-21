@@ -101,13 +101,13 @@ const contextBranchIsCurrent = computed(() => {
             @click="branchDel(contextmenuBranch!)"
             :disabled="contextBranchIsCurrent"
         >
-            删除当前分支
+            删除此分支
         </Button.Danger>
         <Button.Danger
             @click="branchDel(contextmenuBranch!, true)"
             :disabled="contextBranchIsCurrent"
         >
-            强制删除当前分支
+            强制删除此分支
         </Button.Danger>
         <Button @click="addBranch({ anchor: contextmenuBranch!.name })">
             基于此分支创建新分支

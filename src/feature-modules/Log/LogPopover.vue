@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { writeText } from "@tauri-apps/api/clipboard";
 import { getRepoLogMsg, repoLogsMsg } from "@/store";
-import { GitLog } from "@/utils";
+import { addBranch, GitLog } from "@/utils";
 import { Copy } from "@vicons/ionicons5";
 import { NButton, NIcon, NTime, NTooltip } from "naive-ui";
 import { tw } from "twind";
@@ -64,5 +64,13 @@ const copyHash = async () => {
             v-html="repoLogsMsg[hash]?.join(`<br />`)"
             :class="tw`ml-[10px]`"
         ></div>
+        <NButton
+            type="success"
+            ghost
+            @click="addBranch({ anchor: log.Hash })"
+            :class="tw`mt-[6px]`"
+        >
+            根据此提交历史创建分支
+        </NButton>
     </div>
 </template>
