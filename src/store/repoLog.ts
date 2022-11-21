@@ -1,4 +1,11 @@
-import { loop, sleep, GitLog, gitLog, gitLogMsg } from "@/utils";
+import {
+    loop,
+    sleep,
+    GitLog,
+    gitLog,
+    gitLogMsg,
+    repoChangeWatch,
+} from "@/utils";
 // import { GitLog, gitLog } from "@/utils/gitLog";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/vue-query";
 import { last } from "lodash";
@@ -59,7 +66,8 @@ const getLogs = async () => {
         await refetchLogs();
     }
 };
-loop(getLogs, 1000);
+// loop(getLogs, 1000);
+repoChangeWatch(getLogs);
 
 export const repoLogsMsg = reactive<Record<string, string[]>>({});
 export const getRepoLogMsg = async (hash: string) => {

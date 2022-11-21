@@ -1,4 +1,7 @@
+import { curRepoDir } from "@/store";
 import { sep } from "@tauri-apps/api/path";
+import { watch } from "tauri-plugin-fs-watch-api";
+import { effect } from "vue";
 /**
  * 获取一个路径的最后的名字
  */
@@ -19,15 +22,6 @@ export const sleep = (timer: number) => {
     });
 };
 
-export const loop = (fn: Function, timer = 1000) => {
-    const scheduler = async () => {
-        await fn();
-        await sleep(timer);
-        requestIdleCallback(scheduler);
-    };
-    requestIdleCallback(scheduler);
-};
-
 export * from "./command";
 export * from "./file";
 export * from "./gitStatus";
@@ -37,3 +31,4 @@ export * from "./gitPush";
 export * from "./gitRemote";
 export * from "./gitLog";
 export * from "./gitRebase";
+export * from "./loop";

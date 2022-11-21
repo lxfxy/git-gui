@@ -4,6 +4,7 @@ import {
     FileStatus,
     getRepoFileStatus,
     RepoWorkTree,
+    repoChangeWatch,
 } from "@/utils";
 // import { FileStatus, getRepoFileStatus, RepoWorkTree } from "@/utils/gitStatus";
 import { effect, ref } from "vue";
@@ -22,5 +23,6 @@ const readRepoFilesStatus = async () => {
             await getRepoFileStatus();
     }
 };
-loop(readRepoFilesStatus);
+// loop(readRepoFilesStatus);
+repoChangeWatch(readRepoFilesStatus);
 effect(readRepoFilesStatus);

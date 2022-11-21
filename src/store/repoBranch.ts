@@ -1,5 +1,12 @@
 import { useRef } from "@/hooks";
-import { GitBranch, gitBranch, gitSwitch, loop, sleep } from "@/utils";
+import {
+    GitBranch,
+    gitBranch,
+    gitSwitch,
+    loop,
+    repoChangeWatch,
+    sleep,
+} from "@/utils";
 import { message } from "@/utils/globalApis";
 import { isEmpty } from "lodash";
 import { effect, reactive, ref } from "vue";
@@ -25,7 +32,8 @@ export const getBranch = async () => {
         }
     }
 };
-loop(getBranch);
+// loop(getBranch);
+repoChangeWatch(getBranch);
 effect(getBranch);
 
 export const changeBranch = async (branchInfo: GitBranch) => {

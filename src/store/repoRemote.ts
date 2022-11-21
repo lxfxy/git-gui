@@ -1,4 +1,10 @@
-import { loop, gitRemote, GitRemote, GitRemotes } from "@/utils";
+import {
+    loop,
+    gitRemote,
+    GitRemote,
+    GitRemotes,
+    repoChangeWatch,
+} from "@/utils";
 // import { gitRemote, GitRemote } from "@/utils";
 import { effect, reactive, ref } from "vue";
 import { curRepoDir, repos } from "./repo";
@@ -23,5 +29,6 @@ export const getAllRemotes = async () => {
     }
     allRemotes.value = result;
 };
-loop(getAllRemotes);
+// loop(getAllRemotes);
+repoChangeWatch(getAllRemotes);
 effect(getAllRemotes);
