@@ -31,4 +31,5 @@ export * from "./gitPush";
 export * from "./gitRemote";
 export * from "./gitLog";
 export * from "./gitRebase";
+export * from "./gitPull";
 export * from "./loop";

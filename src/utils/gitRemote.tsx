@@ -49,20 +49,20 @@ export const gitRemoteUpdate = async (cwd: Cwd = curRepoDir.value) => {
     const child = await command.execute();
     const newRemotes = await gitRemote();
     const curHeadsBranchs = repoHeadsBranchs.value;
-    for (const remoteBranch of repoRemotesBranchs.value) {
-        if (remoteBranch.branchname === "HEAD") {
-            continue;
-        }
-        const isExits = curHeadsBranchs.find((item) => {
-            return item.branchname === remoteBranch.branchname;
-        });
-        if (isExits) {
-        } else {
-            await gitBranchCreate({
-                branchName: remoteBranch.branchname,
-                anchor: remoteBranch.name,
-            });
-        }
-    }
+    // for (const remoteBranch of repoRemotesBranchs.value) {
+    //     if (remoteBranch.branchname === "HEAD") {
+    //         continue;
+    //     }
+    //     const isExits = curHeadsBranchs.find((item) => {
+    //         return item.branchname === remoteBranch.branchname;
+    //     });
+    //     if (isExits) {
+    //     } else {
+    //         await gitBranchCreate({
+    //             branchName: remoteBranch.branchname,
+    //             anchor: remoteBranch.name,
+    //         });
+    //     }
+    // }
     setRepoStatus({ isRemoteRefetching: false });
 };

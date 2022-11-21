@@ -128,6 +128,7 @@ export const commandErrorDialog = ({
     stderrLines,
     shell,
     args,
+    options,
 }: CommandEventData) => {
     dialog.value?.error({
         style: { width: "50vw" },
@@ -143,6 +144,7 @@ export const commandErrorDialog = ({
         content() {
             return (
                 <>
+                    <code class={tw`mb-[6px]`}>{options.cwd}</code>
                     {stderrLines?.map((item) => {
                         return (
                             <code key={item} class={tw`block`}>
