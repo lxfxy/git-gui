@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { contextmenuRepo, setCurRepo } from "@/store";
+import { contextmenuRepo, curRepo, delLocalRepo, setCurRepo } from "@/store";
 import { commandErrorDialog, runCommand } from "@/utils";
 import { message } from "@/utils/globalApis";
 import { writeText } from "@tauri-apps/api/clipboard";
 import { open } from "@tauri-apps/api/shell";
 import { tw } from "twind";
+import { computed } from "vue";
 import Button from "../Branch/Button";
 const vscodeOpen = async () => {
     const command = runCommand("code", [contextmenuRepo.value!.dir]);
@@ -23,6 +24,9 @@ const copyRepoDir = async () => {
     await writeText(contextmenuRepo.value!.dir);
     message.value?.success("复制仓库目录路径成功");
 };
+const contextmenuRepoIsCurrent = computed(() => {
+    return contextmenuRepo.value! === curRepo.value!;
+});
 </script>
 
 <template>
@@ -34,5 +38,11 @@ const copyRepoDir = async () => {
         <Button @click="openDir"> 通过资源管理器打开此目录 </Button>
         <Button @click="copyRepoName"> 复制仓库名 </Button>
         <Button @click="copyRepoDir"> 复制仓库目录路径 </Button>
+        <Button.Danger
+            @click="delLocalRepo([contextmenuRepo!.dir])"
+            :disabled="contextmenuRepoIsCurrent"
+        >
+            移除此仓库
+        </Button.Danger>
     </div>
 </template>

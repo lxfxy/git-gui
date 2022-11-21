@@ -2,6 +2,7 @@ import { useRef } from "@/hooks";
 import { getFilePathLastText, readFileToJSON, writeFile } from "@/utils";
 // import { readFileToJSON, writeFile } from "@/utils/file";
 import { open } from "@tauri-apps/api/dialog";
+import { listen } from "@tauri-apps/api/event";
 import { dirname } from "@tauri-apps/api/path";
 import { isEmpty } from "lodash";
 import { computed, effect, reactive, ref } from "vue";
@@ -23,6 +24,39 @@ export const setCurRepo = (repoInfo: RepoInfo) => {
 export const curRepoDir = computed(() => {
     return curRepo.value?.dir;
 });
+
+listen<string[]>("tauri://file-drop", (e) => {
+    addLocalRepo(e.payload);
+});
+export const addLocalRepo = (dirs: string[]) => {
+    for (let dir of dirs) {
+        if (repos[dir]) {
+            continue;
+        }
+        repos[dir] = {
+            dir,
+            title: getFilePathLastText(dir),
+            isCurrent: false,
+        };
+    }
+};
+export const delLocalRepo = (dirs: string[]) => {
+    for (const dir of dirs) {
+        if (repos[dir]) {
+            delete repos[dir];
+        }
+    }
+};
+
+export const getLocalRepo = async () => {
+    const dirs = (await open({
+        directory: true,
+        multiple: true,
+        title: "选择仓库",
+    })) as string[];
+    addLocalRepo(dirs);
+};
+
 readFileToJSON<Record<string, RepoInfo>>("data/repos.json")
     .then((res) => {
         if (!isEmpty(res)) {
@@ -38,20 +72,5 @@ readFileToJSON<Record<string, RepoInfo>>("data/repos.json")
             writeFile("data/repos.json", JSON.stringify(repos));
         });
     });
-
-export const getLocalRepo = async () => {
-    const dirs = (await open({
-        directory: true,
-        multiple: true,
-        title: "选择仓库",
-    })) as string;
-    for (let dir of dirs) {
-        repos[dir] = {
-            dir,
-            title: getFilePathLastText(dir),
-            isCurrent: false,
-        };
-    }
-};
 
 export const [contextmenuRepo, setContextmenuRepo] = useRef<RepoInfo>();
