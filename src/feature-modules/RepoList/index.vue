@@ -28,7 +28,7 @@ import { useContextmenu } from "@/hooks";
 import { css } from "twind/css";
 import { Add, CheckmarkDoneSharp } from "@vicons/ionicons5";
 import RemoteOperation from "./RemoteOperation.vue";
-import { addRemote } from "@/utils";
+import { addRemote, Clone } from "@/utils";
 const container = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
 const { x, y, show, open, close } = useContextmenu({
     container,
@@ -49,17 +49,22 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
         </NPopover>
         <div :class="tw`title flex justify-between items-center`">
             <div>仓库列表</div>
-            <NButton quaternary type="success">
-                <template #icon>
-                    <NIcon
-                        :class="tw`cursor-pointer`"
-                        size="24"
-                        @click="getLocalRepo"
-                    >
-                        <PlaylistAddTwotone />
-                    </NIcon>
-                </template>
-            </NButton>
+            <NButtonGroup>
+                <NButton quaternary type="success" @click="Clone">
+                    克隆
+                </NButton>
+                <NButton quaternary type="success">
+                    <template #icon>
+                        <NIcon
+                            :class="tw`cursor-pointer`"
+                            size="24"
+                            @click="getLocalRepo"
+                        >
+                            <PlaylistAddTwotone />
+                        </NIcon>
+                    </template>
+                </NButton>
+            </NButtonGroup>
         </div>
         <NScrollbar
             :class="tw`text-color1 transition-color flex-1`"

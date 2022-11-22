@@ -46,7 +46,6 @@ export const runCommand = (
     command.stdout.on("data", (output) => {
         stdoutLines.push(output);
     });
-    command.addListener("command-error", (e) => {});
     const promiseCatch = (reason: any) => {
         stderrLines.push(reason);
         return {
@@ -94,6 +93,11 @@ export const runCommand = (
             command.emit("command-error", eventData);
             return Promise.reject(eventData);
         }
+    };
+    const spawn = command.spawn.bind(command);
+    command.spawn = async () => {
+        const child = await spawn();
+        return child;
     };
     return command;
 };
