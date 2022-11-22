@@ -8,6 +8,7 @@ import {
     exists,
     readDir as tauriReadDir,
 } from "@tauri-apps/api/fs";
+import { dirname } from "@tauri-apps/api/path";
 const fsOptions: FsOptions = {
     dir: BaseDirectory.Resource,
 };
@@ -34,14 +35,20 @@ export const readFileToJSON = async <T>(
         return {} as any;
     }
 };
-export const writeFile = (
+export const isExists = async (dir: string, create: boolean = false) => {
+    const flag: any = await exists(dir, fsOptions);
+    if (!flag && create) {
+        mkdir(dir, { recursive: true });
+    }
+};
+export const writeFile = async (
     path: string,
     content: string,
     options?: FsOptions
 ) => {
     options = Object.assign({}, fsOptions, options);
+    const dir = await dirname(path);
+    await isExists(dir, true);
     return writeTextFile(path, content, options);
 };
-exists("data", { dir: BaseDirectory.Resource }).catch(() => {
-    mkdir("data");
-});
+isExists("data", true);
