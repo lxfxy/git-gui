@@ -11,8 +11,14 @@ document.addEventListener("mousemove", (e) => {
 });
 interface UseContextmenuOptions {
     container: Ref<Element | undefined>;
+    onClose?: () => void;
+    onOpen?: () => void;
 }
-export const useContextmenu = ({ container }: UseContextmenuOptions) => {
+export const useContextmenu = ({
+    container,
+    onClose,
+    onOpen,
+}: UseContextmenuOptions) => {
     const x = ref(0);
     const y = ref(0);
     const show = ref(false);
@@ -20,9 +26,11 @@ export const useContextmenu = ({ container }: UseContextmenuOptions) => {
         x.value = openPosition.x;
         y.value = openPosition.y;
         show.value = true;
+        onOpen?.();
     };
     const close = () => {
         show.value = false;
+        onClose?.();
     };
     document.addEventListener("click", () => {
         close();

@@ -24,7 +24,7 @@ import {
     watch,
 } from "vue";
 import { dialog } from "./globalApis";
-import { GitRemotes } from "./gitRemote";
+import { GitRemote } from "./gitRemote";
 // import { repoRemoteNames } from "@/store/repoRemote";
 
 const formatMap = {
@@ -346,7 +346,7 @@ const FormItemRemote = defineComponent({
                             options={remotes as any}
                             labelField="name"
                             valueField="name"
-                            renderLabel={(option: GitRemotes) => {
+                            renderLabel={(option: GitRemote) => {
                                 return <code>{option.name}</code>;
                             }}
                         />

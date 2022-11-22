@@ -7,6 +7,7 @@ import {
     allRemotes,
     curRepo,
     setCurRepo,
+    setContextmenuRemote,
 } from "@/store";
 import {
     NButton,
@@ -26,11 +27,16 @@ import Operation from "./Operation.vue";
 import { useContextmenu } from "@/hooks";
 import { css } from "twind/css";
 import { Add, CheckmarkDoneSharp } from "@vicons/ionicons5";
+import RemoteOperation from "./RemoteOperation.vue";
+import { addRemote } from "@/utils";
 const container = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
-const { x, y, show, open } = useContextmenu({ container });
+const { x, y, show, open, close } = useContextmenu({
+    container,
+});
 const contextmenu = (item: RepoInfo, e: MouseEvent) => {
     e.preventDefault();
     setContextmenuRepo(item);
+    setContextmenuRemote();
     open();
 };
 </script>
@@ -39,6 +45,7 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
     <div :class="tw`flex flex-col flex-1 overflow-hidden`" ref="container">
         <NPopover trigger="manual" :x="x" :y="y" :show="show" placement="right">
             <Operation />
+            <RemoteOperation />
         </NPopover>
         <div :class="tw`title flex justify-between items-center`">
             <div>仓库列表</div>
@@ -55,7 +62,8 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
             </NButton>
         </div>
         <NScrollbar
-            :class="tw`text-color1 transition-color select-none flex-1`"
+            :class="tw`text-color1 transition-color flex-1`"
+            @scroll="close"
         >
             <NCollapse>
                 <NCollapseItem
@@ -94,21 +102,22 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
                             ? tw`bg-bgColor1` + ` active`
                             : ``,
                     ]"
-                    @contextmenu="contextmenu(repo, $event)"
+                    @contextmenu.capture="contextmenu(repo, $event)"
                 >
                     <div
                         v-for="remote in allRemotes[repo.dir]"
                         :key="remote.name"
-                        :class="tw`flex flex-col overflow-hidden`"
+                        :class="
+                            tw`flex flex-col overflow-hidden transition hover:bg-bgColor2`
+                        "
+                        @contextmenu.capture="setContextmenuRemote(remote)"
                     >
                         <div
-                            :class="
-                                tw`center gap-x-[10px] p-[10px] transition hover:bg-bgColor2`
-                            "
+                            :class="tw`gap-x-[10px] p-[10px]`"
                             v-for="item in remote.urls"
                             :key="item.type"
                         >
-                            <div :class="tw`flex flex-col gap-y-[6px]`">
+                            <div :class="tw`flex gap-x-[6px]`">
                                 <code>{{ item.name }}</code>
                                 <code>({{ item.type }})</code>
                             </div>
@@ -128,7 +137,7 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
                     </template>
                     <template #header-extra>
                         <NButtonGroup>
-                            <NTooltip>
+                            <NTooltip :delay="1000">
                                 <template #trigger>
                                     <NButton
                                         quaternary
@@ -143,12 +152,12 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
                                 </template>
                                 切换至当前仓库
                             </NTooltip>
-                            <NTooltip>
+                            <NTooltip :delay="1000">
                                 <template #trigger>
                                     <NButton
                                         quaternary
                                         type="success"
-                                        @click.stop
+                                        @click.stop="addRemote({ repo })"
                                     >
                                         <NIcon size="24">
                                             <Add />

@@ -3,7 +3,7 @@ import { NFormItem, NSelect, FormItemProps } from "naive-ui";
 import { tw } from "twind";
 import { defineComponent, ref, toRefs, watch } from "vue";
 import { GitBranch, createRemoteBranch } from ".";
-import { GitRemotes } from "../gitRemote";
+import { GitRemote } from "../gitRemote";
 export const FormItemRemoteBranch = defineComponent({
     props: {
         remote: Object,
@@ -70,7 +70,7 @@ export const FormItemRemoteBranch = defineComponent({
                             options={remotes as any}
                             labelField="name"
                             valueField="name"
-                            renderLabel={(option: GitRemotes) => {
+                            renderLabel={(option: GitRemote) => {
                                 return <code>{option.name}</code>;
                             }}
                             style={{ borderTopRightRadius: 0 }}
