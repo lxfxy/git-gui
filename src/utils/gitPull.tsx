@@ -1,23 +1,33 @@
-import { curRepoDir } from "@/store";
+import { curRepoDir, setRepoStatus } from "@/store";
 import { commandErrorDialog, runCommand } from "./command";
+import { GitBranch } from "./gitBranch.bak";
 
 interface GitPull {
     cwd?: Cwd;
     rebase?: boolean;
-    remote: string;
-    remoteBranchName: string;
+    remote: GitBranch;
 }
 export const gitPull = async ({
     cwd = curRepoDir.value,
     remote,
-    remoteBranchName,
     rebase = false,
 }: GitPull) => {
-    const args = ["pull", remote, remoteBranchName];
+    const args = ["pull", remote.remote!, remote.branchname];
     if (rebase) {
         args.push("--rebase");
     }
     const command = runCommand("git", args, { cwd });
     command.on("command-error", commandErrorDialog);
-    await command.exec();
+    setRepoStatus({
+        isRemoteRefetching: {
+            [remote.name]: true,
+        },
+    });
+    return await command.exec().finally(() => {
+        setRepoStatus({
+            isRemoteRefetching: {
+                [remote.name]: false,
+            },
+        });
+    });
 };

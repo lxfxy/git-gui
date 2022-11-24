@@ -57,8 +57,16 @@ onBeforeUnmount(() => {
             <NTooltip>
                 <template #trigger>
                     <Button
-                        :disabled="repoStatus.isPushing"
-                        :loading="repoStatus.isPushing"
+                        :disabled="
+                            repoStatus.isPushing?.[
+                                curRepoBranch?.branchname || ``
+                            ]
+                        "
+                        :loading="
+                            repoStatus.isPushing?.[
+                                curRepoBranch?.branchname || ``
+                            ]
+                        "
                         type="success"
                         quaternary
                         @click="gitPush({ branch: curRepoBranch! })"

@@ -1,4 +1,11 @@
-import { curRepoDir, setRepoStatus, repoHeadsBranchs } from "@/store";
+import {
+    curRepoDir,
+    setRepoStatus,
+    repoHeadsBranchs,
+    repoRemoteNames,
+    repoRemotesBranchs,
+} from "@/store";
+import { sleep } from "..";
 import { runCommand, commandErrorDialog } from "../command";
 
 export interface GitRemoteUrl {
@@ -38,10 +45,19 @@ export const gitRemote = async (cwd: Cwd = curRepoDir.value) => {
 
 export const gitRemoteUpdate = async (cwd: Cwd = curRepoDir.value) => {
     const command = runCommand("git", ["remote", "update"], { cwd });
-    setRepoStatus({ isRemoteRefetching: true });
-    const child = await command.execute();
-    const newRemotes = await gitRemote();
-    const curHeadsBranchs = repoHeadsBranchs.value;
+    const status: Record<string, boolean> = {};
+    for (const remoteBranch of repoRemotesBranchs.value) {
+        status[remoteBranch.name] = true;
+    }
+    setRepoStatus({ isRemoteRefetching: status });
+    const child = await command.exec().finally(() => {
+        for (const remoteBranch of repoRemotesBranchs.value) {
+            status[remoteBranch.name] = false;
+        }
+        setRepoStatus({ isRemoteRefetching: status });
+    });
+    // const newRemotes = await gitRemote();
+    // const curHeadsBranchs = repoHeadsBranchs.value;
     // for (const remoteBranch of repoRemotesBranchs.value) {
     //     if (remoteBranch.branchname === "HEAD") {
     //         continue;
@@ -57,7 +73,6 @@ export const gitRemoteUpdate = async (cwd: Cwd = curRepoDir.value) => {
     //         });
     //     }
     // }
-    setRepoStatus({ isRemoteRefetching: false });
 };
 
 interface GitRemoteDelOptions {

@@ -40,8 +40,9 @@ export const gitPush = async ({
     }
     if (!remote) {
         remote = repoBranchs.value.find((item) => {
-            return item.remotes && item.branchname === branch.name;
+            return item.remotes && item.name === branch.upstream;
         })!;
+        console.log(remote);
     }
     args.push(remote.remote!, `${branch.branchname}:${remote.branchname}`);
     const command = runCommand("git", args, { cwd });
@@ -49,9 +50,22 @@ export const gitPush = async ({
     //     gitPushErrorForceDialog(e, args.slice(1));
     // });
     command.on("command-error", commandErrorDialog);
-    setRepoStatus({ isPushing: true });
+    setRepoStatus({
+        isPushing: {
+            [branch.branchname]: true,
+        },
+        pushingMsg: {
+            [branch.branchname]: {
+                remoteName: remote.name,
+            },
+        },
+    });
     return await command.execute().finally(() => {
-        setRepoStatus({ isPushing: false });
+        setRepoStatus({
+            isPushing: {
+                [branch.branchname]: false,
+            },
+        });
     });
 };
 
@@ -77,29 +91,26 @@ export const gitPushUpstream = async ({
         args.push("-f");
     }
     const command = runCommand("git", args, { cwd });
-    setRepoStatus({ isPushing: true });
+    setRepoStatus({
+        isPushing: {
+            [branch.branchname]: true,
+        },
+        pushingMsg: {
+            [branch.branchname]: {
+                remoteName: remote.name,
+            },
+        },
+    });
     // command.on("command-error", (e) => {
     //     gitPushErrorForceDialog(e, args.slice(1));
     // });
     command.on("command-error", commandErrorDialog);
     return await command.execute().finally(() => {
-        setRepoStatus({ isPushing: false });
-    });
-};
-
-export interface GitPushForce {
-    cwd?: Cwd;
-    args: string[];
-}
-export const gitPushForce = async ({
-    args,
-    cwd = curRepoDir.value,
-}: GitPushForce) => {
-    const command = runCommand("git", ["push", ...args, "-f"], { cwd });
-    command.on("command-error", commandErrorDialog);
-    setRepoStatus({ isPushing: true });
-    return await command.execute().finally(() => {
-        setRepoStatus({ isPushing: false });
+        setRepoStatus({
+            isPushing: {
+                [branch.branchname]: false,
+            },
+        });
     });
 };
 
@@ -111,10 +122,6 @@ export const gitPushErrorForceDialog = (
         style: { width: "50vw" },
         maskClosable: false,
         positiveText: "知道了",
-        negativeText: "强制推送",
-        onNegativeClick() {
-            gitPushForce({ args: forceArgs });
-        },
         title() {
             return (
                 <code class={tw`ml-[4px]`}>

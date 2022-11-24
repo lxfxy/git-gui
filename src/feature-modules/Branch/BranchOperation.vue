@@ -1,6 +1,11 @@
 <script setup lang="tsx">
 import Button from "./Button";
-import { contextmenuBranch, changeBranch, curRepoBranch } from "@/store";
+import {
+    contextmenuBranch,
+    changeBranch,
+    curRepoBranch,
+    repoStatus,
+} from "@/store";
 import {
     addBranch,
     branchDel,
@@ -54,13 +59,18 @@ const fetch = async () => {
 };
 const pull = async (rebase: boolean = false) => {
     await gitPull({
-        remote: contextmenuBranch.value!.remote!,
-        remoteBranchName: contextmenuBranch.value!.branchname,
+        remote: contextmenuBranch.value!,
         rebase,
     });
 };
 const contextBranchIsCurrent = computed(() => {
     return contextmenuBranch.value?.name === curRepoBranch.value?.name;
+});
+const isPushing = computed(() => {
+    return repoStatus.isPushing[contextmenuBranch.value!.name];
+});
+const isRemoteFetching = computed(() => {
+    return repoStatus.isRemoteRefetching[contextmenuBranch.value!.name];
 });
 </script>
 
@@ -76,11 +86,13 @@ const contextBranchIsCurrent = computed(() => {
         </Button>
 
         <template v-if="isRemoteBranch">
-            <Button @click="fetch"> 拉取此远程分支的信息 </Button>
-            <Button @click="pull(true)">
+            <Button @click="fetch" :disabled="isRemoteFetching">
+                拉取此远程分支的信息
+            </Button>
+            <Button @click="pull(true)" :disabled="isRemoteFetching">
                 拉取此远程分支的信息并变基到当前分支
             </Button>
-            <Button @click="pull(false)">
+            <Button @click="pull(false)" :disabled="isRemoteFetching">
                 拉取此远程分支的信息并合并到当前分支
             </Button>
         </template>
@@ -102,12 +114,19 @@ const contextBranchIsCurrent = computed(() => {
                 </span>
                 <span v-show="!isRemoteBranch"> 双击也可以切换分支哦~</span>
             </NTooltip>
-            <Button :disabled="isRemoteBranch" @click="push"> 推送 </Button>
-            <Button :disabled="isRemoteBranch" @click="pushTo"> 推送至 </Button>
-            <Button :disabled="isRemoteBranch" @click="forcePush">
+            <Button :disabled="isRemoteBranch || isPushing" @click="push">
+                推送
+            </Button>
+            <Button :disabled="isRemoteBranch || isPushing" @click="pushTo">
+                推送至
+            </Button>
+            <Button :disabled="isRemoteBranch || isPushing" @click="forcePush">
                 强制推送
             </Button>
-            <Button :disabled="isRemoteBranch" @click="forcePushTo">
+            <Button
+                :disabled="isRemoteBranch || isPushing"
+                @click="forcePushTo"
+            >
                 强制推送至
             </Button>
         </template>

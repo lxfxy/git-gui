@@ -1,13 +1,19 @@
 import { reactive, readonly } from "vue";
+import { merge } from "lodash";
 
+export interface PushingMsg {
+    remoteName?: string;
+}
 export interface RepoStatus {
-    isPushing?: boolean;
-    isRemoteRefetching?: boolean;
+    isPushing: Record<string, boolean>;
+    isRemoteRefetching: Record<string, boolean>;
+    pushingMsg: Record<string, PushingMsg>;
 }
 export const repoStatus = reactive<RepoStatus>({
-    isPushing: false,
-    isRemoteRefetching: false,
+    isPushing: {},
+    pushingMsg: {},
+    isRemoteRefetching: {},
 });
-export const setRepoStatus = (newStatus: RepoStatus) => {
-    Object.assign(repoStatus, newStatus);
+export const setRepoStatus = (newStatus: Partial<RepoStatus>) => {
+    merge(repoStatus, newStatus);
 };

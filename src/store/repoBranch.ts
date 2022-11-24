@@ -9,9 +9,10 @@ import {
 } from "@/utils";
 import { message } from "@/utils/globalApis";
 import { isEmpty } from "lodash";
-import { effect, reactive, ref } from "vue";
+import { effect, reactive, ref, watch } from "vue";
 import { curRepoDir } from "./repo";
 import { repoFileStatus, repoHistoryFileStatus } from "./repoFileStatus";
+import { repoRemotes } from "./repoRemote";
 
 export const [contextmenuBranch, setContextmenuBranch] = useRef<GitBranch>();
 export const repoBranchs = ref<GitBranch[]>([]);
@@ -34,7 +35,9 @@ export const getBranch = async () => {
 };
 // loop(getBranch);
 repoChangeWatch(getBranch);
-effect(getBranch);
+watch(() => [curRepoDir.value, repoRemotes.value], getBranch, {
+    immediate: true,
+});
 
 export const changeBranch = async (branchInfo: GitBranch) => {
     if (
