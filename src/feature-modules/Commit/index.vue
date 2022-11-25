@@ -4,10 +4,11 @@ import {
     curRepo,
     repoHistoryFileStatus,
     repoLogs,
+    repoStatus,
     theme,
     ThemeType,
 } from "@/store";
-import { commitAmendRepo, commitRepo } from "@/utils";
+import { commitAmendRepo, commitRepo, gitRebaseContinue } from "@/utils";
 import { gitLogMsg } from "@/utils/gitLog";
 import { AlertCircleSharp, Reload } from "@vicons/ionicons5";
 import { isEmpty } from "lodash";
@@ -34,6 +35,15 @@ const commitMsg = ref("");
 const amendMsg = ref("");
 const msg = ref("");
 const isCommitAmend = ref(false);
+watch(
+    () => repoStatus.rebaseMergeMsg?.message || "",
+    (rebaseMsg) => {
+        msg.value = rebaseMsg;
+    },
+    {
+        immediate: true,
+    }
+);
 watch(
     () => msg.value,
     (val) => {
@@ -103,6 +113,9 @@ const commit = async () => {
             return;
         }
         await commitRepo(msg.value);
+    }
+    if (repoStatus.isRebaseMerge) {
+        await gitRebaseContinue();
     }
     message.success("提交成功");
     msg.value = "";

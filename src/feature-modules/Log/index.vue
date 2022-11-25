@@ -60,7 +60,7 @@ onBeforeUnmount(() => {
                         :disabled="
                             repoStatus.isPushing?.[
                                 curRepoBranch?.branchname || ``
-                            ]
+                            ] || repoStatus.isRebaseMerge
                         "
                         :loading="
                             repoStatus.isPushing?.[
@@ -70,7 +70,6 @@ onBeforeUnmount(() => {
                         type="success"
                         quaternary
                         @click="gitPush({ branch: curRepoBranch! })"
-                        :class="tw`opacity-100!`"
                     >
                         <template #icon>
                             <NIcon size="24">

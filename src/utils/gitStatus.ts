@@ -12,12 +12,13 @@ export enum RepoWorkTree {
     Workspace,
     History,
 }
-export type FileStatusType = "Modify" | "New" | "Delete" | "Renamed";
+export type FileStatusType = "Modify" | "New" | "Delete" | "Renamed" | "Update";
 export const fileStatusType: FileStatusType[] = [
     "Delete",
     "Modify",
     "New",
     "Renamed",
+    "Update",
 ];
 const fileStatusMap: Record<string, FileStatusType> = {
     M: "Modify",
@@ -25,6 +26,7 @@ const fileStatusMap: Record<string, FileStatusType> = {
     D: "Delete",
     A: "New",
     R: "Renamed",
+    U: "Update",
 };
 
 export const getRepoFileStatus = async (cwd: Cwd = curRepoDir.value) => {

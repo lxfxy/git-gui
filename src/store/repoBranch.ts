@@ -13,6 +13,7 @@ import { effect, reactive, ref, watch } from "vue";
 import { curRepoDir } from "./repo";
 import { repoFileStatus, repoHistoryFileStatus } from "./repoFileStatus";
 import { repoRemotes } from "./repoRemote";
+import { repoStatus } from "./repoStatus";
 
 export const [contextmenuBranch, setContextmenuBranch] = useRef<GitBranch>();
 export const repoBranchs = ref<GitBranch[]>([]);
@@ -40,6 +41,13 @@ watch(() => [curRepoDir.value, repoRemotes.value], getBranch, {
 });
 
 export const changeBranch = async (branchInfo: GitBranch) => {
+    if (repoStatus.isRebaseMerge) {
+        message.value?.error(
+            "当前正在处理变基冲突，不能切换分支。可以退出变基后，再进行切换分支",
+            { keepAliveOnHover: true }
+        );
+        return;
+    }
     if (
         !isEmpty(repoFileStatus.value) ||
         !isEmpty(repoHistoryFileStatus.value)

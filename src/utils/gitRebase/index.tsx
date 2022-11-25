@@ -1,5 +1,7 @@
 import { curRepoDir } from "@/store";
+import { exists, readTextFile } from "@tauri-apps/api/fs";
 import { commandErrorDialog, runCommand } from "../command";
+import { isExists } from "../file";
 
 export interface GitRebaseOptions {
     cwd?: Cwd;
@@ -21,6 +23,34 @@ export const gitRebase = async ({
     const command = runCommand("git", args, { cwd });
     command.on("command-error", commandErrorDialog);
     await command.exec();
+};
+
+export const gitRebaseAbort = async (cwd: string = curRepoDir.value!) => {
+    const command = runCommand("git", ["rebase", "--abort"], { cwd });
+    return await command.exec();
+};
+
+export const gitRebaseSkip = async (cwd: string = curRepoDir.value!) => {
+    const command = runCommand("git", ["rebase", "--skip"], { cwd });
+    return await command.exec();
+};
+
+export const gitRebaseContinue = async (cwd: string = curRepoDir.value!) => {
+    const command = runCommand("git", ["rebase", "--continue"], { cwd });
+    return await command.exec();
+};
+
+export const isRebaseMerge = (): Promise<boolean> => {
+    return exists(`${curRepoDir.value}/.git/rebase-merge`) as any;
+};
+
+export const readRebaseMergeMsg = async (repoDir: string) => {
+    const dir = `${repoDir}/.git/rebase-merge`;
+    return {
+        end: parseInt(await readTextFile(`${dir}/end`)),
+        num: parseInt(await readTextFile(`${dir}/msgnum`)),
+        message: await readTextFile(`${dir}/message`),
+    };
 };
 
 export * from "./chooseBranchRebase";

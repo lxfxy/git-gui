@@ -1,9 +1,18 @@
 import { useRef } from "@/hooks";
-import { getFilePathLastText, readFileToJSON, writeFile } from "@/utils";
+import {
+    getFilePathLastText,
+    readFile,
+    readFileToJSON,
+    runCommand,
+    sleep,
+    writeFile,
+} from "@/utils";
 // import { readFileToJSON, writeFile } from "@/utils/file";
 import { open } from "@tauri-apps/api/dialog";
 import { listen } from "@tauri-apps/api/event";
-import { dirname } from "@tauri-apps/api/path";
+import { readTextFile } from "@tauri-apps/api/fs";
+import { BaseDirectory, dirname } from "@tauri-apps/api/path";
+import axios from "axios";
 import { isEmpty } from "lodash";
 import { computed, effect, reactive, ref } from "vue";
 

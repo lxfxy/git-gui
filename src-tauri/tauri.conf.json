@@ -14,7 +14,7 @@
         "allowlist": {
             "all": true,
             "fs": {
-                "scope": ["$RESOURCE/*"]
+                "scope": ["*"]
             },
             "shell": {
                 "scope": [
@@ -22,11 +22,6 @@
                     {
                         "cmd": "code.cmd",
                         "name": "code",
-                        "args": true
-                    },
-                    {
-                        "cmd": "start",
-                        "name": "start",
                         "args": true
                     }
                 ]

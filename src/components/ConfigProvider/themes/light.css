@@ -21,4 +21,7 @@
 
     --log-ref-color: #69c0ff;
     --log-ref-bg: #bae7ff30;
+
+    --rebase-merge-color: #fa8c16;
+    --rebase-merge-bg-color: #ffe7ba40;
 }
