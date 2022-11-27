@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { curRepo } from "@/store";
+import { curRepo, fileStatusWorkspace, setFileStatusWorkspace } from "@/store";
 import {
     FileStatusType,
     historyRepoFiles,
@@ -9,7 +9,6 @@ import {
 import { repoWorkTreeInfo } from "@/store";
 import {
     NButton,
-    NCode,
     NDataTable,
     NPopselect,
     NSpace,
@@ -19,7 +18,7 @@ import {
 import { apply, tw } from "twind";
 import { computed, ref } from "vue";
 import { css } from "twind/css";
-import { columns } from "./columns";
+import { columns, TableStatusColFilter } from "./columns";
 import { curRepoBranch } from "@/store";
 const genCss = (status: FileStatusType) => {
     return css`
@@ -36,6 +35,7 @@ const rowClassName: Record<FileStatusType, any> = {
     Delete: genCss("Delete"),
     New: genCss("New"),
     Renamed: genCss("Renamed"),
+    Update: genCss("Update"),
 };
 const workTreeTypeOptions = [
     { label: "工作区", value: RepoWorkTree.Workspace },
@@ -45,11 +45,10 @@ const workTreeTypeValueMap = {
     [RepoWorkTree.Workspace]: "工作区",
     [RepoWorkTree.History]: "暂存区",
 };
-const message = useMessage();
-const workspace = ref<RepoWorkTree>(RepoWorkTree.Workspace);
 const tableData = computed(() => {
-    return repoWorkTreeInfo[workspace.value].value;
+    return repoWorkTreeInfo[fileStatusWorkspace.value!].value;
 });
+const message = useMessage();
 const pushHistory = async () => {
     await historyRepoFiles();
     message.success("暂存完成！");
@@ -80,22 +79,25 @@ const tableClassName = css`
             v-if="curRepo"
             :class="tw`title flex items-center justify-between h-[50px]`"
         >
-            <div :class="[tw`flex gap-x-[10px] items-center`]">
+            <div :class="[tw`flex gap-x-[10px] items-center flex-1`]">
                 <div>
                     <code>{{ curRepo.title }}^{{ curRepoBranch?.name }}</code>
                     的工作树信息
                 </div>
                 <NPopselect
                     :options="workTreeTypeOptions"
-                    v-model:value="workspace"
+                    :value="fileStatusWorkspace"
+                    @update:value="setFileStatusWorkspace"
                 >
                     <NTag type="info" size="small">
-                        {{ workTreeTypeValueMap[workspace] }}
+                        {{ workTreeTypeValueMap[fileStatusWorkspace!] }}
                     </NTag>
                 </NPopselect>
+
+                <TableStatusColFilter />
             </div>
             <NSpace
-                v-if="tableData.length && workspace === RepoWorkTree.Workspace"
+                v-if="tableData.length && fileStatusWorkspace! === RepoWorkTree.Workspace"
                 :align="'center'"
             >
                 <NButton type="success" @click="pushHistory" quaternary>

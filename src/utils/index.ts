@@ -34,4 +34,5 @@ export * from "./gitLog";
 export * from "./gitRebase";
 export * from "./gitPull";
 export * from "./gitClone";
+export * from "./gitRestore";
 export * from "./loop";

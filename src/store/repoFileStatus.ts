@@ -1,3 +1,4 @@
+import { useRef } from "@/hooks";
 import {
     loop,
     sleep,
@@ -7,7 +8,7 @@ import {
     repoChangeWatch,
 } from "@/utils";
 // import { FileStatus, getRepoFileStatus, RepoWorkTree } from "@/utils/gitStatus";
-import { effect, ref } from "vue";
+import { computed, effect, ref } from "vue";
 import { curRepo } from "./repo";
 
 export const repoFileStatus = ref<FileStatus[]>([]);
@@ -26,3 +27,14 @@ const readRepoFilesStatus = async () => {
 // loop(readRepoFilesStatus);
 repoChangeWatch(readRepoFilesStatus);
 effect(readRepoFilesStatus);
+
+export const [fileStatusWorkspace, setFileStatusWorkspace] =
+    useRef<RepoWorkTree>(RepoWorkTree.Workspace);
+
+export const fileStatusIsWorkSpace = computed(() => {
+    return fileStatusWorkspace.value === RepoWorkTree.Workspace;
+});
+
+export const fileStatusIsHistory = computed(() => {
+    return fileStatusWorkspace.value === RepoWorkTree.History;
+});

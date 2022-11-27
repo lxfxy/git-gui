@@ -1,8 +1,8 @@
 import { ref, Ref, UnwrapRef } from "vue";
 
 export const useRef = <T, Set = (val?: T) => void>(
-    set?: Set,
-    initialValue?: T
+    initialValue?: T,
+    set?: Set
 ): [Ref<UnwrapRef<T> | undefined>, Set] => {
     const value = ref<T | undefined>(initialValue);
     const setValue =

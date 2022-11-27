@@ -11,6 +11,7 @@ export const setGlobalDialog = (
     dialog.value = newDialog;
 };
 export const [message, setGlobalMessage] = useRef<MessageApiInjection>(
+    undefined,
     (newMessage = useMessage()) => {
         message.value = newMessage;
     }
