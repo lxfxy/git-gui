@@ -2,6 +2,7 @@
     /* 背景颜色 */
     --bg-color: #222;
     --bg-color2: #333;
+    --bg-color3: #22222260;
 
     /* 字体颜色 */
     --text-color: #fff;
@@ -19,8 +20,12 @@
     --file-status-delete-bg-color: #f3737020;
     --file-status-delete-text-color: #f37370;
 
+    --file-status-update-bg-color: #1d39c440;
+    --file-status-update-text-color: #d6e4ff;
+
     --log-ref-color: #69c0ff;
     --log-ref-bg: #bae7ff30;
+    --log-border-color: #fff;
 
     --rebase-merge-color: #ffc069;
     --rebase-merge-bg-color: #ad4e0040;

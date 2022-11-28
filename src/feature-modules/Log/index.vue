@@ -60,7 +60,9 @@ onBeforeUnmount(() => {
                         :disabled="
                             repoStatus.isPushing?.[
                                 curRepoBranch?.branchname || ``
-                            ] || repoStatus.isRebaseMerge
+                            ] ||
+                            repoStatus.isRebaseMerge ||
+                            repoStatus.isMerge
                         "
                         :loading="
                             repoStatus.isPushing?.[
@@ -97,7 +99,14 @@ onBeforeUnmount(() => {
                 placement="right"
             >
                 <template #trigger>
-                    <div :class="tw`px-[8px] py-[6px] w-full`">
+                    <div
+                        :class="tw`px-[8px] py-[6px] w-full`"
+                        :style="{
+                            backgroundColor: `var(--bg-${
+                                index % 2 === 0 ? `color2` : `color3`
+                            })`,
+                        }"
+                    >
                         <div
                             :class="
                                 tw`relative inline-block mb-[10px] text-[12px] px-[6px]`
@@ -142,22 +151,21 @@ onBeforeUnmount(() => {
                 </template>
                 <LogPopover :log="item" />
             </NTooltip>
-            <div
-                ref="endEl"
-                @click="fetchNext"
-                :class="tw`w-full h-[36px] center cursor-pointer`"
-            >
-                <NSpin
-                    size="small"
-                    :class="tw`w-[18px] h-[18px] mr-[10px] transition-all`"
-                    :style="{ opacity: isFetchingNextPage ? 1 : 0 }"
-                />
-                <span
-                    v-if="last(data?.pages)?.length && last(data?.pages)!.length > logLimit"
+            <div ref="endEl">
+                <Button
+                    @click="fetchNext"
+                    :loading="isFetchingNextPage"
+                    block
+                    quaternary
+                    type="success"
                 >
-                    加载更多
-                </span>
-                <span v-else>到底了</span>
+                    <span
+                        v-if="last(data?.pages)?.length && last(data?.pages)!.length > logLimit"
+                    >
+                        加载更多
+                    </span>
+                    <span v-else>到底了</span>
+                </Button>
             </div>
         </NScrollbar>
     </div>

@@ -18,8 +18,10 @@ const { loading, ...props } = toRefs(propsRaw);
                 v-if="loading"
                 :class="tw`w-[20px] h-[20px] opacity-100`"
             ></NSpin>
-            <slot name="icon" v-else></slot>
+            <template v-else>
+                <slot name="icon"></slot>
+                <slot></slot>
+            </template>
         </Opacity>
-        <slot></slot>
     </NButton>
 </template>

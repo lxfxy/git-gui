@@ -10,6 +10,7 @@ const tagTypeMap: Record<FileStatusType, string> = {
     Modify: "warning",
     New: "success",
     Renamed: "default",
+    Update: "info",
 };
 </script>
 

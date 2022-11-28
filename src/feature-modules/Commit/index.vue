@@ -24,7 +24,7 @@ import {
 } from "naive-ui";
 import { apply, tw } from "twind";
 import { css } from "twind/css";
-import { ref, watch } from "vue";
+import { effect, ref, watch } from "vue";
 import Gitmoji from "./Gitmoji.vue";
 const inputCompRef = ref<GetCompSetupReturn<typeof NInput>>();
 const cursorPos = {
@@ -35,15 +35,6 @@ const commitMsg = ref("");
 const amendMsg = ref("");
 const msg = ref("");
 const isCommitAmend = ref(false);
-watch(
-    () => repoStatus.rebaseMergeMsg?.message || "",
-    (rebaseMsg) => {
-        msg.value = rebaseMsg;
-    },
-    {
-        immediate: true,
-    }
-);
 watch(
     () => msg.value,
     (val) => {
@@ -67,6 +58,13 @@ watch(
         }
     }
 );
+effect(() => {
+    isCommitAmend.value = false;
+    msg.value =
+        repoStatus.rebaseMergeMsg?.message ||
+        repoStatus.mergeMsg?.message ||
+        "";
+});
 const gitmojiVisible = ref(false);
 const message = useMessage();
 const inputGitmoji = (info: string) => {
@@ -143,7 +141,7 @@ const keyup = (e: KeyboardEvent) => {
 
 <template>
     <div :class="tw`bg-bgColor1 text-color1`">
-        <div :class="tw`title flex justify-between items-center h-[50px]`">
+        <div :class="tw`title flex justify-between items-center h-[50px] `">
             <div :class="tw`flex items-center gap-x-[6px]`">
                 <code>Commit</code>
                 <Divider vertical />

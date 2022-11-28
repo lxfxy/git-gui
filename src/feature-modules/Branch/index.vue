@@ -30,7 +30,7 @@ import BranchOperation from "./BranchOperation.vue";
 const container = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
 const { x, y, show, open, close } = useContextmenu({ container });
 const contextmenu = (branch: GitBranch, e: MouseEvent) => {
-    if (!repoStatus.isRebaseMerge) {
+    if (!repoStatus.isRebaseMerge && !repoStatus.isMerge) {
         e.preventDefault();
         setContextmenuBranch(branch);
         open();
@@ -58,7 +58,9 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
                             quaternary
                             type="success"
                             @click="gitRemoteUpdate()"
-                            :disabled="repoStatus.isRebaseMerge"
+                            :disabled="
+                                repoStatus.isRebaseMerge || repoStatus.isMerge
+                            "
                         >
                             <template #icon>
                                 <NIcon size="24">
@@ -75,7 +77,9 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
                             quaternary
                             type="success"
                             @click="addBranch()"
-                            :disabled="repoStatus.isRebaseMerge"
+                            :disabled="
+                                repoStatus.isRebaseMerge || repoStatus.isMerge
+                            "
                         >
                             <template #icon>
                                 <NIcon size="24">
