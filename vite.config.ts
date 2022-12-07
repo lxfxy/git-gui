@@ -25,6 +25,9 @@ export default defineConfig({
         //     resolvers: [NaiveUiResolver()],
         // }),
     ],
+    server: {
+        port: 1420,
+    },
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "src"),
