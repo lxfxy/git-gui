@@ -72,7 +72,7 @@ const tableClassName = css`
 <template>
     <div
         :class="[
-            tw`text-color1 flex-1 flex flex-col h-[600px] ${tableClassName} overflow-hidden`,
+            tw`text-color1 flex-1 flex flex-col ${tableClassName} overflow-hidden`,
         ]"
     >
         <div

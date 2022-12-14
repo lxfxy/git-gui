@@ -22,6 +22,16 @@ button {
     }
 }
 
+.drag-line {
+    background-color: var(--bg-color);
+    transition: background-color 0.3s;
+
+    &:hover,
+    &.active {
+        background-color: var(--dragline-color);
+    }
+}
+
 // .formitem-horizontal {
 //     display: grid;
 //     grid-template-areas:

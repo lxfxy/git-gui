@@ -58,7 +58,7 @@ export const gitRemote = async (cwd: Cwd = curRepoDir.value) => {
 
 export const gitRemoteUpdate = async (cwd: Cwd = curRepoDir.value) => {
     const command = runCommand("git", ["remote", "update"], { cwd });
-    setRepoStatus({ isRemoteRefetching: true });
+    // setRepoStatus({ isRemoteRefetching: true });
     const child = await command.execute();
     const newRemotes = await gitRemote();
     const curHeadsBranchs = repoHeadsBranchs.value;
@@ -77,7 +77,7 @@ export const gitRemoteUpdate = async (cwd: Cwd = curRepoDir.value) => {
     //         });
     //     }
     // }
-    setRepoStatus({ isRemoteRefetching: false });
+    // setRepoStatus({ isRemoteRefetching: false });
 };
 
 interface GitRemoteDelOptions {

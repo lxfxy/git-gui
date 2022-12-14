@@ -140,7 +140,7 @@ const keyup = (e: KeyboardEvent) => {
 </script>
 
 <template>
-    <div :class="tw`bg-bgColor1 text-color1`">
+    <div :class="tw`bg-bgColor1 text-color1 flex flex-col`">
         <div :class="tw`title flex justify-between items-center h-[50px] `">
             <div :class="tw`flex items-center gap-x-[6px]`">
                 <code>Commit</code>
@@ -205,21 +205,25 @@ const keyup = (e: KeyboardEvent) => {
                 提交
             </NButton>
         </div>
-        <div :class="[tw`p-[10px]`]">
+        <div :class="[tw`p-[10px] flex-1 overflow-hidden`]">
             <NInput
                 ref="inputCompRef"
                 @blur="blur"
                 @keydown="keydown"
                 @keyup.enter="keyup"
                 v-model:value="msg"
-                :class="tw`text-[16px]`"
+                :class="[
+                    tw`text-[16px]`,
+                    tw`${css`
+                        .n-input-wrapper {
+                            resize: none !important;
+                        }
+                    `}`,
+                ]"
                 type="textarea"
-                :autosize="{
-                    maxRows: 4,
-                    minRows: 4,
-                }"
                 placeholder="请输入本次提交的描述信息"
                 show-count
+                style="height: 100%"
             ></NInput>
         </div>
     </div>
