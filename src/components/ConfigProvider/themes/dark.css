@@ -8,9 +8,11 @@
     --text-color: #fff;
     --text-color2: #999;
 
+    /* 滚动条 */
     --scroll-color: #333;
     --scroll-thumb-color: #444;
 
+    /* 工作树 文件状态 */
     --file-status-modify-bg-color: #f3cc6220;
     --file-status-modify-text-color: #f3cc62;
 
@@ -23,11 +25,14 @@
     --file-status-update-bg-color: #1d39c440;
     --file-status-update-text-color: #d6e4ff;
 
+    /* 提交历史 历史信息指向的分支标签颜色 */
     --log-ref-color: #69c0ff;
     --log-ref-bg: #bae7ff30;
     --log-border-color: #fff;
 
+    /* 仓库要处理 变基冲突时的 提示框字体边框颜色 */
     --rebase-merge-color: #ffc069;
+    /* 仓库要处理 变基冲突时的 提示框背景颜色 */
     --rebase-merge-bg-color: #ad4e0040;
 
     --dragline-color: #378113;

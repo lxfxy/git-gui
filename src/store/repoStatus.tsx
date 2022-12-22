@@ -54,60 +54,55 @@ export const getRebaseMergeMsg = async () => {
         repoStatus.rebaseMergeMsg = await readRebaseMergeMsg(curRepoDir.value!);
     }
 };
-export const showRebaseMergeDialog = async () => {
+export const showRebaseMergeDialog = async (reset = false) => {
+    rebaseMergeMessageReactive?.destroy();
     if (repoStatus.isRebaseMerge) {
-        rebaseMergeMessageReactive =
-            rebaseMergeMessageReactive ||
-            message.value?.warning(
-                () => {
-                    return <div></div>;
-                },
-                {
-                    duration: 0,
-                    render() {
-                        const rebaseMergeMsg = repoStatus.rebaseMergeMsg;
-                        return (
-                            <div
-                                style={{
-                                    color: "var(--rebase-merge-color)",
-                                    border: "1px solid var(--rebase-merge-color)",
-                                    backgroundColor:
-                                        "var(--rebase-merge-bg-color)",
-                                }}
-                                class={tw`p-[10px] text-center`}
-                            >
-                                <div class={tw`flex gap-x-[10px] items-center`}>
-                                    正在处理变基冲突
-                                    <code>
-                                        {rebaseMergeMsg?.num}/
-                                        {rebaseMergeMsg?.end}
-                                    </code>
-                                    <NButton
-                                        ghost
-                                        type="warning"
-                                        onClick={() => gitRebaseAbort()}
-                                    >
-                                        退出变基
-                                    </NButton>
-                                    <NButton
-                                        ghost
-                                        type="warning"
-                                        onClick={() => gitRebaseSkip()}
-                                    >
-                                        不处理本次冲突
-                                    </NButton>
-                                </div>
-                                <div class={tw`mt-[6px]`}>
-                                    处理完所有冲突后，提交commit，即可处理下一个冲突！
-                                </div>
+        rebaseMergeMessageReactive = message.value?.warning(
+            () => {
+                return <div></div>;
+            },
+            {
+                duration: 0,
+                render() {
+                    const rebaseMergeMsg = repoStatus.rebaseMergeMsg;
+                    return (
+                        <div
+                            style={{
+                                color: "var(--rebase-merge-color)",
+                                border: "1px solid var(--rebase-merge-color)",
+                                backgroundColor: "var(--rebase-merge-bg-color)",
+                            }}
+                            class={tw`p-[10px] text-center`}
+                        >
+                            <div class={tw`flex gap-x-[10px] items-center`}>
+                                正在处理变基冲突
+                                <code>
+                                    {rebaseMergeMsg?.num}/{rebaseMergeMsg?.end}
+                                </code>
+                                <NButton
+                                    ghost
+                                    type="warning"
+                                    onClick={() => gitRebaseAbort()}
+                                >
+                                    退出变基
+                                </NButton>
+                                <NButton
+                                    ghost
+                                    type="warning"
+                                    onClick={() => gitRebaseSkip()}
+                                >
+                                    不处理本次冲突
+                                </NButton>
                             </div>
-                        );
-                    },
-                }
-            )!;
+                            <div class={tw`mt-[6px]`}>
+                                处理完所有冲突后，提交commit，即可处理下一个冲突！
+                            </div>
+                        </div>
+                    );
+                },
+            }
+        )!;
     } else {
-        rebaseMergeMessageReactive?.destroy();
-        rebaseMergeMessageReactive = null;
         repoStatus.rebaseMergeMsg = undefined;
     }
 };
@@ -119,62 +114,62 @@ export const getMergeMsg = async () => {
         };
     }
 };
-export let showMergeDialog = async () => {
+export let showMergeDialog = async (reset = false) => {
+    mergeMessageReactive?.destroy();
     if (repoStatus.isMerge) {
-        mergeMessageReactive =
-            mergeMessageReactive ||
-            message.value?.warning(
-                () => {
-                    return <div></div>;
-                },
-                {
-                    duration: 0,
-                    render() {
-                        const rebaseMergeMsg = repoStatus.rebaseMergeMsg;
-                        return (
+        mergeMessageReactive = message.value?.warning(
+            () => {
+                return <div></div>;
+            },
+            {
+                duration: 0,
+                render() {
+                    const rebaseMergeMsg = repoStatus.rebaseMergeMsg;
+                    return (
+                        <div
+                            style={{
+                                color: "var(--rebase-merge-color)",
+                                border: "1px solid var(--rebase-merge-color)",
+                                backgroundColor: "var(--rebase-merge-bg-color)",
+                            }}
+                            class={tw`p-[10px] text-center`}
+                        >
                             <div
-                                style={{
-                                    color: "var(--rebase-merge-color)",
-                                    border: "1px solid var(--rebase-merge-color)",
-                                    backgroundColor:
-                                        "var(--rebase-merge-bg-color)",
-                                }}
-                                class={tw`p-[10px] text-center`}
+                                class={tw`flex gap-x-[10px] ${center} items-center`}
                             >
-                                <div
-                                    class={tw`flex gap-x-[10px] ${center} items-center`}
+                                正在处理合并冲突
+                                <NButton
+                                    ghost
+                                    type="warning"
+                                    onClick={() => gitMergeAbort()}
                                 >
-                                    正在处理合并冲突
-                                    <NButton
-                                        ghost
-                                        type="warning"
-                                        onClick={() => gitMergeAbort()}
-                                    >
-                                        退出合并
-                                    </NButton>
-                                </div>
-                                <div class={tw`mt-[6px]`}>
-                                    处理完所有冲突后，提交commit，即可完成合并！
-                                </div>
+                                    退出合并
+                                </NButton>
                             </div>
-                        );
-                    },
-                }
-            )!;
+                            <div class={tw`mt-[6px]`}>
+                                处理完所有冲突后，提交commit，即可完成合并！
+                            </div>
+                        </div>
+                    );
+                },
+            }
+        )!;
     } else {
         mergeMessageReactive?.destroy();
         mergeMessageReactive = null;
         repoStatus.mergeMsg = undefined;
     }
 };
-export const checkMerge = async () => {
+export const checkMerge = async (reset = false) => {
     repoStatus.isRebaseMerge = await isRebaseMerge();
+    console.log(repoStatus.isRebaseMerge);
+
     getRebaseMergeMsg();
-    showRebaseMergeDialog();
+    showRebaseMergeDialog(reset);
 
     repoStatus.isMerge = await isMerge();
     getMergeMsg();
-    showMergeDialog();
+    showMergeDialog(reset);
 };
 effect(checkMerge);
 repoChangeWatch(checkMerge);

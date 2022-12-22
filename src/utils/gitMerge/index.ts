@@ -12,5 +12,5 @@ export const readMergeMsg = (dir: Cwd = curRepoDir.value) => {
 };
 
 export const isMerge = (dir: Cwd = curRepoDir.value): Promise<boolean> => {
-    return exists(`${dir}/.git/MERGE_MSG`) as any;
+    return exists(`${dir}/.git/MERGE_HEAD`) as any;
 };
