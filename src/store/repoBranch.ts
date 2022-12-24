@@ -58,3 +58,17 @@ export const changeBranch = async (branchInfo: GitBranch) => {
     await gitSwitch(branchInfo.name);
     await getBranch();
 };
+
+export const getUpstreamBranch = (branch: GitBranch) => {
+    if (branch.remotes) {
+        return branch;
+    }
+    if (!branch.upstream) {
+        console.error(branch, `此分支没有关联上游分支`);
+        return;
+    }
+    const upstream = branch.upstream;
+    return repoBranchs.value.find((item) => {
+        return item.name === upstream;
+    });
+};

@@ -5,6 +5,8 @@ import {
     changeBranch,
     curRepoBranch,
     repoStatus,
+    repoBranchs,
+    getUpstreamBranch,
 } from "@/store";
 import {
     addBranch,
@@ -55,11 +57,13 @@ const rebaseToHEAD = () => {
     });
 };
 const fetch = async () => {
-    await gitFetch({ remoteBranch: contextmenuBranch.value! });
+    await gitFetch({
+        remoteBranch: getUpstreamBranch(contextmenuBranch.value!)!,
+    });
 };
 const pull = async (rebase: boolean = false) => {
     await gitPull({
-        remote: contextmenuBranch.value!,
+        remote: getUpstreamBranch(contextmenuBranch.value!)!,
         rebase,
     });
 };
@@ -97,6 +101,17 @@ const isRemoteFetching = computed(() => {
             </Button>
         </template>
         <template v-else>
+            <template v-if="contextmenuBranch?.upstream">
+                <Button @click="fetch" :disabled="isRemoteFetching">
+                    拉取此分支上游分支的信息
+                </Button>
+                <Button @click="pull(true)" :disabled="isRemoteFetching">
+                    拉取此分支上游分支的信息并<b>变基</b>到当前分支
+                </Button>
+                <Button @click="pull(false)" :disabled="isRemoteFetching">
+                    拉取此分支上游分支的信息并<b>合并</b>到当前分支
+                </Button>
+            </template>
             <Button :disabled="contextBranchIsCurrent" @click="rebase">
                 将<code>HEAD</code>变基至此分支
             </Button>
