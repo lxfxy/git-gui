@@ -42,7 +42,6 @@ export const gitPush = async ({
         remote = repoBranchs.value.find((item) => {
             return item.remotes && item.name === branch.upstream;
         })!;
-        console.log(remote);
     }
     args.push(remote.remote!, `${branch.branchname}:${remote.branchname}`);
     const command = runCommand("git", args, { cwd });

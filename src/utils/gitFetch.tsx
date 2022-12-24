@@ -20,8 +20,6 @@ export const gitFetch = async ({
             [remoteBranch.name]: true,
         },
     });
-    console.log(repoStatus);
-
     command.on("command-error", commandErrorDialog);
     return await command.exec().finally(() => {
         setRepoStatus({

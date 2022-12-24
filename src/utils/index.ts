@@ -1,7 +1,5 @@
-import { curRepoDir } from "@/store";
 import { sep } from "@tauri-apps/api/path";
-import { watch } from "tauri-plugin-fs-watch-api";
-import { effect } from "vue";
+import { withModifiers } from "vue";
 
 /**
  * 获取一个路径的最后的名字
@@ -20,6 +18,35 @@ export const sleep = (timer: number) => {
         setTimeout(() => {
             resolve(timer);
         }, timer);
+    });
+};
+
+export const jsxClickStop = withModifiers(() => {}, ["stop"]);
+
+export const arrayToObj = <T extends any[]>(
+    arr: T,
+    key: keyof T[0]
+): Record<string, T[0]> => {
+    return arr.reduce((memo, item) => {
+        memo[item[key]] = item;
+        return memo;
+    }, {} as any);
+};
+
+/**
+ * 如果数组中存在相同值的内容，将不会插入
+ */
+export const addArrayOnce = <T extends any[]>(array: T, ...values: T) => {
+    for (const item of values) {
+        if (!array.includes(item)) {
+            array.push(item);
+        }
+    }
+};
+
+export const filterArrayItems = <T extends any[]>(array: T, ...values: T) => {
+    return array.filter((item) => {
+        return !values.includes(item);
     });
 };
 

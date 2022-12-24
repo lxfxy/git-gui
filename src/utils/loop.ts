@@ -38,7 +38,7 @@ window.addEventListener("load", () => {
                 if ((e.payload as string).endsWith(".git")) {
                     return;
                 }
-                console.log("watch .git \n", e);
+                // console.log("watch .git \n", e);
                 changes.push(e);
                 emitCbs();
             }

@@ -8,6 +8,8 @@ import {
     curRepo,
     setCurRepo,
     setContextmenuRemote,
+    repoCurGroupRepos,
+    contextmenuScheduler,
 } from "@/store";
 import {
     NButton,
@@ -22,17 +24,17 @@ import {
 } from "naive-ui";
 import { PlaylistAddTwotone } from "@vicons/material";
 import { apply, tw } from "twind";
-import { Ref, ref } from "vue";
+import { onMounted, Ref, ref } from "vue";
 import Operation from "./Operation.vue";
 import { useContextmenu } from "@/hooks";
 import { css } from "twind/css";
 import { Add, CheckmarkDoneSharp } from "@vicons/ionicons5";
 import RemoteOperation from "./RemoteOperation.vue";
 import { addRemote, Clone } from "@/utils";
+import Groups from "./Goups.vue";
 const container = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
-const { x, y, show, open, close } = useContextmenu({
-    container,
-});
+const { x, y, show, open, close, setContainer } = contextmenuScheduler;
+setContainer(container);
 const contextmenu = (item: RepoInfo, e: MouseEvent) => {
     e.preventDefault();
     setContextmenuRepo(item);
@@ -43,12 +45,24 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
 
 <template>
     <div :class="tw`flex flex-col flex-1 overflow-hidden`" ref="container">
-        <NPopover trigger="manual" :x="x" :y="y" :show="show" placement="right">
+        <NPopover
+            trigger="manual"
+            :x="x"
+            :y="y + 50"
+            :show="show"
+            placement="right"
+            :arrow-style="{
+                top: `calc(50% - 50px)`,
+            }"
+            @clickoutside="close"
+        >
             <Operation />
             <RemoteOperation />
         </NPopover>
         <div :class="tw`title flex justify-between items-center`">
-            <div>仓库列表</div>
+            <div :class="[tw`flex gap-x-[6px] items-center`]">
+                仓库列表 <Groups />
+            </div>
             <NButtonGroup>
                 <NButton quaternary type="success" @click="Clone">
                     克隆
@@ -72,7 +86,7 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
         >
             <NCollapse>
                 <NCollapseItem
-                    v-for="(repo, key) in repos"
+                    v-for="(repo, key) in repoCurGroupRepos"
                     :key="key"
                     :class="[
                         tw`p-[10px] cursor-pointer mt-0!`,

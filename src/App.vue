@@ -23,8 +23,6 @@ const layout = reactive({
 });
 readFileToJSON("data/layout.json")
     .then((newLayout) => {
-        console.log(newLayout);
-
         Object.assign(layout, newLayout);
     })
     .finally(() => {

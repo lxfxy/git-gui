@@ -162,8 +162,6 @@ export let showMergeDialog = async (reset = false) => {
 };
 export const checkMerge = async (reset = false) => {
     repoStatus.isRebaseMerge = await isRebaseMerge();
-    console.log(repoStatus.isRebaseMerge);
-
     getRebaseMergeMsg();
     showRebaseMergeDialog(reset);
 

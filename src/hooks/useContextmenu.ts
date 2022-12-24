@@ -1,4 +1,4 @@
-import { reactive, Ref, ref } from "vue";
+import { reactive, Ref, ref, VNode } from "vue";
 
 interface Position {
     x: number;
@@ -10,15 +10,18 @@ document.addEventListener("mousemove", (e) => {
     position.y = e.clientY;
 });
 interface UseContextmenuOptions {
-    container: Ref<Element | undefined>;
+    container?: Ref<Element | undefined>;
     onClose?: () => void;
     onOpen?: () => void;
+    clickoutside?: boolean;
 }
 export const useContextmenu = ({
     container,
     onClose,
     onOpen,
-}: UseContextmenuOptions) => {
+    clickoutside = false,
+}: UseContextmenuOptions = {}) => {
+    let _container = container;
     const x = ref(0);
     const y = ref(0);
     const show = ref(false);
@@ -32,11 +35,16 @@ export const useContextmenu = ({
         show.value = false;
         onClose?.();
     };
-    document.addEventListener("click", () => {
-        close();
+    const setContainer = (newContainer: UseContextmenuOptions["container"]) => {
+        _container = newContainer;
+    };
+    document.addEventListener("click", (e) => {
+        if (!clickoutside) {
+            close();
+        }
     });
     document.addEventListener("contextmenu", (e) => {
-        if (!container.value?.contains(e.target as any)) {
+        if (!_container?.value?.contains(e.target as any)) {
             close();
         }
     });
@@ -46,5 +54,6 @@ export const useContextmenu = ({
         show,
         open,
         close,
+        setContainer,
     };
 };

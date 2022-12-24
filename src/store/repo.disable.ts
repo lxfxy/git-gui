@@ -20,6 +20,7 @@ export interface RepoInfo {
     dir: string;
     title: string;
     isCurrent?: boolean;
+    group?: string;
 }
 export const repos = reactive<Record<string, RepoInfo>>({});
 export const curRepo = ref<RepoInfo>();
@@ -83,3 +84,48 @@ readFileToJSON<Record<string, RepoInfo>>("data/repos.json")
     });
 
 export const [contextmenuRepo, setContextmenuRepo] = useRef<RepoInfo>();
+
+export interface RepoGroup {
+    name: string;
+    repos: string[];
+}
+export const [repoGroups, setRepoGroups] = useRef<RepoGroup[]>([
+    {
+        name: "默认分组",
+        repos: [],
+    },
+]);
+export const [repoCurGroup, setRepoCurGroup] = useRef<RepoGroup>();
+readFileToJSON<RepoGroup[]>("data/repoGroups.json")
+    .then((res) => {
+        repoGroups.value = res;
+    })
+    .then(() => {
+        effect(() => {
+            writeFile("data/repoGroups.json", JSON.stringify(repoGroups.value));
+        });
+    });
+export const repoGroupsName = computed(() => {
+    return repoGroups.value?.map((item) => item.name) || [];
+});
+export const addRepoGroups = (name: string) => {
+    if (repoGroupsName.value.includes(name)) {
+        return;
+    }
+    repoGroups.value?.push({
+        name,
+        repos: [],
+    });
+    repoGroups.value = [...repoGroups.value!];
+};
+export const removeRepoGroups = (name: string) => {
+    repoGroups.value = repoGroups.value?.filter((item) => {
+        return item.name !== name;
+    });
+};
+export const changeRepoGroupName = (oldName: string, newName: string) => {
+    const repoGroup = repoGroups.value?.find((item) => {
+        return item.name === oldName;
+    });
+    repoGroup!.name = newName;
+};
