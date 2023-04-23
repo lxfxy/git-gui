@@ -1,24 +1,8 @@
-import { curRepoDir } from "@/store";
+import { curRepoDir, isBlur, isFocus } from "@/store";
 import { effect, nextTick, watch } from "vue";
 import { sleep } from ".";
 import { watch as watchFile, DebouncedEvent } from "tauri-plugin-fs-watch-api";
 import { debounce } from "lodash";
-import { listen } from "@tauri-apps/api/event";
-import { useRef } from "@/hooks";
-
-// const [isBlur, setBlurFlag] = useRef(false);
-// const [isFocus, setFocusFlag] = useRef(false);
-let isBlur = false,
-    isFocus = false;
-listen("tauri://blur", () => {
-    isBlur = true;
-    isFocus = false;
-});
-listen("tauri://focus", () => {
-    isBlur = false;
-    isFocus = true;
-    // requestIdleCallback(loopScheduler);
-});
 const loopFns: any[] = [];
 export const loop = (fn: any) => {
     if (loopFns.includes(fn)) {
@@ -27,15 +11,19 @@ export const loop = (fn: any) => {
     loopFns.push(fn);
 };
 let handle: number;
+let index = 0;
 const loopScheduler: IdleRequestCallback = async (deadline) => {
-    cancelIdleCallback(handle);
-    await Promise.all(loopFns.map((fn) => fn()));
+    const requests: Promise<any>[] = [];
+    let start = index;
+    for (start; start < index + 2; start++) {
+        console.log(start);
+        requests.push(loopFns[start % loopFns.length]?.());
+    }
+    index = start % loopFns.length;
+    await Promise.all(requests);
     await sleep(600);
-    // if (isFocus) {
-    //     handle = requestIdleCallback(loopScheduler);
-    // }
 };
-requestIdleCallback(loopScheduler);
+// requestIdleCallback(loopScheduler);
 let stopWatch: Function;
 const cbs = new Set<Function>();
 const changes: DebouncedEvent[] = [];
@@ -45,11 +33,15 @@ const emitCbs = debounce(async () => {
     await Promise.all([...cbs].map((cb) => cb(curChanges)));
 });
 window.addEventListener("load", () => {
+    watch(() => isFocus.value, emitCbs);
     effect(async () => {
         if (stopWatch) {
             stopWatch();
         }
         if (!curRepoDir.value) {
+            return;
+        }
+        if (isBlur.value) {
             return;
         }
         await emitCbs();

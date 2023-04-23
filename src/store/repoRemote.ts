@@ -7,7 +7,7 @@ import {
     repoChangeWatch,
     isExists,
 } from "@/utils";
-import { effect, reactive, ref } from "vue";
+import { effect, reactive, ref, watch } from "vue";
 import { curRepoDir, repos } from "./repo";
 
 export const repoRemotes = ref<Record<string, GitRemote>>({});
@@ -28,8 +28,13 @@ export const getAllRemotes = async () => {
     const dirs = Object.keys(repos);
     const result: any = {};
     for (const dir of dirs) {
-        if (await isExists(dir)) {
+        try {
             result[dir] = await gitRemote(dir);
+        } catch (error) {
+            // console.group("getAllRemotes");
+            // console.log(dir);
+            // console.log(error);
+            // console.groupEnd();
         }
     }
     allRemotes.value = result;
@@ -37,5 +42,6 @@ export const getAllRemotes = async () => {
 // loop(getAllRemotes);
 repoChangeWatch(getAllRemotes);
 // effect(getAllRemotes);
+watch(() => [repos], getAllRemotes, { deep: true });
 
 export const [contextmenuRemote, setContextmenuRemote] = useRef<GitRemote>();
