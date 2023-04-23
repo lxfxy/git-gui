@@ -9,7 +9,7 @@ loadRepoData();
 export async function loadRepoData() {
     const [reposData, repoGroupsData] = await Promise.all([
         readFileToJSON<Record<string, RepoInfo>>("data/repos.json"),
-        readFileToJSON<RepoGroup[]>("data/repoGroups.json"),
+        readFileToJSON<RepoGroup[]>("data/repoGroups.json", repoGroups.value),
     ]);
     if (!isEmpty(reposData)) {
         Object.assign(repos, reposData);

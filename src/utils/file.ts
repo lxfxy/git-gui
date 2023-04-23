@@ -26,20 +26,23 @@ export const readFile = (path: string, options?: FsOptions) => {
 };
 export const readFileToJSON = async <T>(
     path: string,
+    defaultValue?: T,
     options?: FsOptions
 ): Promise<T> => {
     try {
         const res = await readFile(path, options);
         return JSON.parse(res);
     } catch {
-        return {} as any;
+        return defaultValue || ({} as any);
     }
 };
 export const isExists = async (dir: string, create: boolean = false) => {
-    const flag: any = await exists(dir, fsOptions);
+    let flag: any = await exists(dir, fsOptions);
     if (!flag && create) {
         mkdir(dir, { recursive: true });
+        flag = true;
     }
+    return flag;
 };
 export const writeFile = async (
     path: string,

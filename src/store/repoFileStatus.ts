@@ -26,7 +26,7 @@ const readRepoFilesStatus = async () => {
 };
 // loop(readRepoFilesStatus);
 repoChangeWatch(readRepoFilesStatus);
-effect(readRepoFilesStatus);
+// effect(readRepoFilesStatus);
 
 export const [fileStatusWorkspace, setFileStatusWorkspace] =
     useRef<RepoWorkTree>(RepoWorkTree.Workspace);

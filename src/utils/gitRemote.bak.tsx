@@ -34,7 +34,8 @@ export interface GitRemote {
 }
 export const gitRemote = async (cwd: Cwd = curRepoDir.value) => {
     const command = runCommand("git", ["remote", "-v"], { cwd });
-    await command.spawn();
+    // await command.spawn();
+    await command.exec();
     return new Promise<Record<string, GitRemote>>((resolve) => {
         const result: Record<string, GitRemote> = {};
         command.stdout.on("data", (remoteInfo) => {

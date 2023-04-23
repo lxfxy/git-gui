@@ -1,7 +1,9 @@
+import { Child } from "@tauri-apps/api/shell";
 import { EventEmitter } from "@tauri-apps/api/shell";
 import { ChildProcess, Command, SpawnOptions } from "@tauri-apps/api/shell";
 import { tw } from "twind";
-import { dialog } from "./globalApis";
+import { ref } from "vue";
+import { dialog, notification } from "./globalApis";
 export type CommandEvent = "command-error" | "command-success";
 export interface CommandEventData {
     shell: string;
@@ -161,3 +163,5 @@ export const commandErrorDialog = ({
         },
     });
 };
+
+export const showNotify = ref(true);

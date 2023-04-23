@@ -6,6 +6,7 @@ import {
     gitRebaseSkip,
     isMerge,
     isRebaseMerge,
+    loop,
     readMergeMsg,
     readRebaseMergeMsg,
     repoChangeWatch,
@@ -17,6 +18,7 @@ import { curRepoBranch } from "./repoBranch";
 import { readTextFile } from "@tauri-apps/api/fs";
 import { curRepoDir } from "./repo";
 import { center } from "@/styles";
+import { useQuery } from "@tanstack/vue-query";
 
 export interface PushingMsg {
     remoteName?: string;
@@ -114,7 +116,7 @@ export const getMergeMsg = async () => {
         };
     }
 };
-export let showMergeDialog = async (reset = false) => {
+export let showMergeDialog = async () => {
     mergeMessageReactive?.destroy();
     if (repoStatus.isMerge) {
         mergeMessageReactive = message.value?.warning(
@@ -160,14 +162,26 @@ export let showMergeDialog = async (reset = false) => {
         repoStatus.mergeMsg = undefined;
     }
 };
-export const checkMerge = async (reset = false) => {
-    repoStatus.isRebaseMerge = await isRebaseMerge();
+export const checkMerge = async () => {
+    [repoStatus.isRebaseMerge, repoStatus.isMerge] = await Promise.all([
+        isRebaseMerge(),
+        isMerge(),
+    ]);
     getRebaseMergeMsg();
-    showRebaseMergeDialog(reset);
-
-    repoStatus.isMerge = await isMerge();
     getMergeMsg();
-    showMergeDialog(reset);
 };
-effect(checkMerge);
+watch(
+    () => repoStatus.isMerge,
+    () => {
+        showMergeDialog();
+    }
+);
+watch(
+    () => repoStatus.isRebaseMerge,
+    () => {
+        showRebaseMergeDialog();
+    }
+);
+// effect(checkMerge);
 repoChangeWatch(checkMerge);
+// loop(checkMerge);

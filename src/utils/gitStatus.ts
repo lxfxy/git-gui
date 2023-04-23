@@ -57,7 +57,8 @@ export const getRepoFileStatus = async (cwd: Cwd = curRepoDir.value) => {
         }
     });
     const child = await command.spawn();
-
+    // const child = await command.exec();
+    // return [files, historyFiles];
     return new Promise<FileStatus[][]>((resolve) => {
         command.on("close", () => {
             resolve([files, historyFiles]);

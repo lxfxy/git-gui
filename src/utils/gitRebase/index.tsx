@@ -41,7 +41,7 @@ export const gitRebaseContinue = async (cwd: string = curRepoDir.value!) => {
 };
 
 export const isRebaseMerge = (): Promise<boolean> => {
-    return exists(`${curRepoDir.value}/.git/REBASE_HEAD`) as any;
+    return exists(`${curRepoDir.value}/.git/rebase-merge`) as any;
 };
 
 export const readRebaseMergeMsg = async (repoDir: string) => {

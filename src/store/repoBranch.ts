@@ -5,6 +5,7 @@ import {
     gitSwitch,
     loop,
     repoChangeWatch,
+    showNotify,
     sleep,
 } from "@/utils";
 import { message } from "@/utils/globalApis";

@@ -5,6 +5,7 @@ import {
     GitRemote,
     GitRemoteUrl,
     repoChangeWatch,
+    isExists,
 } from "@/utils";
 import { effect, reactive, ref } from "vue";
 import { curRepoDir, repos } from "./repo";
@@ -20,19 +21,21 @@ export const getRemotes = async () => {
 };
 // loop(getRemotes);
 repoChangeWatch(getRemotes);
-effect(getRemotes);
+// effect(getRemotes);
 
 export const allRemotes = ref<Record<string, Record<string, GitRemote>>>({});
 export const getAllRemotes = async () => {
     const dirs = Object.keys(repos);
     const result: any = {};
     for (const dir of dirs) {
-        result[dir] = await gitRemote(dir);
+        if (await isExists(dir)) {
+            result[dir] = await gitRemote(dir);
+        }
     }
     allRemotes.value = result;
 };
 // loop(getAllRemotes);
 repoChangeWatch(getAllRemotes);
-effect(getAllRemotes);
+// effect(getAllRemotes);
 
 export const [contextmenuRemote, setContextmenuRemote] = useRef<GitRemote>();

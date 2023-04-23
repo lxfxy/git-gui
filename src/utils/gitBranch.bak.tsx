@@ -57,7 +57,8 @@ export const gitBranch = async (cwd: Cwd = curRepoDir.value) => {
     const command = runCommand("git", ["branch", "-a", "--format", format], {
         cwd,
     });
-    const child = await command.spawn();
+    // const child = await command.spawn();
+    const child = await command.exec();
     return new Promise<[GitBranch, GitBranch[]]>((resolve) => {
         let activeBranch: GitBranch;
         let chunks: string[][] = [];

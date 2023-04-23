@@ -4,6 +4,7 @@ import { getFilePathLastText } from "@/utils";
 import { open } from "@tauri-apps/api/dialog";
 import { listen } from "@tauri-apps/api/event";
 import { computed, effect, reactive, ref, watch } from "vue";
+import { addRepoGroupRepo, delRepoGroupRepo } from "./groups";
 
 export const defaultGroupName = "默认分组";
 export interface RepoInfo {
@@ -39,11 +40,16 @@ export const addLocalRepo = (dirs: string[]) => {
             isCurrent: false,
             group: [defaultGroupName],
         };
+        addRepoGroupRepo(defaultGroupName, [dir]);
     }
 };
 export const delLocalRepo = (dirs: string[]) => {
     for (const dir of dirs) {
-        if (repos[dir]) {
+        const repo = repos[dir];
+        if (repo) {
+            repo.group.forEach((group) => {
+                delRepoGroupRepo(group, [repo.dir]);
+            });
             delete repos[dir];
         }
     }

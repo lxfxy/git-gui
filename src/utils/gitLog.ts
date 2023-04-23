@@ -59,6 +59,9 @@ export const gitLog = async ({
         lines.push(data);
     });
     await command.spawn();
+    // await command.exec();
+    // return result;
+
     return new Promise<GitLog[]>((resolve) => {
         command.on("close", () => {
             resolve(result);

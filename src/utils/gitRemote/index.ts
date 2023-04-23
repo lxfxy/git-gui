@@ -21,7 +21,23 @@ export interface GitRemote {
 }
 export const gitRemote = async (cwd: Cwd = curRepoDir.value) => {
     const command = runCommand("git", ["remote", "-v"], { cwd });
+    const result: Record<string, GitRemote> = {};
+    command.stdout.on("data", (remoteInfo) => {
+        const [, name, url, type] = /(.+?)\s+(.+?)\s\((\w+)\)/.exec(
+            remoteInfo
+        )!;
+        const info = {
+            name,
+            url,
+            type,
+        };
+        result[name] = result[name] || { name, urls: [] };
+        result[name][type as "fetch" | "push"] = info;
+        result[name].urls.push(info);
+    });
     await command.spawn();
+    // await command.exec();
+    // return result;
     return new Promise<Record<string, GitRemote>>((resolve) => {
         const result: Record<string, GitRemote> = {};
         command.stdout.on("data", (remoteInfo) => {
@@ -50,6 +66,7 @@ export const gitRemoteUpdate = async (cwd: Cwd = curRepoDir.value) => {
         status[remoteBranch.name] = true;
     }
     setRepoStatus({ isRemoteRefetching: status });
+    command.addListener("command-error", commandErrorDialog);
     const child = await command.exec().finally(() => {
         for (const remoteBranch of repoRemotesBranchs.value) {
             status[remoteBranch.name] = false;

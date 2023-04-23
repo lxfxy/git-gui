@@ -24,25 +24,25 @@ import { computed, watch } from "vue";
 import Button from "../Branch/Button";
 const { close } = contextmenuScheduler;
 const vscodeOpen = async () => {
+    close();
     const command = runCommand("code", [contextmenuRepo.value!.dir]);
     await command.exec().catch(commandErrorDialog);
-    close();
 };
 const openDir = async () => {
+    close();
     await open(contextmenuRepo.value!.dir);
     // const command = runCommand("start", [contextmenuRepo.value!.dir]);
     // const data = await command.exec().catch(commandErrorDialog);
-    close();
 };
 const copyRepoName = async () => {
+    close();
     await writeText(contextmenuRepo.value!.title);
     message.value?.success("复制仓库名成功");
-    close();
 };
 const copyRepoDir = async () => {
+    close();
     await writeText(contextmenuRepo.value!.dir);
     message.value?.success("复制仓库目录路径成功");
-    close();
 };
 const contextmenuRepoIsCurrent = computed(() => {
     return contextmenuRepo.value! === curRepo.value!;
@@ -98,6 +98,7 @@ watch(
                 filterable
                 multiple
                 v-model:value="contextmenuRepo!.group"
+                placement="top"
             >
             </NSelect>
         </NPopconfirm>

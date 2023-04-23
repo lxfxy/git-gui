@@ -8,6 +8,7 @@ import {
     zhCN,
     dateZhCN,
     NDialogProvider,
+    NNotificationProvider,
 } from "naive-ui";
 import { apply, tw } from "twind";
 import { theme, ThemeType } from "@/store/theme";
@@ -34,7 +35,12 @@ const themes: Record<ThemeType, GlobalTheme> = {
     >
         <NMessageProvider>
             <NDialogProvider>
-                <slot></slot>
+                <NNotificationProvider
+                    placement="bottom-right"
+                    :container-style="{ maxHeight: '80vh' }"
+                >
+                    <slot></slot>
+                </NNotificationProvider>
             </NDialogProvider>
         </NMessageProvider>
     </NConfigProvider>
