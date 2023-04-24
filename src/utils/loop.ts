@@ -12,14 +12,18 @@ export const loop = (fn: any) => {
 };
 let handle: number | null = null;
 let index = 0;
+const maxRequestNum = 2;
 const loopScheduler: IdleRequestCallback = async (deadline) => {
-    const requests: Promise<any>[] = [];
-    let start = index;
-    for (start; start < index + 2; start++) {
-        console.log(start);
-        requests.push(loopFns[start % loopFns.length]?.());
+    let requests: Promise<any>[] = [];
+    if (maxRequestNum > loopFns.length) {
+        requests = loopFns.map((f) => f());
+    } else {
+        let start = index;
+        for (; start < index + maxRequestNum; start++) {
+            requests.push(loopFns[start % loopFns.length]?.());
+        }
+        index = start % loopFns.length;
     }
-    index = start % loopFns.length;
     await Promise.all(requests);
     if (isBlur.value) {
         handle = null;
