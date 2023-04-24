@@ -183,5 +183,5 @@ watch(
     }
 );
 // effect(checkMerge);
-repoChangeWatch(checkMerge);
-// loop(checkMerge);
+// repoChangeWatch(checkMerge);
+loop(checkMerge);

@@ -35,8 +35,8 @@ export const getBranch = async () => {
         }
     }
 };
-// loop(getBranch);
-repoChangeWatch(getBranch);
+loop(getBranch);
+// repoChangeWatch(getBranch);
 watch(() => [curRepoDir.value, repoRemotes.value], getBranch, {
     immediate: true,
 });

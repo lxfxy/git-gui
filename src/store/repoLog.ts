@@ -66,8 +66,8 @@ const getLogs = async () => {
         await refetchLogs();
     }
 };
-// loop(getLogs);
-repoChangeWatch(getLogs);
+loop(getLogs);
+// repoChangeWatch(getLogs);
 
 export const repoLogsMsg = reactive<Record<string, string[]>>({});
 export const getRepoLogMsg = async (hash: string) => {

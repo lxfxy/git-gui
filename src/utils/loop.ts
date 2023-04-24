@@ -10,7 +10,7 @@ export const loop = (fn: any) => {
     }
     loopFns.push(fn);
 };
-let handle: number;
+let handle: number | null = null;
 let index = 0;
 const loopScheduler: IdleRequestCallback = async (deadline) => {
     const requests: Promise<any>[] = [];
@@ -21,9 +21,14 @@ const loopScheduler: IdleRequestCallback = async (deadline) => {
     }
     index = start % loopFns.length;
     await Promise.all(requests);
+    if (isBlur.value) {
+        handle = null;
+        return;
+    }
     await sleep(600);
+    handle = requestIdleCallback(loopScheduler);
 };
-// requestIdleCallback(loopScheduler);
+
 let stopWatch: Function;
 const cbs = new Set<Function>();
 const changes: DebouncedEvent[] = [];
@@ -33,6 +38,16 @@ const emitCbs = debounce(async () => {
     await Promise.all([...cbs].map((cb) => cb(curChanges)));
 });
 window.addEventListener("load", () => {
+    handle = requestIdleCallback(loopScheduler);
+    watch(
+        () => isFocus.value,
+        (isFocus) => {
+            if (handle === null && isFocus) {
+                handle = requestIdleCallback(loopScheduler);
+            }
+        }
+    );
+    return;
     watch(() => isFocus.value, emitCbs);
     effect(async () => {
         if (stopWatch) {

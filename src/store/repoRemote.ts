@@ -19,8 +19,8 @@ export const getRemotes = async () => {
         repoRemoteNames.value = Object.keys(remotes);
     }
 };
-// loop(getRemotes);
-repoChangeWatch(getRemotes);
+loop(getRemotes);
+// repoChangeWatch(getRemotes);
 // effect(getRemotes);
 
 export const allRemotes = ref<Record<string, Record<string, GitRemote>>>({});
@@ -39,8 +39,8 @@ export const getAllRemotes = async () => {
     }
     allRemotes.value = result;
 };
-// loop(getAllRemotes);
-repoChangeWatch(getAllRemotes);
+loop(getAllRemotes);
+// repoChangeWatch(getAllRemotes);
 // effect(getAllRemotes);
 watch(() => [repos], getAllRemotes, { deep: true });
 

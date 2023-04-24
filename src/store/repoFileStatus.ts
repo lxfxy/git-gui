@@ -24,8 +24,8 @@ const readRepoFilesStatus = async () => {
             await getRepoFileStatus();
     }
 };
-// loop(readRepoFilesStatus);
-repoChangeWatch(readRepoFilesStatus);
+loop(readRepoFilesStatus);
+// repoChangeWatch(readRepoFilesStatus);
 // effect(readRepoFilesStatus);
 
 export const [fileStatusWorkspace, setFileStatusWorkspace] =
