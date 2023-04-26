@@ -54,13 +54,6 @@ export const logsInfinityQuery = () => {
 export const refetchLogs = () => {
     return Promise.all([...refetchs].map((refetch) => refetch()));
 };
-watch(
-    () => [curRepoDir.value, curRepoBranch.value],
-    () => {
-        // repoLogs.length = 0;
-        refetchLogs();
-    }
-);
 const getLogs = async () => {
     if (curRepoDir.value) {
         await refetchLogs();
@@ -68,6 +61,13 @@ const getLogs = async () => {
 };
 loop(getLogs);
 // repoChangeWatch(getLogs);
+// watch(
+//     () => [curRepoDir.value, curRepoBranch.value],
+//     () => {
+//         // repoLogs.length = 0;
+//         refetchLogs();
+//     }
+// );
 
 export const repoLogsMsg = reactive<Record<string, string[]>>({});
 export const getRepoLogMsg = async (hash: string) => {

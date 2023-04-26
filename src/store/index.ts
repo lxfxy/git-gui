@@ -1,13 +1,14 @@
 import { useRef } from "@/hooks";
+import { listen } from "@tauri-apps/api/event";
 import { ref } from "vue";
 
 export const isBlur = ref(false);
 export const isFocus = ref(false);
-window.addEventListener("focus", () => {
+listen("tauri://focus", () => {
     isBlur.value = false;
     isFocus.value = true;
 });
-window.addEventListener("blur", () => {
+listen("tauri://blur", () => {
     isBlur.value = true;
     isFocus.value = false;
 });

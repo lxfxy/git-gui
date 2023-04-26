@@ -39,9 +39,9 @@ export const getAllRemotes = async () => {
     }
     allRemotes.value = result;
 };
-loop(getAllRemotes);
+// loop(getAllRemotes);
 // repoChangeWatch(getAllRemotes);
 // effect(getAllRemotes);
-watch(() => [repos], getAllRemotes, { deep: true });
+// watch(() => [curRepoDir.value], getAllRemotes);
 
 export const [contextmenuRemote, setContextmenuRemote] = useRef<GitRemote>();

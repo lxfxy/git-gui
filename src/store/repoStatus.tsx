@@ -57,7 +57,6 @@ export const getRebaseMergeMsg = async () => {
     }
 };
 export const showRebaseMergeDialog = async (reset = false) => {
-    rebaseMergeMessageReactive?.destroy();
     if (repoStatus.isRebaseMerge) {
         rebaseMergeMessageReactive = message.value?.warning(
             () => {
@@ -117,7 +116,6 @@ export const getMergeMsg = async () => {
     }
 };
 export let showMergeDialog = async () => {
-    mergeMessageReactive?.destroy();
     if (repoStatus.isMerge) {
         mergeMessageReactive = message.value?.warning(
             () => {

@@ -30,6 +30,8 @@ export const getBranch = async () => {
             repoHeadsBranchs.value,
             repoRemotesBranchs.value,
         ] = await gitBranch();
+        console.log("getBranch");
+
         if (curRepoBranch.value?.name !== newCurBranch?.name) {
             curRepoBranch.value = newCurBranch;
         }
@@ -37,9 +39,9 @@ export const getBranch = async () => {
 };
 loop(getBranch);
 // repoChangeWatch(getBranch);
-watch(() => [curRepoDir.value, repoRemotes.value], getBranch, {
-    immediate: true,
-});
+// watch(() => [curRepoDir.value, repoRemotes.value], getBranch, {
+//     immediate: true,
+// });
 
 export const changeBranch = async (branchInfo: GitBranch) => {
     if (repoStatus.isRebaseMerge) {

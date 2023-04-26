@@ -2,9 +2,32 @@ import { curRepoDir, isBlur, isFocus } from "@/store";
 import { effect, nextTick, watch } from "vue";
 import { sleep } from ".";
 import { watch as watchFile, DebouncedEvent } from "tauri-plugin-fs-watch-api";
-import { debounce } from "lodash";
+import { debounce, throttle } from "lodash";
 const loopFns: any[] = [];
 export const loop = (fn: any) => {
+    let handle: number | null;
+    const loopInnerSchedule = async () => {
+        await fn();
+        if (isBlur.value) {
+            handle = null;
+            return;
+        }
+        nextTick(async () => {
+            await sleep(600);
+            handle = requestIdleCallback(loopInnerSchedule);
+        });
+    };
+    requestIdleCallback(() => {
+        handle = requestIdleCallback(loopInnerSchedule);
+        watch(
+            () => isFocus.value,
+            (isFocus) => {
+                if (handle === null && isFocus) {
+                    handle = requestIdleCallback(loopInnerSchedule);
+                }
+            }
+        );
+    });
     if (loopFns.includes(fn)) {
         return;
     }
@@ -12,10 +35,10 @@ export const loop = (fn: any) => {
 };
 let handle: number | null = null;
 let index = 0;
-const maxRequestNum = 2;
+const maxRequestNum = 3;
 const loopScheduler: IdleRequestCallback = async (deadline) => {
     let requests: Promise<any>[] = [];
-    if (maxRequestNum > loopFns.length) {
+    if (maxRequestNum >= loopFns.length) {
         requests = loopFns.map((f) => f());
     } else {
         let start = index;
@@ -29,8 +52,10 @@ const loopScheduler: IdleRequestCallback = async (deadline) => {
         handle = null;
         return;
     }
-    await sleep(600);
-    handle = requestIdleCallback(loopScheduler);
+    nextTick(async () => {
+        await sleep(200);
+        handle = requestIdleCallback(loopScheduler);
+    });
 };
 
 let stopWatch: Function;
@@ -42,13 +67,13 @@ const emitCbs = debounce(async () => {
     await Promise.all([...cbs].map((cb) => cb(curChanges)));
 });
 window.addEventListener("load", () => {
-    handle = requestIdleCallback(loopScheduler);
+    // handle = requestIdleCallback(loopScheduler);
     watch(
         () => isFocus.value,
         (isFocus) => {
-            if (handle === null && isFocus) {
-                handle = requestIdleCallback(loopScheduler);
-            }
+            // if (handle === null && isFocus) {
+            //     handle = requestIdleCallback(loopScheduler);
+            // }
         }
     );
     return;
