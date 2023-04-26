@@ -1,7 +1,7 @@
 import { fileStatusIsHistory, fileStatusWorkspace } from "@/store";
 import { gitRestore } from "@/utils";
 import { FileStatus, fileStatusType, RepoWorkTree } from "@/utils/gitStatus";
-import { DataTableColumns, NButton, NPopconfirm, NSelect } from "naive-ui";
+import { DataTableColumns, NButton, NPopconfirm, NSelect, ty } from "naive-ui";
 import { TableBaseColumn } from "naive-ui/es/data-table/src/interface";
 import { tw } from "twind";
 import { defineComponent, Prop, reactive, ref, toRefs } from "vue";
@@ -23,6 +23,7 @@ export const columns = reactive<DataTableColumns<FileStatus>>([
         key: "status",
         filterOptionValue: null,
         filterOptionValues: [],
+        width: 120,
         title() {
             return (
                 <div class={tw`flex items-center gap-x-[10px]`}>
@@ -40,22 +41,23 @@ export const columns = reactive<DataTableColumns<FileStatus>>([
     {
         key: "filename",
         title: "文件名",
+        ellipsis: true,
         render(data) {
-            return <code>{data.filename}</code>;
+            return <code title={data.filename}>{data.filename}</code>;
         },
     },
     {
         key: "filepath",
         title: "文件路径",
+        ellipsis: true,
         render(data) {
-            return <code>{data.filepath}</code>;
+            return <code title={data.filepath}>{data.filepath}</code>;
         },
         width: "60%",
     },
     {
         title: "操作",
         key: "filename",
-
         render(data) {
             return <TableOperationCol data={data} />;
         },

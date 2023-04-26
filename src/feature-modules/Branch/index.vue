@@ -125,28 +125,27 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
                 @dblclick="item.heads ? changeBranch(item) : null"
                 @contextmenu="contextmenu(item, $event)"
             >
-                <div
+                <NEllipsis
                     :class="[
-                        tw`flex-1 items-center flex gap-x-[4px] ml-[16px]`,
+                        tw`max-w-[80%] overflow-hidden`,
+                        tw`items-center flex gap-x-[4px] ml-[16px] overflow-hidden`,
                         `branch-content`,
                     ]"
                 >
-                    <NEllipsis :class="[tw`max-w-[80%]`]">
-                        <code>{{ item.name }}</code>
-                        <code v-show="item.upstream" :class="tw`text-color2`">
-                            -> {{ item.upstream }}
-                        </code>
-                    </NEllipsis>
-                    <span :class="tw`text-[12px] ml-[4px]`">
-                        <NTime
-                            v-if="item.updateDate"
-                            type="relative"
-                            :time="new Date(item.updateDate)"
-                            :to="new Date()"
-                        >
-                        </NTime>
-                    </span>
-                </div>
+                    <code>{{ item.name }}</code>
+                    <code v-show="item.upstream" :class="tw`text-color2`">
+                        -> {{ item.upstream }}
+                    </code>
+                </NEllipsis>
+                <span :class="tw`text-[12px] ml-[4px]`">
+                    <NTime
+                        v-if="item.updateDate"
+                        type="relative"
+                        :time="new Date(item.updateDate)"
+                        :to="new Date()"
+                    >
+                    </NTime>
+                </span>
                 <Opacity>
                     <template v-if="item.heads">
                         <div
