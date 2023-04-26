@@ -30,8 +30,6 @@ export const getBranch = async () => {
             repoHeadsBranchs.value,
             repoRemotesBranchs.value,
         ] = await gitBranch();
-        console.log("getBranch");
-
         if (curRepoBranch.value?.name !== newCurBranch?.name) {
             curRepoBranch.value = newCurBranch;
         }

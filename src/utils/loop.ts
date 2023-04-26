@@ -7,7 +7,9 @@ const loopFns: any[] = [];
 export const loop = (fn: any) => {
     let handle: number | null;
     const loopInnerSchedule = async () => {
-        await fn();
+        await fn().catch((e: any) => {
+            console.log(e);
+        });
         if (isBlur.value) {
             handle = null;
             return;

@@ -1,7 +1,7 @@
 import { fileStatusIsHistory, fileStatusWorkspace } from "@/store";
 import { gitRestore } from "@/utils";
 import { FileStatus, fileStatusType, RepoWorkTree } from "@/utils/gitStatus";
-import { DataTableColumns, NButton, NPopconfirm, NSelect, ty } from "naive-ui";
+import { DataTableColumns, NButton, NPopconfirm, NSelect } from "naive-ui";
 import { TableBaseColumn } from "naive-ui/es/data-table/src/interface";
 import { tw } from "twind";
 import { defineComponent, Prop, reactive, ref, toRefs } from "vue";

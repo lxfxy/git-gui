@@ -8,6 +8,7 @@ import {
     setContextmenuBranch,
     repoStatus,
     contextmenuBranch,
+    curRepoDir,
 } from "@/store";
 import { GitBranch, gitRemoteUpdate, addBranch } from "@/utils";
 import { Add } from "@vicons/ionicons5";
@@ -95,12 +96,12 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
         <NScrollbar :class="tw`flex-1 text-color1`" @scroll="close">
             <div
                 v-for="item in repoBranchs"
-                :key="item.name"
+                :key="`${item.name}${curRepoDir}`"
                 :type="
                     item.current ? `success` : item.remotes ? `info` : `default`
                 "
                 :class="[
-                    tw`select-none transition-all duration-[300ms] h-[38px] items-center flex gap-x-[4px]`,
+                    tw`select-none transition-all duration-[300ms] h-[38px] items-center flex gap-x-[4px] px-[16px]`,
                     tw`${css`
                         ${apply`${item.heads ? `cursor-pointer` : ``}`}
                         .branch-content {
@@ -127,8 +128,8 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
             >
                 <NEllipsis
                     :class="[
-                        tw`max-w-[80%] overflow-hidden`,
-                        tw`items-center flex gap-x-[4px] ml-[16px] overflow-hidden`,
+                        tw`flex-1 overflow-hidden`,
+                        tw`items-center flex gap-x-[4px] overflow-hidden`,
                         `branch-content`,
                     ]"
                 >
