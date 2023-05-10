@@ -9,6 +9,8 @@ declare module "*.vue" {
 
 declare var globalDialog: ReturnType<typeof import("naive-ui")["useDialog"]>;
 
+declare type StoreState = typeof import("./store/index.state");
+
 declare module globalThis {
     interface Window {
         showOpenFilePicker(): any;

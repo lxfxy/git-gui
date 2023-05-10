@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import {
-    getLocalRepo,
-    RepoInfo,
-    repos,
-    setContextmenuRepo,
     allRemotes,
-    curRepo,
-    setCurRepo,
-    setContextmenuRemote,
-    repoCurGroupRepos,
     contextmenuScheduler,
+    curRepo,
+    getLocalRepo,
+    repoCurGroupRepos,
+    RepoInfo,
+    setContextmenuRemote,
+    setContextmenuRepo,
+    setCurRepo,
 } from "@/store";
+import { addRemote, Clone } from "@/utils";
+import { css } from "@twind/core";
+import { Add, CheckmarkDoneSharp } from "@vicons/ionicons5";
+import { PlaylistAddTwotone } from "@vicons/material";
 import {
     NButton,
     NButtonGroup,
@@ -20,18 +23,11 @@ import {
     NPopover,
     NScrollbar,
     NTooltip,
-    useMessage,
 } from "naive-ui";
-import { PlaylistAddTwotone } from "@vicons/material";
-import { apply, tw } from "twind";
-import { onMounted, Ref, ref } from "vue";
-import Operation from "./Operation.vue";
-import { useContextmenu } from "@/hooks";
-import { css } from "twind/css";
-import { Add, CheckmarkDoneSharp } from "@vicons/ionicons5";
-import RemoteOperation from "./RemoteOperation.vue";
-import { addRemote, Clone } from "@/utils";
+import { Ref, ref } from "vue";
 import Groups from "./Goups.vue";
+import Operation from "./Operation.vue";
+import RemoteOperation from "./RemoteOperation.vue";
 const container = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
 const { x, y, show, open, close, setContainer } = contextmenuScheduler;
 setContainer(container);
@@ -44,7 +40,7 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
 </script>
 
 <template>
-    <div :class="tw`flex flex-col flex-1 overflow-hidden`" ref="container">
+    <div :class="`flex flex-col flex-1 overflow-hidden`" ref="container">
         <NPopover
             trigger="manual"
             :x="x"
@@ -59,8 +55,8 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
             <Operation />
             <RemoteOperation />
         </NPopover>
-        <div :class="tw`title flex justify-between items-center`">
-            <div :class="[tw`flex gap-x-[6px] items-center`]">
+        <div :class="`title flex justify-between items-center`">
+            <div :class="[`flex gap-x-[6px] items-center`]">
                 仓库列表 <Groups />
             </div>
             <NButtonGroup>
@@ -70,7 +66,7 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
                 <NButton quaternary type="success">
                     <template #icon>
                         <NIcon
-                            :class="tw`cursor-pointer`"
+                            :class="`cursor-pointer`"
                             size="24"
                             @click="getLocalRepo"
                         >
@@ -81,7 +77,7 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
             </NButtonGroup>
         </div>
         <NScrollbar
-            :class="tw`text-color1 transition-color flex-1`"
+            :class="`text-color1 transition-color flex-1`"
             @scroll="close"
         >
             <NCollapse>
@@ -89,8 +85,8 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
                     v-for="(repo, key) in repoCurGroupRepos"
                     :key="key"
                     :class="[
-                        tw`p-[10px] cursor-pointer mt-0!`,
-                        tw`${css`
+                        `p-[10px] cursor-pointer !mt-0`,
+                        `${css`
                             transition: background-color 0.6s !important;
 
                             .n-collapse-item__header {
@@ -108,17 +104,16 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
                             &.active .n-collapse-item__header {
                                 background-color: var(--bg-color) !important;
                                 .n-collapse-item__header-extra {
-                                    ${apply`opacity-100`}
+                                    @apply opacity-100;
                                 }
                             }
 
                             .n-collapse-item__header-extra {
-                                ${apply`opacity-0`}
-                                transition: opacity .3s !important;
+                                transition: opacity 0.3s !important;
                             }
                         `}`,
                         curRepo?.dir === repo.dir
-                            ? tw`bg-bgColor1` + ` active`
+                            ? `bg-bgColor1` + ` active`
                             : ``,
                     ]"
                     @contextmenu.capture="contextmenu(repo, $event)"
@@ -126,31 +121,27 @@ const contextmenu = (item: RepoInfo, e: MouseEvent) => {
                     <div
                         v-for="remote in allRemotes[repo.dir]"
                         :key="remote.name"
-                        :class="
-                            tw`flex flex-col overflow-hidden transition hover:bg-bgColor2`
-                        "
+                        :class="`flex flex-col overflow-hidden transition hover:bg-bgColor2`"
                         @contextmenu.capture="setContextmenuRemote(remote)"
                     >
                         <div
-                            :class="tw`gap-x-[10px] p-[10px]`"
+                            :class="`gap-x-[10px] p-[10px]`"
                             v-for="item in remote.urls"
                             :key="item.type"
                         >
-                            <div :class="tw`flex gap-x-[6px]`">
+                            <div :class="`flex gap-x-[6px]`">
                                 <code>{{ item.name }}</code>
                                 <code>({{ item.type }})</code>
                             </div>
                             <code
-                                :class="
-                                    tw`flex-1 whitespace-normal break-words`
-                                "
+                                :class="`flex-1 whitespace-normal break-words`"
                             >
                                 {{ item.url }}
                             </code>
                         </div>
                     </div>
                     <template #header>
-                        <div :class="tw`ml-[4px]`">
+                        <div :class="`ml-[4px]`">
                             {{ repo.title }}
                         </div>
                     </template>

@@ -3,7 +3,7 @@ import { getFilePathLastText } from "@/utils";
 // import { readFileToJSON, writeFile } from "@/utils/file";
 import { open } from "@tauri-apps/api/dialog";
 import { listen } from "@tauri-apps/api/event";
-import { computed, effect, reactive, ref, watch } from "vue";
+import { computed, reactive, ref } from "vue";
 import { addRepoGroupRepo, delRepoGroupRepo } from "./groups";
 
 export const defaultGroupName = "默认分组";

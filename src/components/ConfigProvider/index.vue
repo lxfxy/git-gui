@@ -10,9 +10,8 @@ import {
     NDialogProvider,
     NNotificationProvider,
 } from "naive-ui";
-import { apply, tw } from "twind";
+import { apply, tw, css } from "@twind/core";
 import { theme, ThemeType } from "@/store/theme";
-import { css } from "twind/css";
 import hljs from "highlight.js/lib/core";
 import javascript from "highlight.js/lib/languages/javascript";
 hljs.registerLanguage("js", javascript);
@@ -24,10 +23,7 @@ const themes: Record<ThemeType, GlobalTheme> = {
 
 <template>
     <NConfigProvider
-        :class="[
-            tw`h-screen w-screen bg-bgColor2 transition-color`,
-            `scrollbar`,
-        ]"
+        :class="[`h-screen w-screen bg-bgColor2 transition-color`, `scrollbar`]"
         :theme="themes[theme]"
         :locale="zhCN"
         :date-locale="dateZhCN"

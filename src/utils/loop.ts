@@ -1,23 +1,26 @@
 import { curRepoDir, isBlur, isFocus } from "@/store";
+import { debounce } from "lodash";
+import { DebouncedEvent, watch as watchFile } from "tauri-plugin-fs-watch-api";
 import { effect, nextTick, watch } from "vue";
 import { sleep } from ".";
-import { watch as watchFile, DebouncedEvent } from "tauri-plugin-fs-watch-api";
-import { debounce, throttle } from "lodash";
 const loopFns: any[] = [];
 export const loop = (fn: any) => {
     let handle: number | null;
     const loopInnerSchedule = async () => {
-        await fn().catch((e: any) => {
-            console.log(e);
-        });
-        if (isBlur.value) {
-            handle = null;
-            return;
+        try {
+            await fn();
+        } catch (error) {
+            console.log(error);
+        } finally {
+            if (isBlur.value) {
+                handle = null;
+                return;
+            }
+            nextTick(async () => {
+                await sleep(600);
+                handle = requestIdleCallback(loopInnerSchedule);
+            });
         }
-        nextTick(async () => {
-            await sleep(600);
-            handle = requestIdleCallback(loopInnerSchedule);
-        });
     };
     requestIdleCallback(() => {
         handle = requestIdleCallback(loopInnerSchedule);

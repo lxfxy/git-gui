@@ -1,5 +1,5 @@
 import { curRepoDir, repoBranchs, setRepoStatus } from "@/store";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { commandErrorDialog, CommandEventData, runCommand } from "./command";
 import { chooseBranch, GitBranch } from "./gitBranch";
 import { dialog } from "./globalApis";
@@ -123,7 +123,7 @@ export const gitPushErrorForceDialog = (
         positiveText: "知道了",
         title() {
             return (
-                <code class={tw`ml-[4px]`}>
+                <code class={`ml-[4px]`}>
                     {shell} {args.join(" ")}
                 </code>
             );
@@ -133,7 +133,7 @@ export const gitPushErrorForceDialog = (
                 <>
                     {stderrLines.map((item) => {
                         return (
-                            <code key={item} class={tw`block`}>
+                            <code key={item} class={`block`}>
                                 {item}
                             </code>
                         );

@@ -8,7 +8,7 @@ import {
     NSelect,
     NSpace,
 } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { reactive, ref } from "vue";
 import { GitBranch, gitRebase } from "..";
 import { dialog } from "../globalApis";
@@ -40,7 +40,7 @@ export const chooseBranchRebase = ({ branch }: ChooseBranchRebaseOptions) => {
         const dialogReactive = dialog.value?.info({
             title() {
                 return (
-                    <div class={tw`ml-[10px]`}>
+                    <div class={`ml-[10px]`}>
                         选择&nbsp;<code>{branch.name}</code>&nbsp;要变基的分支
                     </div>
                 );
@@ -52,7 +52,7 @@ export const chooseBranchRebase = ({ branch }: ChooseBranchRebaseOptions) => {
                             model={model}
                             labelPlacement="left"
                             labelWidth={100}
-                            class={tw`mt-[20px]`}
+                            class={`mt-[20px]`}
                             rules={rules}
                             ref={form}
                         >
@@ -64,7 +64,7 @@ export const chooseBranchRebase = ({ branch }: ChooseBranchRebaseOptions) => {
                                     valueField="name"
                                 ></NSelect>
                             </NFormItem>
-                            <NSpace class={tw`ml-[100px]`}>
+                            <NSpace class={`ml-[100px]`}>
                                 <NButton type="success" onClick={submit}>
                                     确定
                                 </NButton>

@@ -10,7 +10,7 @@ import {
     NSpace,
     NSpin,
 } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { effect, reactive, ref, watch } from "vue";
 import {
     createHeadsBranch,
@@ -110,7 +110,7 @@ export const addBranch = ({
                     rules={rules}
                     requireMarkPlacement="left"
                     labelWidth={100}
-                    class={tw`mt-[20px]`}
+                    class={`mt-[20px]`}
                 >
                     <NFormItem path="branchName" first label="分支名：">
                         <NInput
@@ -126,12 +126,12 @@ export const addBranch = ({
                         v-model:remoteBranchName={formValue.remoteBranchName}
                         v-model:remoteName={formValue.remoteName}
                     />
-                    <NFormItem class={tw`ml-[100px]`}>
+                    <NFormItem class={`ml-[100px]`}>
                         <NCheckbox v-model:checked={formValue.checkout}>
                             创建完成后是否切换到此分支
                         </NCheckbox>
                     </NFormItem>
-                    <NSpace class={tw`ml-[100px]`}>
+                    <NSpace class={`ml-[100px]`}>
                         <NButton type="success" onClick={submit}>
                             确定
                         </NButton>

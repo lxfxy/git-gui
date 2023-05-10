@@ -1,5 +1,5 @@
 import { ButtonProps, NButton } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { FunctionalComponent } from "vue";
 
 interface Button extends FunctionalComponent<ButtonProps> {
@@ -10,7 +10,7 @@ const Button: Button = (props, context) => {
         <NButton
             quaternary
             type="success"
-            class={tw`justify-start`}
+            class={`justify-start`}
             {...props}
             size="medium"
         >

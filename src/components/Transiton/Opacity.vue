@@ -5,19 +5,19 @@ const props = defineProps<TransitionOpacityProps>();
 </script>
 
 <template>
-    <Transition name="opacity" v-bind="props">
+    <Transition name="v-opacity" v-bind="props">
         <slot></slot>
     </Transition>
 </template>
 <style>
-.opacity-enter-active,
-.opacity-leave-active {
+.v-opacity-enter-active,
+.v-opacity-leave-active {
     transition: opacity 0.5s ease;
 }
-.opacity-enter-from {
+.v-opacity-enter-from {
     opacity: 0 !important;
 }
-.opacity-leave-to {
+.v-opacity-leave-to {
     opacity: 0 !important;
 }
 </style>

@@ -1,15 +1,7 @@
-import {
-    loop,
-    sleep,
-    GitLog,
-    gitLog,
-    gitLogMsg,
-    repoChangeWatch,
-} from "@/utils";
-// import { GitLog, gitLog } from "@/utils/gitLog";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/vue-query";
+import { GitLog, gitLog, gitLogMsg, loop } from "@/utils";
+import { useInfiniteQuery } from "@tanstack/vue-query";
 import { last } from "lodash";
-import { effect, onBeforeUnmount, reactive, ref, watch } from "vue";
+import { onBeforeUnmount, reactive } from "vue";
 import { curRepoDir } from "./repo";
 import { curRepoBranch } from "./repoBranch";
 

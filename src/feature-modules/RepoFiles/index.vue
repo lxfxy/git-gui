@@ -1,12 +1,18 @@
 <script setup lang="tsx">
-import { curRepo, fileStatusWorkspace, setFileStatusWorkspace } from "@/store";
 import {
+    curRepo,
+    curRepoBranch,
+    fileStatusWorkspace,
+    repoWorkTreeInfo,
+    setFileStatusWorkspace,
+} from "@/store";
+import {
+    FileStatus,
     FileStatusType,
     historyRepoFiles,
     RepoWorkTree,
-    FileStatus,
 } from "@/utils/gitStatus";
-import { repoWorkTreeInfo } from "@/store";
+import { css } from "@twind/core";
 import {
     NButton,
     NDataTable,
@@ -15,14 +21,11 @@ import {
     NTag,
     useMessage,
 } from "naive-ui";
-import { apply, tw } from "twind";
-import { computed, ref } from "vue";
-import { css } from "twind/css";
+import { computed } from "vue";
 import { columns, TableStatusColFilter } from "./columns";
-import { curRepoBranch } from "@/store";
 const genCss = (status: FileStatusType) => {
     return css`
-        .n-data-table-td {
+        & .n-data-table-td {
             background-color: var(
                 --file-status-${status.toLocaleLowerCase()}-bg-color
             ) !important;
@@ -53,33 +56,33 @@ const pushHistory = async () => {
     await historyRepoFiles();
     message.success("暂存完成！");
 };
-const tableClassName = css`
-    .n-data-table {
-        ${apply`flex-1 overflow-hidden`}
-    }
-    .n-data-table-wrapper {
-        ${apply`flex-1 overflow-hidden`}
-    }
-    .n-data-table-base-table {
-        ${apply`flex flex-col overflow-hidden`};
-    }
-    .n-data-table-base-table-body {
-        ${apply`flex-1 overflow-hidden`};
-    }
-`;
 </script>
 
 <template>
     <div
         :class="[
-            tw`text-color1 flex-1 flex flex-col ${tableClassName} overflow-hidden`,
+            `text-color1 flex-1 flex flex-col overflow-hidden`,
+            css`
+                & .n-data-table {
+                    @apply flex-1 overflow-hidden;
+                }
+                & .n-data-table-wrapper {
+                    @apply flex-1 overflow-hidden;
+                }
+                & .n-data-table-base-table {
+                    @apply flex flex-col overflow-hidden;
+                }
+                & .n-data-table-base-table-body {
+                    @apply flex-1 overflow-hidden;
+                }
+            `,
         ]"
     >
         <div
             v-if="curRepo"
-            :class="tw`title flex items-center justify-between h-[50px]`"
+            :class="`title flex items-center justify-between h-[50px]`"
         >
-            <div :class="[tw`flex gap-x-[10px] items-center flex-1`]">
+            <div :class="[`flex gap-x-[10px] items-center flex-1`]">
                 <div>
                     <code>{{ curRepo.title }}^{{ curRepoBranch?.name }}</code>
                     的工作树信息
@@ -105,21 +108,21 @@ const tableClassName = css`
                 </NButton>
             </NSpace>
         </div>
-        <div v-else :class="tw`title h-[50px]`">未选择仓库</div>
+        <div v-else :class="`title h-[50px]`">未选择仓库</div>
         <NDataTable
             :bordered="true"
             :columns="(columns as any)"
             :data="tableData"
             :max-height="'100%'"
             :row-class-name="(data: FileStatus) => {
-                return tw`${rowClassName[data.status]}`
+                return `${rowClassName[data.status]}`
             }"
             size="small"
         ></NDataTable>
         <!-- <NCode
             contenteditable
             @input="input"
-            :class="tw`h-[200px]`"
+            :class="`h-[200px]`"
             :code="code"
             language="js"
         /> -->

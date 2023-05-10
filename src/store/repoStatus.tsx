@@ -1,5 +1,3 @@
-import { effect, reactive, watch } from "vue";
-import { merge } from "lodash";
 import {
     gitMergeAbort,
     gitRebaseAbort,
@@ -9,16 +7,12 @@ import {
     loop,
     readMergeMsg,
     readRebaseMergeMsg,
-    repoChangeWatch,
 } from "@/utils";
 import { message } from "@/utils/globalApis";
-import { MessageReactive, NAlert, NButton } from "naive-ui";
-import { tw } from "twind";
-import { curRepoBranch } from "./repoBranch";
-import { readTextFile } from "@tauri-apps/api/fs";
+import { merge } from "lodash";
+import { MessageReactive, NButton } from "naive-ui";
+import { reactive, watch } from "vue";
 import { curRepoDir } from "./repo";
-import { center } from "@/styles";
-import { useQuery } from "@tanstack/vue-query";
 
 export interface PushingMsg {
     remoteName?: string;
@@ -73,9 +67,9 @@ export const showRebaseMergeDialog = async (reset = false) => {
                                 border: "1px solid var(--rebase-merge-color)",
                                 backgroundColor: "var(--rebase-merge-bg-color)",
                             }}
-                            class={tw`p-[10px] text-center`}
+                            class={`p-[10px] text-center`}
                         >
-                            <div class={tw`flex gap-x-[10px] items-center`}>
+                            <div class={`flex gap-x-[10px] items-center`}>
                                 正在处理变基冲突
                                 <code>
                                     {rebaseMergeMsg?.num}/{rebaseMergeMsg?.end}
@@ -95,7 +89,7 @@ export const showRebaseMergeDialog = async (reset = false) => {
                                     不处理本次冲突
                                 </NButton>
                             </div>
-                            <div class={tw`mt-[6px]`}>
+                            <div class={`mt-[6px]`}>
                                 处理完所有冲突后，提交commit，即可处理下一个冲突！
                             </div>
                         </div>
@@ -132,11 +126,9 @@ export let showMergeDialog = async () => {
                                 border: "1px solid var(--rebase-merge-color)",
                                 backgroundColor: "var(--rebase-merge-bg-color)",
                             }}
-                            class={tw`p-[10px] text-center`}
+                            class={`p-[10px] text-center`}
                         >
-                            <div
-                                class={tw`flex gap-x-[10px] ${center} items-center`}
-                            >
+                            <div class={`flex gap-x-[10px] items-center`}>
                                 正在处理合并冲突
                                 <NButton
                                     ghost
@@ -146,7 +138,7 @@ export let showMergeDialog = async () => {
                                     退出合并
                                 </NButton>
                             </div>
-                            <div class={tw`mt-[6px]`}>
+                            <div class={`mt-[6px]`}>
                                 处理完所有冲突后，提交commit，即可完成合并！
                             </div>
                         </div>

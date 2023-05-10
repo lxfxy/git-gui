@@ -1,14 +1,6 @@
 import { useRef } from "@/hooks";
-import {
-    loop,
-    sleep,
-    FileStatus,
-    getRepoFileStatus,
-    RepoWorkTree,
-    repoChangeWatch,
-} from "@/utils";
-// import { FileStatus, getRepoFileStatus, RepoWorkTree } from "@/utils/gitStatus";
-import { computed, effect, ref } from "vue";
+import { FileStatus, getRepoFileStatus, loop, RepoWorkTree } from "@/utils";
+import { computed, ref } from "vue";
 import { curRepo } from "./repo";
 
 export const repoFileStatus = ref<FileStatus[]>([]);

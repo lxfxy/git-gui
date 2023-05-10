@@ -1,19 +1,10 @@
 import { useRef } from "@/hooks";
-import {
-    GitBranch,
-    gitBranch,
-    gitSwitch,
-    loop,
-    repoChangeWatch,
-    showNotify,
-    sleep,
-} from "@/utils";
+import { GitBranch, gitBranch, gitSwitch, loop } from "@/utils";
 import { message } from "@/utils/globalApis";
 import { isEmpty } from "lodash";
-import { effect, reactive, ref, watch } from "vue";
+import { ref } from "vue";
 import { curRepoDir } from "./repo";
 import { repoFileStatus, repoHistoryFileStatus } from "./repoFileStatus";
-import { repoRemotes } from "./repoRemote";
 import { repoStatus } from "./repoStatus";
 
 export const [contextmenuBranch, setContextmenuBranch] = useRef<GitBranch>();

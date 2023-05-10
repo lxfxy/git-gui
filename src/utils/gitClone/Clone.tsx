@@ -11,7 +11,7 @@ import {
     NInput,
     NSpace,
 } from "naive-ui";
-import { mode, tw } from "twind";
+import { mode, tw } from "@twind/core";
 import { reactive, ref, watch } from "vue";
 import { gitClone } from ".";
 import { dialog } from "../globalApis";
@@ -76,7 +76,7 @@ export const Clone = () => {
         const dialogReactive = dialog.value?.info({
             style: { width: "50vw" },
             title() {
-                return <div class={tw`ml-[10px]`}>克隆仓库</div>;
+                return <div class={`ml-[10px]`}>克隆仓库</div>;
             },
             content() {
                 return (
@@ -88,7 +88,7 @@ export const Clone = () => {
                             model={model}
                             rules={rules}
                             labelWidth={100}
-                            class={tw`mt-[20px]`}
+                            class={`mt-[20px]`}
                         >
                             <NFormItem path="url" label="仓库地址" first>
                                 <NInput v-model:value={model.url} />
@@ -96,7 +96,7 @@ export const Clone = () => {
                             <NFormItem path="name" label="文件夹名">
                                 <NInput v-model:value={model.name} />
                             </NFormItem>
-                            <NSpace class={tw`ml-[100px]`}>
+                            <NSpace class={`ml-[100px]`}>
                                 <NButton
                                     type="success"
                                     onClick={submit}

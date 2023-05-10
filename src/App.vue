@@ -1,17 +1,10 @@
 <script setup lang="ts">
 import { effect, onMounted, reactive, Ref, ref, watch } from "vue";
-import ConfigProvider from "./components/ConfigProvider/index.vue";
-import Header from "./components/Header.vue";
-import LoadingBar from "./components/LoadingBar/index.vue";
-import Initial from "./components/Initial.vue";
-import RepoList from "./feature-modules/RepoList/index.vue";
-import RepoFiles from "./feature-modules/RepoFiles/index.vue";
-import Commit from "./feature-modules/Commit/index.vue";
-import Log from "./feature-modules/Log/index.vue";
-import Branch from "./feature-modules/Branch/index.vue";
+import { ConfigProvider, Header, LoadingBar, Initial } from "@/components";
+import { RepoList, RepoFiles, Commit, Log, Branch } from "@/feature-modules";
 import { readFileToJSON, writeFile } from "@/utils";
 import { debounce } from "lodash";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 onMounted(() => {
     document.getElementById("loading-control")!.style.display = "none";
 });
@@ -74,10 +67,10 @@ const mouseStart = (
     <ConfigProvider>
         <LoadingBar>
             <Initial />
-            <div :class="tw`h-screen w-screen flex flex-col overflow-hidden`">
+            <div :class="`h-screen w-screen flex flex-col overflow-hidden`">
                 <Header></Header>
                 <div
-                    :class="tw`grid overflow-hidden flex-1`"
+                    :class="`grid overflow-hidden flex-1`"
                     :style="{
                         gridTemplateColumns: `${layout.side}% ${lineWidth} 1fr`,
                         gridTemplateRows: `1fr`,
@@ -85,7 +78,7 @@ const mouseStart = (
                     ref="containerRef"
                 >
                     <div
-                        :class="tw`overflow-hidden grid`"
+                        :class="`overflow-hidden grid`"
                         :style="{
                             gridTemplateRows: `1fr 1fr 1fr`,
                             gridTemplateColumns: `1fr`,
@@ -94,22 +87,22 @@ const mouseStart = (
                         <RepoList></RepoList>
                         <!-- <div
                             class="drag-line"
-                            :class="[tw`cursor-n-resize`]"
+                            :class="[`cursor-n-resize`]"
                         ></div> -->
                         <Branch></Branch>
                         <!-- <div
                             class="drag-line"
-                            :class="[tw`cursor-n-resize`]"
+                            :class="[`cursor-n-resize`]"
                         ></div> -->
                         <Log></Log>
                     </div>
                     <div
                         class="drag-line"
-                        :class="[tw`cursor-w-resize`]"
+                        :class="[`cursor-w-resize`]"
                         @mousedown="mouseStart(`side`, 60, 20, `x`, $event)"
                     ></div>
                     <div
-                        :class="tw`overflow-hidden grid`"
+                        :class="`overflow-hidden grid`"
                         :style="{
                             gridTemplateRows: `${layout.commit}% ${lineWidth} 1fr`,
                             gridTemplateColumns: `1fr`,
@@ -118,7 +111,7 @@ const mouseStart = (
                         <Commit></Commit>
                         <div
                             class="drag-line"
-                            :class="[tw`cursor-n-resize`]"
+                            :class="[`cursor-n-resize`]"
                             @mousedown="
                                 mouseStart(`commit`, 50, 24, `y`, $event)
                             "
@@ -127,7 +120,7 @@ const mouseStart = (
                     </div>
                 </div>
                 <!-- <div
-                    :class="[tw`grid overflow-hidden`]"
+                    :class="[`grid overflow-hidden`]"
                     :style="{
                         gridTemplateAreas,
                         gridTemplateColumns,

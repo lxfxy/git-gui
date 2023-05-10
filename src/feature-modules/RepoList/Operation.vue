@@ -19,7 +19,7 @@ import { message } from "@/utils/globalApis";
 import { writeText } from "@tauri-apps/api/clipboard";
 import { open } from "@tauri-apps/api/shell";
 import { NPopconfirm, NPopover, NSelect } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { computed, watch } from "vue";
 import Button from "../Branch/Button";
 const { close } = contextmenuScheduler;
@@ -70,7 +70,7 @@ watch(
 </script>
 
 <template>
-    <div :class="tw`flex flex-col w-[200px]`">
+    <div :class="`flex flex-col w-[200px]`">
         <Button @click="setCurRepo(contextmenuRepo!)">切换至此仓库</Button>
         <Button @click="vscodeOpen">
             通过&nbsp;<code>vscode</code>&nbsp;打开此目录

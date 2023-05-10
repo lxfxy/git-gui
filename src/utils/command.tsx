@@ -1,9 +1,6 @@
-import { Child } from "@tauri-apps/api/shell";
-import { EventEmitter } from "@tauri-apps/api/shell";
 import { ChildProcess, Command, SpawnOptions } from "@tauri-apps/api/shell";
-import { tw } from "twind";
 import { ref } from "vue";
-import { dialog, notification } from "./globalApis";
+import { dialog } from "./globalApis";
 export type CommandEvent = "command-error" | "command-success";
 export interface CommandEventData {
     shell: string;
@@ -115,7 +112,7 @@ export const commandSuccessDialog = ({
         positiveText: "知道了",
         title() {
             return (
-                <code class={tw`ml-[10px]`}>
+                <code class={`ml-[10px]`}>
                     {shell} {args?.join(" ")}
                 </code>
             );
@@ -142,7 +139,7 @@ export const commandErrorDialog = ({
         positiveText: "知道了",
         title() {
             return (
-                <code class={tw`ml-[10px]`}>
+                <code class={`ml-[10px]`}>
                     {shell} {args?.join(" ")}
                 </code>
             );
@@ -150,10 +147,10 @@ export const commandErrorDialog = ({
         content() {
             return (
                 <>
-                    <code class={tw`mb-[6px]`}>{options.cwd}</code>
+                    <code class={`mb-[6px]`}>{options.cwd}</code>
                     {stderrLines?.map((item) => {
                         return (
-                            <code key={item} class={tw`block`}>
+                            <code key={item} class={`block`}>
                                 {item}
                             </code>
                         );

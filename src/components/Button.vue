@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NButton, ButtonProps, NIcon, NSpin } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { toRefs } from "vue";
 import Opacity from "./Transiton/Opacity.vue";
 
@@ -16,7 +16,7 @@ const { loading, ...props } = toRefs(propsRaw);
         <Opacity mode="out-in">
             <NSpin
                 v-if="loading"
-                :class="tw`w-[20px] h-[20px] opacity-100`"
+                :class="`w-[20px] h-[20px] opacity-100`"
             ></NSpin>
             <template v-else>
                 <slot name="icon"></slot>

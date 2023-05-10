@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { apply, tw } from "twind";
+import { apply, tw } from "@twind/core";
 import { theme } from "@/store/theme";
 </script>
 
 <template>
     <span
         :class="
-            tw`text-color1 cursor-pointer px-[16px] select-none center h-full hover:bg-bgColor2`
+            `text-color1 cursor-pointer px-[16px] select-none center h-full hover:bg-bgColor2`
         "
         @click="theme = theme === 'dark' ? 'light' : 'dark'"
     >

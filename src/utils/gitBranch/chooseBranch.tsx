@@ -10,7 +10,7 @@ import {
     NSpace,
     NButton,
 } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { reactive, ref } from "vue";
 import { GitBranch } from ".";
 import { dialog } from "../globalApis";
@@ -63,7 +63,7 @@ export const chooseBranch = ({
         const dialogReactive = dialog.value!.create({
             title: () => {
                 return (
-                    <div class={tw`flex gap-x-[10px] items-center`}>
+                    <div class={`flex gap-x-[10px] items-center`}>
                         <div>
                             选择<code>&nbsp;{branch}&nbsp;</code>
                             分支推送的上游分支
@@ -90,7 +90,7 @@ export const chooseBranch = ({
                             labelPlacement="left"
                             labelWidth={100}
                             requireMarkPlacement="left"
-                            class={tw`mt-[20px]`}
+                            class={`mt-[20px]`}
                             rules={rules}
                         >
                             <FormItemRemoteBranch
@@ -110,7 +110,7 @@ export const chooseBranch = ({
                                                     v-model:checked={
                                                         formValue.isUpstream
                                                     }
-                                                    class={tw`ml-[100px]`}
+                                                    class={`ml-[100px]`}
                                                 >
                                                     关联此上游分支
                                                 </NCheckbox>
@@ -126,7 +126,7 @@ export const chooseBranch = ({
                                     }}
                                 </NTooltip>
                             </NFormItem>
-                            <NSpace class={tw`ml-[100px]`}>
+                            <NSpace class={`ml-[100px]`}>
                                 <NButton type="primary" onClick={submit}>
                                     确定
                                 </NButton>

@@ -1,6 +1,6 @@
 import { repoBranchs, repoRemotes } from "@/store";
 import { NFormItem, NSelect, FormItemProps } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { defineComponent, ref, toRefs, watch } from "vue";
 import { GitBranch, createRemoteBranch } from ".";
 import { GitRemote } from "../gitRemote";
@@ -61,7 +61,7 @@ export const FormItemRemoteBranch = defineComponent({
                     showFeedback={false}
                     showRequireMark={required.value}
                 >
-                    <NFormItem class={tw`w-[200px]`} path="remoteName">
+                    <NFormItem class={`w-[200px]`} path="remoteName">
                         <NSelect
                             value={props.remoteName}
                             onUpdateValue={(...args) => {
@@ -77,7 +77,7 @@ export const FormItemRemoteBranch = defineComponent({
                         />
                     </NFormItem>
 
-                    <NFormItem class={tw`flex-1`} path="remoteBranchName">
+                    <NFormItem class={`flex-1`} path="remoteBranchName">
                         <NSelect
                             filterable
                             clearable

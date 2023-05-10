@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { contextmenuRemote, contextmenuRepo } from "@/store";
 import { delRemote, addRemote } from "@/utils";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import Button from "../Branch/Button";
 </script>
 
 <template>
-    <div v-if="contextmenuRemote" :class="tw`flex flex-col`">
+    <div v-if="contextmenuRemote" :class="`flex flex-col`">
         <Button.Danger
             @click="
                 delRemote({

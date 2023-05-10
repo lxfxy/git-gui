@@ -3,14 +3,15 @@ import Button from "@/components/Button.vue";
 import Opacity from "@/components/Transiton/Opacity.vue";
 import { useContextmenu } from "@/hooks";
 import {
-    repoBranchs,
     changeBranch,
-    setContextmenuBranch,
-    repoStatus,
     contextmenuBranch,
     curRepoDir,
+    repoBranchs,
+    repoStatus,
+    setContextmenuBranch,
 } from "@/store";
-import { GitBranch, gitRemoteUpdate, addBranch } from "@/utils";
+import { addBranch, GitBranch, gitRemoteUpdate } from "@/utils";
+import { apply, css } from "@twind/core";
 import { Add } from "@vicons/ionicons5";
 import { CloudSyncOutlined } from "@vicons/material";
 import {
@@ -23,8 +24,6 @@ import {
     NTime,
     NTooltip,
 } from "naive-ui";
-import { apply, tw } from "twind";
-import { css } from "twind/css";
 import { Ref, ref } from "vue";
 import BranchOperation from "./BranchOperation.vue";
 
@@ -40,7 +39,7 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
 </script>
 
 <template>
-    <div :class="tw`flex-1 flex-col flex overflow-hidden`" ref="container">
+    <div :class="`flex-1 flex-col flex overflow-hidden`" ref="container">
         <NPopover
             :x="x"
             :y="y"
@@ -50,7 +49,7 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
         >
             <BranchOperation />
         </NPopover>
-        <div :class="tw`title flex justify-between items-center`">
+        <div :class="`title flex justify-between items-center`">
             <div>分支信息</div>
             <NButtonGroup>
                 <NTooltip>
@@ -93,7 +92,7 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
                 </NTooltip>
             </NButtonGroup>
         </div>
-        <NScrollbar :class="tw`flex-1 text-color1`" @scroll="close">
+        <NScrollbar :class="`flex-1 text-color1`" @scroll="close">
             <div
                 v-for="item in repoBranchs"
                 :key="`${item.name}${curRepoDir}`"
@@ -101,24 +100,26 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
                     item.current ? `success` : item.remotes ? `info` : `default`
                 "
                 :class="[
-                    tw`select-none transition-all duration-[300ms] h-[38px] items-center flex gap-x-[4px] px-[16px]`,
-                    tw`${css`
-                        ${apply`${item.heads ? `cursor-pointer` : ``}`}
-                        .branch-content {
-                            ${apply`opacity-${
+                    `select-none transition-all duration-[300ms] h-[38px] items-center flex gap-x-[4px] px-[16px]`,
+                    item.heads ? `cursor-pointer` : ``,
+                    `${css`
+                        & .branch-content {
+                            @apply ${apply`opacity-${
                                 item.current ? `100` : item.heads ? `60 ` : `60`
-                            }`}
-                            ${apply`transition-all duration-[300ms]`}
+                            }`};
+                            @apply ${apply`transition-all duration-[300ms]`};
                         }
 
                         &:hover,
                         &.context-active {
-                            ${apply`bg-bgColor1`}
+                            @apply ${apply`bg-bgColor1`};
                         }
 
                         &:hover .branch-content,
                         &.context-active .branch-content {
-                            ${apply(item.heads ? `opacity-100` : `opacity-80`)}
+                            @apply ${apply(
+                                item.heads ? `opacity-100` : `opacity-80`
+                            )};
                         }
                     `}`,
                     { 'context-active': contextmenuBranch === item && show },
@@ -128,17 +129,17 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
             >
                 <NEllipsis
                     :class="[
-                        tw`flex-1 overflow-hidden`,
-                        tw`items-center flex gap-x-[4px] overflow-hidden`,
+                        `flex-1 overflow-hidden`,
+                        `items-center flex gap-x-[4px] overflow-hidden`,
                         `branch-content`,
                     ]"
                 >
                     <code>{{ item.name }}</code>
-                    <code v-show="item.upstream" :class="tw`text-color2`">
+                    <code v-show="item.upstream" :class="`text-color2`">
                         -> {{ item.upstream }}
                     </code>
                 </NEllipsis>
-                <span :class="tw`text-[12px] ml-[4px]`">
+                <span :class="`text-[12px] ml-[4px]`">
                     <NTime
                         v-if="item.updateDate"
                         type="relative"
@@ -150,15 +151,15 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
                 <Opacity>
                     <template v-if="item.heads">
                         <div
-                            :class="[tw`flex items-center h-full mx-[12px]`]"
+                            :class="[`flex items-center h-full mx-[12px]`]"
                             v-show="repoStatus.isPushing[item.branchname]"
                         >
                             <NTooltip placement="right">
                                 <template #trigger>
-                                    <NSpin :class="[tw`w-[20px] h-[20px]`]" />
+                                    <NSpin :class="[`w-[20px] h-[20px]`]" />
                                 </template>
                                 正在推送至
-                                <code :class="[tw`ml-[4px]`]">
+                                <code :class="[`ml-[4px]`]">
                                     {{
                                         repoStatus.pushingMsg[item.branchname]
                                             .remoteName
@@ -169,15 +170,15 @@ const contextmenu = (branch: GitBranch, e: MouseEvent) => {
                     </template>
                     <template v-else>
                         <div
-                            :class="[tw`flex items-center h-full mx-[12px]`]"
+                            :class="[`flex items-center h-full mx-[12px]`]"
                             v-show="repoStatus.isRemoteRefetching[item.name]"
                         >
                             <NTooltip placement="right">
                                 <template #trigger>
-                                    <NSpin :class="[tw`w-[20px] h-[20px]`]" />
+                                    <NSpin :class="[`w-[20px] h-[20px]`]" />
                                 </template>
                                 正在拉取此远程分支
-                                <code :class="[tw`mx-[4px]`]">
+                                <code :class="[`mx-[4px]`]">
                                     {{ item.name }}
                                 </code>
                                 的最新信息

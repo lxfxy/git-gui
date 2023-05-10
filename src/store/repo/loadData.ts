@@ -1,12 +1,13 @@
-import { addArrayOnce, arrayToObj, readFileToJSON, writeFile } from "@/utils";
+import { arrayToObj, readFileToJSON, writeFile } from "@/utils";
 import { isEmpty } from "lodash";
 import { effect } from "vue";
-import { RepoInfo, repos, setCurRepo, defaultGroupName } from ".";
-import { RepoGroup, repoGroups, setRepoCurGroup } from "./groups";
-import { groupBy } from "lodash";
+import { RepoInfo } from ".";
+import { setup } from "../index.merge";
+import { RepoGroup } from "./groups";
 
-loadRepoData();
-export async function loadRepoData() {
+const loadRepoData = async function loadRepoData(state: StoreState) {
+    const { repoGroups, setRepoCurGroup, defaultGroupName, repos, setCurRepo } =
+        state;
     const [reposData, repoGroupsData] = await Promise.all([
         readFileToJSON<Record<string, RepoInfo>>("data/repos.json"),
         readFileToJSON<RepoGroup[]>("data/repoGroups.json", repoGroups.value),
@@ -64,4 +65,5 @@ export async function loadRepoData() {
         });
         writeFile("data/repos.json", JSON.stringify(repos));
     });
-}
+};
+setup(loadRepoData);

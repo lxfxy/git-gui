@@ -1,6 +1,6 @@
 import { curRepoDir, repoRemoteNames } from "@/store";
 import { NAlert } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { commandErrorDialog, runCommand } from "../command";
 import { dialog } from "../globalApis";
 
@@ -205,9 +205,9 @@ export const branchDel = async (branch: GitBranch, force: boolean = false) => {
         },
         title() {
             return (
-                <div class={tw`ml-[6px]`}>
+                <div class={`ml-[6px]`}>
                     是否继续要{force ? "强制" : ""}删除分支
-                    <code class={tw`mx-[6px]`}>{branch.name}</code>吗？
+                    <code class={`mx-[6px]`}>{branch.name}</code>吗？
                 </div>
             );
         },

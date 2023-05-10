@@ -1,8 +1,7 @@
 import { useRef } from "@/hooks";
-import { addArrayOnce, filterArrayItems, readFileToJSON } from "@/utils";
-import { writeFile } from "@tauri-apps/api/fs";
-import { effect, computed, watch } from "vue";
-import { contextmenuRepo, RepoInfo, repos } from ".";
+import { addArrayOnce, filterArrayItems } from "@/utils";
+import { computed } from "vue";
+import { RepoInfo, repos } from ".";
 
 export interface RepoGroup {
     name: string;

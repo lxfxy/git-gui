@@ -1,29 +1,20 @@
 <script setup lang="ts">
 import Divider from "@/components/Divider.vue";
-import {
-    curRepo,
-    repoHistoryFileStatus,
-    repoLogs,
-    repoStatus,
-    theme,
-    ThemeType,
-} from "@/store";
+import { curRepo, repoHistoryFileStatus, repoLogs, repoStatus } from "@/store";
 import { commitAmendRepo, commitRepo, gitRebaseContinue } from "@/utils";
 import { gitLogMsg } from "@/utils/gitLog";
+import { apply, css } from "@twind/core";
 import { AlertCircleSharp, Reload } from "@vicons/ionicons5";
 import { isEmpty } from "lodash";
 import {
     NButton,
     NCheckbox,
-    NDivider,
     NIcon,
     NInput,
     NPopover,
     NTooltip,
     useMessage,
 } from "naive-ui";
-import { apply, tw } from "twind";
-import { css } from "twind/css";
 import { effect, ref, watch } from "vue";
 import Gitmoji from "./Gitmoji.vue";
 const inputCompRef = ref<GetCompSetupReturn<typeof NInput>>();
@@ -140,12 +131,12 @@ const keyup = (e: KeyboardEvent) => {
 </script>
 
 <template>
-    <div :class="tw`bg-bgColor1 text-color1 flex flex-col`">
-        <div :class="tw`title flex justify-between items-center h-[50px] `">
-            <div :class="tw`flex items-center gap-x-[6px]`">
+    <div :class="`bg-bgColor1 text-color1 flex flex-col`">
+        <div :class="`title flex justify-between items-center h-[50px] `">
+            <div :class="`flex items-center gap-x-[6px]`">
                 <code>Commit</code>
                 <Divider vertical />
-                <NPopover :class="tw`p-0!`" v-model:show="gitmojiVisible">
+                <NPopover :class="`p-0`" v-model:show="gitmojiVisible">
                     <template #trigger>
                         <NButton quaternary>
                             <code>gitmoji</code>
@@ -166,15 +157,13 @@ const keyup = (e: KeyboardEvent) => {
                             size="small"
                             @click="getLastCommitMsg"
                             :disabled="!isCommitAmend"
-                            :class="
-                                tw`${css`
-                                    &:hover .n-icon {
-                                        ${apply`rotate-180`}
-                                    }
-                                `}`
-                            "
+                            :class="`${css`
+                                &:hover .n-icon {
+                                    @apply ${apply`rotate-180`};
+                                }
+                            `}`"
                         >
-                            <NIcon size="18px" :class="tw`transition block`">
+                            <NIcon size="18px" :class="`transition block`">
                                 <Reload />
                             </NIcon>
                         </NButton>
@@ -185,7 +174,7 @@ const keyup = (e: KeyboardEvent) => {
                 <NTooltip placement="bottom">
                     <template #trigger>
                         <NIcon
-                            :class="tw`cursor-pointer text-blue-300`"
+                            :class="`cursor-pointer text-blue-300`"
                             size="20px"
                         >
                             <AlertCircleSharp />
@@ -205,7 +194,7 @@ const keyup = (e: KeyboardEvent) => {
                 提交
             </NButton>
         </div>
-        <div :class="[tw`p-[10px] flex-1 overflow-hidden`]">
+        <div :class="[`p-[10px] flex-1 overflow-hidden`]">
             <NInput
                 ref="inputCompRef"
                 @blur="blur"
@@ -213,9 +202,9 @@ const keyup = (e: KeyboardEvent) => {
                 @keyup.enter="keyup"
                 v-model:value="msg"
                 :class="[
-                    tw`text-[16px]`,
-                    tw`${css`
-                        .n-input-wrapper {
+                    `text-[16px]`,
+                    `${css`
+                        & .n-input-wrapper {
                             resize: none !important;
                         }
                     `}`,

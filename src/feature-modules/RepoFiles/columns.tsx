@@ -3,7 +3,7 @@ import { gitRestore } from "@/utils";
 import { FileStatus, fileStatusType, RepoWorkTree } from "@/utils/gitStatus";
 import { DataTableColumns, NButton, NPopconfirm, NSelect } from "naive-ui";
 import { TableBaseColumn } from "naive-ui/es/data-table/src/interface";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { defineComponent, Prop, reactive, ref, toRefs } from "vue";
 import Button from "../Branch/Button";
 import Tag from "./Tag.vue";
@@ -26,7 +26,7 @@ export const columns = reactive<DataTableColumns<FileStatus>>([
         width: 120,
         title() {
             return (
-                <div class={tw`flex items-center gap-x-[10px]`}>
+                <div class={`flex items-center gap-x-[10px]`}>
                     <span>文件状态</span>
                 </div>
             );
@@ -68,7 +68,7 @@ export const tableStatusCol = columns[0] as TableBaseColumn<FileStatus>;
 export const TableStatusColFilter = () => {
     return (
         <NSelect
-            class={tw`w-[240px]`}
+            class={`w-[240px]`}
             options={fileStatusOption}
             clearable
             v-model:value={tableStatusCol.filterOptionValues}

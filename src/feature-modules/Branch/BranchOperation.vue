@@ -16,7 +16,7 @@ import {
     chooseBranchRebase,
 } from "@/utils";
 import { NTooltip } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { computed } from "vue";
 import { gitFetch } from "@/utils/gitFetch";
 import { gitPull } from "@/utils/gitPull";
@@ -79,8 +79,8 @@ const isRemoteFetching = computed(() => {
 </script>
 
 <template>
-    <div :class="tw`flex flex-col`">
-        <!-- <code :class="tw`text-center my-[6px]`">
+    <div :class="`flex flex-col`">
+        <!-- <code :class="`text-center my-[6px]`">
             {{ contextmenuBranch?.name }}
         </code> -->
 

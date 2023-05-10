@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NLoadingBarProvider } from "naive-ui";
-import { loadingBarRenderEl } from "./";
+import { loadingBarRenderEl } from ".";
 </script>
 
 <template>

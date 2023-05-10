@@ -15,7 +15,7 @@ import {
     NInput,
     NSpace,
 } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { reactive, ref } from "vue";
 import { commandErrorDialog, runCommand } from "./command";
 import { gitBranchCreate } from "./gitBranch";
@@ -190,9 +190,9 @@ export const addRemote = ({ remoteInfo, repo }: AddRemoteOptions) => {
             },
             title() {
                 return (
-                    <div class={tw`ml-[6px]`}>
+                    <div class={`ml-[6px]`}>
                         创建
-                        <code class={tw`mx-[6px]`}>{repo.title}</code>
+                        <code class={`mx-[6px]`}>{repo.title}</code>
                         仓库的源
                     </div>
                 );
@@ -207,7 +207,7 @@ export const addRemote = ({ remoteInfo, repo }: AddRemoteOptions) => {
                             requireMarkPlacement="left"
                             rules={rules}
                             labelWidth={100}
-                            class={tw`mt-[20px]`}
+                            class={`mt-[20px]`}
                         >
                             <NFormItem label="名字" path="name">
                                 <NInput v-model:value={model.name} />
@@ -215,7 +215,7 @@ export const addRemote = ({ remoteInfo, repo }: AddRemoteOptions) => {
                             <NFormItem label="地址" path="url">
                                 <NInput v-model:value={model.url} />
                             </NFormItem>
-                            <NSpace class={tw`ml-[100px]`}>
+                            <NSpace class={`ml-[100px]`}>
                                 <NButton type="success" onClick={submit}>
                                     确定
                                 </NButton>

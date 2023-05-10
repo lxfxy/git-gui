@@ -13,7 +13,7 @@ import {
     NTag,
     FormRules,
 } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import {
     computed,
     defineComponent,
@@ -130,9 +130,9 @@ export const branchDel = async (branch: GitBranch) => {
         },
         title() {
             return (
-                <div class={tw`ml-[6px]`}>
+                <div class={`ml-[6px]`}>
                     真的要删除分支
-                    <code class={tw`mx-[6px]`}>{branch.name}</code>吗？
+                    <code class={`mx-[6px]`}>{branch.name}</code>吗？
                 </div>
             );
         },
@@ -211,7 +211,7 @@ export const chooseBranch = ({
         const dialogReactive = dialog.value!.create({
             title: () => {
                 return (
-                    <div class={tw`flex gap-x-[10px] items-center`}>
+                    <div class={`flex gap-x-[10px] items-center`}>
                         <div>
                             选择<code>&nbsp;{branch}&nbsp;</code>
                             分支推送的上游分支
@@ -238,7 +238,7 @@ export const chooseBranch = ({
                             labelPlacement="left"
                             labelWidth={100}
                             requireMarkPlacement="left"
-                            class={tw`mt-[20px]`}
+                            class={`mt-[20px]`}
                             rules={rules}
                         >
                             <FormItemRemote
@@ -257,7 +257,7 @@ export const chooseBranch = ({
                                                     v-model:checked={
                                                         formValue.isUpstream
                                                     }
-                                                    class={tw`ml-[100px]`}
+                                                    class={`ml-[100px]`}
                                                 >
                                                     关联此上游分支
                                                 </NCheckbox>
@@ -273,7 +273,7 @@ export const chooseBranch = ({
                                     }}
                                 </NTooltip>
                             </NFormItem>
-                            <NSpace class={tw`ml-[100px]`}>
+                            <NSpace class={`ml-[100px]`}>
                                 <NButton type="primary" onClick={submit}>
                                     确定
                                 </NButton>
@@ -338,7 +338,7 @@ const FormItemRemote = defineComponent({
         return () => {
             return (
                 <NFormItem label="远程分支：" showFeedback={false} required>
-                    <NFormItem class={tw`w-[200px]`} path="remoteName">
+                    <NFormItem class={`w-[200px]`} path="remoteName">
                         <NSelect
                             value={props.remoteName}
                             onUpdateValue={(...args) => {
@@ -353,7 +353,7 @@ const FormItemRemote = defineComponent({
                         />
                     </NFormItem>
 
-                    <NFormItem class={tw`flex-1`} path="remoteBranchName">
+                    <NFormItem class={`flex-1`} path="remoteBranchName">
                         <NSelect
                             filterable
                             clearable

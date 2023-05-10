@@ -25,6 +25,9 @@
                         "args": true
                     }
                 ]
+            },
+            "notification": {
+                "all": true
             }
         },
         "bundle": {

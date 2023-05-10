@@ -4,7 +4,7 @@ import { getRepoLogMsg, repoLogsMsg } from "@/store";
 import { addBranch, GitLog } from "@/utils";
 import { Copy } from "@vicons/ionicons5";
 import { NButton, NIcon, NTime, NTooltip } from "naive-ui";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { computed, effect, toRefs } from "vue";
 import { message } from "@/utils/globalApis";
 
@@ -26,12 +26,12 @@ const copyHash = async () => {
 </script>
 
 <template>
-    <div :class="tw`flex flex-col gap-y-[6px] relative`">
+    <div :class="`flex flex-col gap-y-[6px] relative`">
         <NTooltip>
             <template #trigger>
                 <NButton
                     quaternary
-                    :class="tw`absolute right-0 top-0`"
+                    :class="`absolute right-0 top-0`"
                     type="success"
                     @click="copyHash"
                 >
@@ -55,20 +55,20 @@ const copyHash = async () => {
                     :time="new Date(log.Date)"
                     :to="Date.now()"
                     type="relative"
-                    :class="tw`text-color2`"
+                    :class="`text-color2`"
                 />
             </code>
         </div>
         <div>提交消息：</div>
         <div
             v-html="repoLogsMsg[hash]?.join(`<br />`)"
-            :class="tw`ml-[10px]`"
+            :class="`ml-[10px]`"
         ></div>
         <NButton
             type="success"
             ghost
             @click="addBranch({ anchor: log.Hash })"
-            :class="tw`mt-[6px]`"
+            :class="`mt-[6px]`"
         >
             根据此提交历史创建分支
         </NButton>

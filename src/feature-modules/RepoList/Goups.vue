@@ -24,7 +24,7 @@ import {
     setRepoCurGroup,
     repoCurGroup,
 } from "@/store";
-import { tw } from "twind";
+import { tw } from "@twind/core";
 import { EngRenderCodeTag } from "@/components";
 import { DeleteOutlineSharp } from "@vicons/material";
 import { ref, watch, withModifiers } from "vue";
@@ -42,7 +42,7 @@ const RenderLabel: SelectProps["renderLabel"] = (item: RepoGroup, selected) => {
     const isNewLabel = !repoGroupsName.value.includes(item.name);
     if (isNewLabel && item.name.trim()) {
         return (
-            <div class={[tw`flex items-center gap-x-[10px]`]}>
+            <div class={[`flex items-center gap-x-[10px]`]}>
                 <NEllipsis>{item.name}</NEllipsis>
 
                 <NPopover>
@@ -59,7 +59,7 @@ const RenderLabel: SelectProps["renderLabel"] = (item: RepoGroup, selected) => {
         );
     }
     return (
-        <div class={[tw`flex items-center gap-x-[6px] px-[10px] py-[1px]`]}>
+        <div class={[`flex items-center gap-x-[6px] px-[10px] py-[1px]`]}>
             {false && (
                 <NBadge
                     value={Object.keys(item.repos || {}).length || 2}
@@ -68,7 +68,7 @@ const RenderLabel: SelectProps["renderLabel"] = (item: RepoGroup, selected) => {
                     show={false}
                 ></NBadge>
             )}
-            <NEllipsis class={[tw`mr-[10px] flex-1`]}>{item.name}</NEllipsis>
+            <NEllipsis class={[`mr-[10px] flex-1`]}>{item.name}</NEllipsis>
             <NPopconfirm
                 onPositiveClick={() => {
                     if (repoCurGroup.value?.name === item.name) {
@@ -146,7 +146,7 @@ const onSelect = (optionValue: string, option: RepoGroup) => {
         <template #trigger>
             <NTag type="success" size="small">{{ repoCurGroup?.name }}</NTag>
         </template>
-        <div :class="[tw`flex items-center gap-x-[6px]`]">
+        <div :class="[`flex items-center gap-x-[6px]`]">
             <!-- <NInput
                 v-model:value="groupName"
                 placeholder="请输入分组名"
@@ -187,14 +187,14 @@ const onSelect = (optionValue: string, option: RepoGroup) => {
         </div>
         <NScrollbar
             :class="[
-                tw`flex gap-x-[14px] gap-y-[4px] mt-[14px] flex-wrap max-h-[300px]`,
+                `flex gap-x-[14px] gap-y-[4px] mt-[14px] flex-wrap max-h-[300px]`,
             ]"
             v-if="repoGroups?.length"
         >
             <div
                 v-for="item in repoGroups"
                 :class="[
-                    tw`w-full py-[6px]! transition duration-[300ms] hover:bg-bgColor2 cursor-pointer ${
+                    `w-full py-[6px]! transition duration-[300ms] hover:bg-bgColor2 cursor-pointer ${
                         repoCurGroup?.name === item.name ? `bg-bgColor2` : ``
                     }`,
                 ]"
@@ -210,10 +210,10 @@ const onSelect = (optionValue: string, option: RepoGroup) => {
             >
                 <div
                     :class="[
-                        tw`flex items-center gap-x-[6px] px-[10px] py-[8px] transition duration-[300ms] hover:bg-bgColor2 cursor-pointer`,
+                        `flex items-center gap-x-[6px] px-[10px] py-[8px] transition duration-[300ms] hover:bg-bgColor2 cursor-pointer`,
                     ]"
                 >
-                    <div :class="[tw`mr-[6px]`]">{{ item.name }}</div>
+                    <div :class="[`mr-[6px]`]">{{ item.name }}</div>
                     <NPopconfirm @positiveClick="removeRepoGroups(item.name)">
                         <template #trigger>
                             <NIcon size="18" color="#ff7875">
